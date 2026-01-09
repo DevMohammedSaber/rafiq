@@ -31,7 +31,7 @@ class QuizScreen extends StatelessWidget {
             const SizedBox(height: 12),
             LinearProgressIndicator(
               value: 0.2,
-              backgroundColor: Theme.of(context).dividerColor.withOpacity(0.2),
+              backgroundColor: Theme.of(context).dividerColor.withValues(alpha: 0.2),
               color: AppColors.primary,
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
@@ -77,12 +77,12 @@ class QuizScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.1)
+                ? AppColors.primary.withValues(alpha: 0.1)
                 : Theme.of(context).cardColor,
             border: Border.all(
               color: isSelected
                   ? AppColors.primary
-                  : Theme.of(context).dividerColor.withOpacity(0.5),
+                  : Theme.of(context).dividerColor.withValues(alpha: 0.5),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(16),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../theme/app_colors.dart';
 
 class MainBottomNavBar extends StatelessWidget {
@@ -18,7 +19,7 @@ class MainBottomNavBar extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -40,23 +41,26 @@ class MainBottomNavBar extends StatelessWidget {
           fontWeight: FontWeight.w500,
           fontSize: 11,
         ),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.bookOpen),
-            label: 'Quran',
+            icon: const Icon(Icons.home_filled),
+            label: "nav.home".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.handsPraying),
-            label: 'Adhkar', // Middle item, maybe emphasized?
+            icon: const Icon(FontAwesomeIcons.bookOpen),
+            label: "nav.quran".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.access_time_filled_rounded),
-            label: 'Prayers',
+            icon: const Icon(FontAwesomeIcons.handsPraying),
+            label: "nav.adhkar".tr(),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_rounded),
-            label: 'More',
+            icon: const Icon(Icons.access_time_filled_rounded),
+            label: "nav.prayers".tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.grid_view_rounded),
+            label: "nav.more".tr(),
           ),
         ],
       ),

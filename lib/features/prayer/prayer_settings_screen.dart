@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/app_card.dart';
 
 class PrayerSettingsScreen extends StatelessWidget {
@@ -7,16 +8,16 @@ class PrayerSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Prayer Settings")),
+      appBar: AppBar(title: Text("prayer.settings.title".tr())),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          _buildSectionHeader(context, "Location"),
+          _buildSectionHeader(context, "prayer.settings.location_header".tr()),
           AppCard(
             child: Column(
               children: [
                 ListTile(
-                  title: const Text("Location"),
+                  title: Text("prayer.settings.location".tr()),
                   subtitle: const Text("Cairo, Egypt"),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {},
@@ -25,28 +26,31 @@ class PrayerSettingsScreen extends StatelessWidget {
                 SwitchListTile(
                   value: true,
                   onChanged: (val) {},
-                  title: const Text("Automatic Location"),
-                  activeColor: Theme.of(context).primaryColor,
+                  title: Text("prayer.settings.auto_location".tr()),
+                  activeThumbColor: Theme.of(context).primaryColor,
                 ),
               ],
             ),
           ),
           const SizedBox(height: 24),
 
-          _buildSectionHeader(context, "Calculation Method"),
+          _buildSectionHeader(
+            context,
+            "prayer.settings.calculation_header".tr(),
+          ),
           AppCard(
             child: Column(
               children: [
                 ListTile(
-                  title: const Text("Calculation Authority"),
-                  subtitle: const Text("Egyptian General Authority of Survey"),
+                  title: Text("prayer.settings.calculation_authority".tr()),
+                  subtitle: Text("prayer.settings.egyptian_authority".tr()),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {},
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  title: const Text("Asr Calculation"),
-                  subtitle: const Text("Standard (Shafi, Maliki, Hanbali)"),
+                  title: Text("prayer.settings.asr_calculation".tr()),
+                  subtitle: Text("prayer.settings.asr_standard".tr()),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {},
                 ),
@@ -55,11 +59,14 @@ class PrayerSettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          _buildSectionHeader(context, "Adjustments"),
+          _buildSectionHeader(
+            context,
+            "prayer.settings.adjustments_header".tr(),
+          ),
           AppCard(
             child: ListTile(
-              title: const Text("Manual Adjustments"),
-              subtitle: const Text("Adjust prayer times by minutes"),
+              title: Text("prayer.settings.manual_adjustments".tr()),
+              subtitle: Text("prayer.settings.manual_adjustments_desc".tr()),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {},
             ),

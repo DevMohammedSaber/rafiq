@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/theme_cubit.dart';
+import '../profile/presentation/cubit/settings_cubit.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -74,7 +75,7 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 ListTile(
                   leading: const Icon(Icons.info_outline),
-                  title: const Text("About App"), // TODO: Add key
+                  title: Text("settings.about_app_title".tr()),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {},
                 ),
@@ -90,8 +91,11 @@ class SettingsScreen extends StatelessWidget {
           ),
 
           const SizedBox(height: 32),
-          const Center(
-            child: Text("Version 1.0.0", style: TextStyle(color: Colors.grey)),
+          Center(
+            child: Text(
+              "${"settings.version".tr()} 1.0.0",
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
         ],
       ),
@@ -122,6 +126,11 @@ class SettingsScreen extends StatelessWidget {
                 title: const Text("English"),
                 onTap: () {
                   context.setLocale(const Locale('en'));
+                  final cubit = context.read<SettingsCubit>();
+                  if (cubit.state is SettingsLoaded) {
+                    final current = (cubit.state as SettingsLoaded).settings;
+                    cubit.saveSettings(current.copyWith(languageCode: 'en'));
+                  }
                   Navigator.pop(context);
                 },
                 trailing: context.locale.languageCode == 'en'
@@ -132,6 +141,11 @@ class SettingsScreen extends StatelessWidget {
                 title: const Text("العربية"),
                 onTap: () {
                   context.setLocale(const Locale('ar'));
+                  final cubit = context.read<SettingsCubit>();
+                  if (cubit.state is SettingsLoaded) {
+                    final current = (cubit.state as SettingsLoaded).settings;
+                    cubit.saveSettings(current.copyWith(languageCode: 'ar'));
+                  }
                   Navigator.pop(context);
                 },
                 trailing: context.locale.languageCode == 'ar'

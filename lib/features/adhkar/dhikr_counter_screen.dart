@@ -88,7 +88,7 @@ class _DhikrCounterScreenState extends State<DhikrCounterScreen> {
                   ],
                 ),
                 progressColor: AppColors.primary,
-                backgroundColor: AppColors.primary.withOpacity(0.1),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                 circularStrokeCap: CircularStrokeCap.round,
                 animation: true,
                 animateFromLastPercent: true,

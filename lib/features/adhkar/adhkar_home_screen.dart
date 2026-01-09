@@ -34,7 +34,7 @@ class AdhkarHomeScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: (cat['color'] as Color).withOpacity(0.1),
+                    color: (cat['color'] as Color).withValues(alpha: 0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(

@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/profile/presentation/cubit/settings_cubit.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/location_permission_screen.dart';
+import '../../features/onboarding/presentation/pages/setup_page.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/quran/quran_home_screen.dart';
 import '../../features/adhkar/adhkar_home_screen.dart';
@@ -16,6 +18,8 @@ import '../../features/settings/settings_screen.dart';
 import '../../features/hadith/hadith_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
 import '../../core/components/bottom_nav_bar.dart';
+
+import '../../features/splash/splash_screen.dart';
 
 // Private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -31,64 +35,116 @@ final _shellNavigatorMoreKey = GlobalKey<NavigatorState>(debugLabel: 'more');
 
 class AppRouter {
   final AuthCubit authCubit;
+  final SettingsCubit settingsCubit;
 
-  AppRouter(this.authCubit);
+  AppRouter(this.authCubit, this.settingsCubit);
 
   late final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/',
-    refreshListenable: GoRouterRefreshStream(authCubit.stream),
+    initialLocation: '/splash',
+    refreshListenable: Listenable.merge([
+      GoRouterRefreshStream(authCubit.stream),
+      GoRouterRefreshStream(settingsCubit.stream),
+    ]),
     redirect: (context, state) {
       final authState = authCubit.state;
+      final settingsState = settingsCubit.state;
+
       final bool isAuthenticated =
           authState is AuthAuthenticated || authState is AuthGuest;
       final bool isUnauthenticated = authState is AuthUnauthenticated;
+      final bool isAuthInitial = authState is AuthInitial;
+      final bool isAuthLoading = authState is AuthLoading;
 
-      // If we are at root or login, check auth
       final bool onLoginPage = state.fullPath == '/login';
+      final bool onSetupPage = state.fullPath == '/setup';
+      final bool onOnboardingPage = state.fullPath == '/';
+      final bool onHomePage =
+          state.fullPath == '/home' ||
+          state.fullPath?.startsWith('/home') == true ||
+          state.fullPath?.startsWith('/quran') == true ||
+          state.fullPath?.startsWith('/adhkar') == true ||
+          state.fullPath?.startsWith('/prayers') == true ||
+          state.fullPath?.startsWith('/more') == true;
 
-      // If Unauthenticated and not on Login/Onboarding -> Redirect to Login
-      // NOTE: We allow Onboarding to be the "public" face if desired, but here prompt asked:
-      // "If AuthUnauthenticated -> redirect to /login"
-      // Assuming Onboarding is done? Or maybe Onboarding leads to Login?
-      // Let's assume: If Unauthenticated -> Login.
-      // EXCEPT: If we are just starting, we might show Onboarding first?
-      // Per prompt: "/login /home".
-      // Let's keep Onboarding accessible or redirect?
-      // Better flow: Unauth -> Login (which has Guest).
+      final bool onSplashPage = state.fullPath == '/splash';
 
+      // 1. Always show splash first (managed by initialLocation and Splash widget timer)
+      // The Splash screen itself will navigate to '/' after animation/timer.
+      // However, we need to protect other routes.
+
+      // If we are on splash, stay there until manual navigation or logic kicks in.
+      // Actually, to keep it simple with GoRouter:
+      // We can let the Splash screen handle the "minimum duration".
+      // When Splash calls context.go('/'), this redirect logic will run again.
+
+      if (onSplashPage) return null;
+
+      // If auth is still initializing, only redirect away from protected routes to splash?
+      // No, let's keep it simple.
+
+      if (isAuthInitial || isAuthLoading) {
+        // If on splash, stay.
+        // If on protected route, go to splash or login.
+        return null;
+      }
+
+      // 1. Unauthenticated -> Login (unless already on login or onboarding)
       if (isUnauthenticated) {
+        if (onLoginPage || onOnboardingPage) {
+          return null;
+        }
+        // If on protected routes, redirect to login
+        if (onHomePage || onSetupPage) {
+          return '/login';
+        }
         return '/login';
       }
 
-      // If Authenticated and on Login -> Redirect to Home
-      if (isAuthenticated && onLoginPage) {
-        return '/home';
+      // 2. Authenticated - check setup status
+      if (isAuthenticated) {
+        // If settings are loading, allow current page but prevent onboarding/login
+        if (settingsState is SettingsLoading) {
+          if (onOnboardingPage || onLoginPage) {
+            // Wait for settings
+            return null;
+          }
+          return null;
+        }
+
+        // Settings loaded - check setup status
+        if (settingsState is SettingsLoaded) {
+          // Setup not done -> go to setup (unless already there)
+          if (!settingsState.settings.setupDone) {
+            if (onSetupPage) {
+              return null;
+            }
+            return '/setup';
+          }
+
+          // Setup done -> go to home (if on login/setup/onboarding/splash)
+          if (settingsState.settings.setupDone) {
+            if (onLoginPage ||
+                onSetupPage ||
+                onOnboardingPage ||
+                onSplashPage) {
+              return '/home';
+            }
+          }
+        }
       }
 
-      // Default: null (no redirect)
+      // Default - no redirect needed
       return null;
     },
     routes: [
-      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(
-        path: '/',
-        builder: (context, state) => const OnboardingScreen(),
-        // Typically Onboarding checks if "seen" in shared_prefs.
-        // For now, let's assume root goes to Onboarding, then user clicks "Get Started" -> Login?
-        // Or if Authenticated, redirect will take them to Home instantly if logic above covers /.
-        // NOTE: The redirect above works on ALL routes. If Authenticated, it allows /.
-        // But we want Authenticated -> Home.
-        // Let's fix redirect logic for root:
-        redirect: (context, state) {
-          final authState = authCubit.state;
-          if (authState is AuthAuthenticated || authState is AuthGuest) {
-            return '/home';
-          }
-          return null; // stay on onboarding if unauth? Or go to Login?
-          // If we want to force Login: "/login"
-        },
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
       ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/setup', builder: (context, state) => const SetupPage()),
+      GoRoute(path: '/', builder: (context, state) => const OnboardingScreen()),
       GoRoute(
         path: '/location',
         builder: (context, state) => const LocationPermissionScreen(),
@@ -186,7 +242,6 @@ class AppRouter {
   );
 }
 
-// Stream wrapper for GoRouter refresh
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
@@ -204,7 +259,6 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-// Wrapper to interface with the existing MainBottomNavBar
 class MainWrapperGoRouter extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 

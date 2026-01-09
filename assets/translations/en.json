@@ -43,7 +43,9 @@
     "dark_mode": "Dark Mode",
     "notifications": "Notifications",
     "about": "About",
-    "privacy_policy": "Privacy Policy"
+    "privacy_policy": "Privacy Policy",
+    "about_app_title": "About App",
+    "version": "Version"
   },
   "auth": {
     "login_title": "Welcome to Muslim Companion",
@@ -53,5 +55,38 @@
     "sign_out": "Sign Out",
     "error_generic": "Authentication failed",
     "cancelled": "Sign in cancelled"
+  },
+  "setup": {
+    "step1_title": "Choose your location",
+    "use_gps": "Use GPS",
+    "select_manual": "Select Manually",
+    "country": "Country",
+    "city": "City",
+    "step2_title": "Prayer Reminders",
+    "enable_reminders": "Enable Reminders",
+    "before_adhan": "Before Adhan (min)",
+    "before_iqama": "Before Iqama (min)",
+    "iqama_after": "Iqama After (min)",
+    "step3_title": "Permissions",
+    "perm_desc": "We need permissions to provide accurate prayer times and notifications.",
+    "allow_notifs": "Allow Notifications",
+    "allow_location": "Allow Location",
+    "finish": "Finish Setup"
+  },
+  "prayer": {
+    "settings": {
+      "title": "Prayer Settings",
+      "location_header": "Location",
+      "location": "Location",
+      "auto_location": "Automatic Location",
+      "calculation_header": "Calculation Method",
+      "calculation_authority": "Calculation Authority",
+      "egyptian_authority": "Egyptian General Authority of Survey",
+      "asr_calculation": "Asr Calculation",
+      "asr_standard": "Standard (Shafi, Maliki, Hanbali)",
+      "adjustments_header": "Adjustments",
+      "manual_adjustments": "Manual Adjustments",
+      "manual_adjustments_desc": "Adjust prayer times by minutes"
+    }
   }
 }

@@ -136,7 +136,7 @@ class _SocialButton extends StatelessWidget {
         ),
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: isLoading ? color.withOpacity(0.7) : color,
+        backgroundColor: isLoading ? color.withValues(alpha: 0.7) : color,
         minimumSize: const Size(double.infinity, 56),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,

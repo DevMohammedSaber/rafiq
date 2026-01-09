@@ -43,7 +43,9 @@
         "dark_mode": "الوضع الداكن",
         "notifications": "الإشعارات",
         "about": "حول التطبيق",
-        "privacy_policy": "سياسة الخصوصية"
+        "privacy_policy": "سياسة الخصوصية",
+        "about_app_title": "عن التطبيق",
+        "version": "الإصدار"
     },
     "auth": {
         "login_title": "مرحباً بك في رفيق المسلم",
@@ -53,5 +55,38 @@
         "sign_out": "تسجيل الخروج",
         "error_generic": "فشل تسجيل الدخول",
         "cancelled": "تم إلغاء تسجيل الدخول"
+    },
+    "setup": {
+        "step1_title": "تحديد الموقع",
+        "use_gps": "استخدام GPS",
+        "select_manual": "تحديد يدوي",
+        "country": "الدولة",
+        "city": "المدينة",
+        "step2_title": "تنبيهات الصلاة",
+        "enable_reminders": "تفعيل التنبيهات",
+        "before_adhan": "قبل الآذان (دقيقة)",
+        "before_iqama": "قبل الإقامة (دقيقة)",
+        "iqama_after": "الإقامة بعد (دقيقة)",
+        "step3_title": "الأذونات",
+        "perm_desc": "نحتاج إلى بعض الأذونات لتقديم خدمة أفضل.",
+        "allow_notifs": "السماح بالإشعارات",
+        "allow_location": "السماح بالموقع",
+        "finish": "إنهاء الإعداد"
+    },
+    "prayer": {
+        "settings": {
+            "title": "إعدادات الصلاة",
+            "location_header": "الموقع",
+            "location": "الموقع",
+            "auto_location": "تحديد الموقع تلقائياً",
+            "calculation_header": "طريقة الحساب",
+            "calculation_authority": "جهة الحساب",
+            "egyptian_authority": "الهيئة المصرية العامة للمساحة",
+            "asr_calculation": "حساب العصر",
+            "asr_standard": "قياسي (شافعي، مالكي، حنبلي)",
+            "adjustments_header": "تعديلات",
+            "manual_adjustments": "تعديلات يدوية",
+            "manual_adjustments_desc": "تعديل أوقات الصلاة بالدقائق"
+        }
     }
 }

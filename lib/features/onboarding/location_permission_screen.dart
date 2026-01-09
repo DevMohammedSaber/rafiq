@@ -41,7 +41,6 @@ class LocationPermissionScreen extends StatelessWidget {
               PrimaryButton(
                 text: "location.use_current".tr(),
                 onPressed: () {
-                  // TODO: Implement location logic
                   // For now, simulate success
                   _navigateToHome(context);
                 },
@@ -49,7 +48,6 @@ class LocationPermissionScreen extends StatelessWidget {
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: () {
-                  // TODO: Implement manual selection
                   _navigateToHome(context);
                 },
                 style: OutlinedButton.styleFrom(

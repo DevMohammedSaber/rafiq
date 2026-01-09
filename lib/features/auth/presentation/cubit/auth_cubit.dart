@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/auth_repository.dart';
 
@@ -46,13 +46,29 @@ class AuthCubit extends Cubit<AuthState> {
       final prefs = await SharedPreferences.getInstance();
       final isGuest = prefs.getBool(_kGuestKey) ?? false;
 
-      _authRepository.authStateChanges.listen((user) {
+      // Check current user immediately (for hot restart scenarios)
+      final currentUser = _authRepository.currentUser;
+      if (currentUser != null) {
+        emit(AuthAuthenticated(currentUser));
+      } else if (isGuest) {
+        emit(AuthGuest());
+      } else {
+        emit(AuthUnauthenticated());
+      }
+
+      // Listen for future auth state changes
+      _authRepository.authStateChanges.listen((user) async {
         if (user != null) {
           emit(AuthAuthenticated(user));
-        } else if (isGuest) {
-          emit(AuthGuest());
         } else {
-          emit(AuthUnauthenticated());
+          // Re-check guest status when user signs out
+          final prefs = await SharedPreferences.getInstance();
+          final guest = prefs.getBool(_kGuestKey) ?? false;
+          if (guest) {
+            emit(AuthGuest());
+          } else {
+            emit(AuthUnauthenticated());
+          }
         }
       });
     } catch (e) {

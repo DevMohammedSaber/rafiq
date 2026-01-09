@@ -29,7 +29,7 @@ class MiniPrayerRow extends StatelessWidget {
               border: Border.all(
                 color: isActive
                     ? AppColors.primary
-                    : Theme.of(context).dividerColor.withOpacity(0.1),
+                    : Theme.of(context).dividerColor.withValues(alpha: 0.1),
               ),
             ),
             child: Column(
