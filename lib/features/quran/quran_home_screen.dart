@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/theme/app_colors.dart';
-import 'quran_reader_screen.dart';
 
 class QuranHomeScreen extends StatelessWidget {
   const QuranHomeScreen({super.key});
@@ -9,7 +10,7 @@ class QuranHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("The Holy Quran"),
+        title: Text("nav.quran".tr()), // "The Holy Quran"
         actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
       ),
       body: CustomScrollView(
@@ -23,7 +24,7 @@ class QuranHomeScreen extends StatelessWidget {
                   _buildLastReadCard(context),
                   const SizedBox(height: 24),
                   Text(
-                    "Surahs",
+                    "Surahs", // Could be localized if key added
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -76,13 +77,7 @@ class QuranHomeScreen extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          QuranReaderScreen(surahName: surah['englishName']!),
-                    ),
-                  );
+                  context.push('/quran/reader', extra: surah['englishName']);
                 },
               );
             }, childCount: _mockSurahs.length),

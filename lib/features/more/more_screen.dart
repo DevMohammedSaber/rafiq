@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
-import '../hadith/hadith_screen.dart';
-import '../quiz/quiz_screen.dart';
-import '../settings/settings_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
@@ -12,7 +11,7 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("More")),
+      appBar: AppBar(title: Text("nav.more".tr())),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -55,47 +54,38 @@ class MoreScreen extends StatelessWidget {
               children: [
                 _buildMenuCard(
                   context,
-                  "Hadith",
+                  "home.hadith".tr(),
                   FontAwesomeIcons.scroll,
                   Colors.indigo,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const HadithScreen()),
-                  ),
+                  () => context.push('/more/hadith'),
                 ),
                 _buildMenuCard(
                   context,
-                  "Daily Quiz",
+                  "home.quiz".tr(),
                   FontAwesomeIcons.brain,
                   Colors.orange,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const QuizScreen()),
-                  ),
+                  () => context.push('/more/quiz'),
                 ),
                 _buildMenuCard(
                   context,
-                  "Qibla",
+                  "onboarding.title3".tr(), // Qibla
                   FontAwesomeIcons.compass,
                   Colors.teal,
                   () {}, // Placeholder
                 ),
                 _buildMenuCard(
                   context,
-                  "Tasbih",
-                  FontAwesomeIcons.handsHoldingCircle, // Use a valid icon
+                  "home.tasbih".tr(),
+                  FontAwesomeIcons.handsHoldingCircle,
                   Colors.purple,
                   () {}, // Placeholder
                 ),
                 _buildMenuCard(
                   context,
-                  "Settings",
+                  "settings.title".tr(),
                   Icons.settings,
                   Colors.grey,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                  ),
+                  () => context.push('/more/settings'),
                 ),
               ],
             ),

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-// ignore: depend_on_referenced_packages
-
+import 'package:easy_localization/easy_localization.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
-import 'core/localization/localization_cubit.dart';
-import 'features/onboarding/onboarding_screen.dart';
+import 'core/router/app_router.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MuslimCompanionApp());
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      startLocale: const Locale('en'),
+      child: const MuslimCompanionApp(),
+    ),
+  );
 }
 
 class MuslimCompanionApp extends StatelessWidget {
@@ -18,36 +25,26 @@ class MuslimCompanionApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => ThemeCubit()),
-        BlocProvider(create: (context) => LocalizationCubit()),
-      ],
+    return BlocProvider(
+      create: (context) => ThemeCubit(),
       child: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
-          return BlocBuilder<LocalizationCubit, LocalizationState>(
-            builder: (context, localeState) {
-              return MaterialApp(
-                title: 'Muslim Companion',
-                debugShowCheckedModeBanner: false,
+          return MaterialApp.router(
+            title: 'Muslim Companion',
+            debugShowCheckedModeBanner: false,
 
-                // Theme
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: themeState.themeMode,
+            // Theme
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeState.themeMode,
 
-                // Localization
-                locale: localeState.locale,
-                localizationsDelegates: const [
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [Locale('ar'), Locale('en')],
+            // Localization
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
 
-                home: const OnboardingScreen(),
-              );
-            },
+            // Router
+            routerConfig: AppRouter.router,
           );
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../core/theme/app_colors.dart';
 
 class NextPrayerCard extends StatelessWidget {
@@ -80,7 +81,7 @@ class NextPrayerCard extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        "Next Prayer is Asr",
+                        "${"home.next_prayer".tr()} Is Asr", // Mock
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(color: Colors.white70),
                       ),

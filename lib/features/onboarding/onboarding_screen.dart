@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../core/theme/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/components/primary_button.dart';
-import '../../core/localization/localization_cubit.dart';
-import 'location_permission_screen.dart';
+import '../../core/theme/app_colors.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,56 +16,58 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _currentPage = 0;
 
-  final List<OnboardingItem> _items = [
-    OnboardingItem(
-      title: "Your Daily Muslim Companion",
-      description:
-          "Everything a Muslim needs in one place: Quran, Prayer Times, Adhkar, and more.",
-      iconData: Icons.mosque_rounded,
-    ),
-    OnboardingItem(
-      title: "Accurate Prayer Times",
-      description:
-          "Never miss a prayer with precise times adjusted to your location.",
-      iconData: Icons.access_time_filled_rounded,
-    ),
-    OnboardingItem(
-      title: "Read & Listen to Quran",
-      description:
-          "Beautiful mushaf reading experience with multiple reciters.",
-      iconData: Icons.menu_book_rounded,
-    ),
+  final List<Map<String, String>> _items = [
+    {
+      'image': 'assets/images/onboarding_1.svg', // Placeholder
+      'titleKey': 'onboarding.title1',
+      'descKey': 'onboarding.desc1',
+    },
+    {
+      'image': 'assets/images/onboarding_2.svg',
+      'titleKey': 'onboarding.title2',
+      'descKey': 'onboarding.desc2',
+    },
+    {
+      'image': 'assets/images/onboarding_3.svg',
+      'titleKey': 'onboarding.title3',
+      'descKey': 'onboarding.desc3',
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
-
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            // Language Toggle
+            // Header: Language Toggle
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () {
-                      final cubit = context.read<LocalizationCubit>();
-                      cubit.changeLocale(isRtl ? 'en' : 'ar');
+                      final newLocale = context.locale.languageCode == 'en'
+                          ? const Locale('ar')
+                          : const Locale('en');
+                      context.setLocale(newLocale);
                     },
                     child: Text(
-                      isRtl ? 'English' : 'العربية',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      context.locale.languageCode == 'ar'
+                          ? 'English'
+                          : 'العربية',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Page View
+            // PageView
             Expanded(
               child: PageView.builder(
                 controller: _controller,
@@ -74,36 +75,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onPageChanged: (index) => setState(() => _currentPage = index),
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.all(32),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        // Placeholder for image
                         Container(
-                          padding: const EdgeInsets.all(32),
+                          height: 250,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: AppColors.primary.withOpacity(0.1),
-                            shape: BoxShape.circle,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Icon(
-                            _items[index].iconData,
+                          child: const Icon(
+                            Icons.image,
                             size: 80,
                             color: AppColors.primary,
                           ),
                         ),
-                        const SizedBox(height: 48),
+                        const SizedBox(height: 40),
                         Text(
-                          _items[index].title,
-                          style: Theme.of(context).textTheme.displaySmall,
+                          _items[index]['titleKey']!.tr(),
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).primaryColor,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _items[index].description,
+                          _items[index]['descKey']!.tr(),
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
-                                color: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium?.color,
+                                color: Theme.of(context).disabledColor,
                               ),
                           textAlign: TextAlign.center,
                         ),
@@ -114,27 +119,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // Indicator & Button
+            // Footer: Indicator & Button
             Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(32),
               child: Column(
                 children: [
                   SmoothPageIndicator(
                     controller: _controller,
                     count: _items.length,
-                    effect: ExpandingDotsEffect(
+                    effect: const ExpandingDotsEffect(
                       activeDotColor: AppColors.primary,
-                      dotColor: AppColors.primary.withOpacity(0.2),
+                      dotColor: Colors.grey,
                       dotHeight: 8,
                       dotWidth: 8,
-                      spacing: 8,
                     ),
                   ),
                   const SizedBox(height: 32),
                   PrimaryButton(
                     text: _currentPage == _items.length - 1
-                        ? "Get Started"
-                        : "Continue",
+                        ? "onboarding.get_started".tr()
+                        : "onboarding.continue".tr(),
                     onPressed: () {
                       if (_currentPage < _items.length - 1) {
                         _controller.nextPage(
@@ -142,15 +146,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           curve: Curves.easeInOut,
                         );
                       } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const LocationPermissionScreen(),
-                          ),
-                        );
+                        context.go('/location');
                       }
                     },
                   ),
+                  if (_currentPage < _items.length - 1)
+                    TextButton(
+                      onPressed: () => context.go('/location'),
+                      child: Text(
+                        "onboarding.skip".tr(),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -159,16 +166,4 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-}
-
-class OnboardingItem {
-  final String title;
-  final String description;
-  final IconData iconData;
-
-  OnboardingItem({
-    required this.title,
-    required this.description,
-    required this.iconData,
-  });
 }

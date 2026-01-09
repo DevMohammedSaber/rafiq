@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart'; // Import easy_localization
 import '../../../core/theme/app_colors.dart';
 import '../../../core/components/app_card.dart';
 
@@ -10,21 +12,33 @@ class QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final actions = [
       {
-        'label': 'Quran',
+        'label': 'nav.quran'.tr(), // "Quran"
         'icon': FontAwesomeIcons.bookOpen,
         'color': AppColors.primary,
+        'route': '/quran',
+        'isTab': true,
       },
       {
-        'label': 'Adhkar',
+        'label': 'nav.adhkar'.tr(), // "Adhkar"
         'icon': FontAwesomeIcons.handsPraying,
         'color': AppColors.accent,
+        'route': '/adhkar',
+        'isTab': true,
       },
       {
-        'label': 'Hadith',
+        'label': 'home.hadith'.tr(), // "Hadith"
         'icon': FontAwesomeIcons.scroll,
         'color': Colors.indigo,
+        'route': '/more/hadith',
+        'isTab': false,
       },
-      {'label': 'Quiz', 'icon': FontAwesomeIcons.brain, 'color': Colors.orange},
+      {
+        'label': 'home.quiz'.tr(), // "Quiz"
+        'icon': FontAwesomeIcons.brain,
+        'color': Colors.orange,
+        'route': '/more/quiz',
+        'isTab': false,
+      },
     ];
 
     return GridView.builder(
@@ -42,7 +56,13 @@ class QuickActions extends StatelessWidget {
         return AppCard(
           padding: EdgeInsets.zero,
           onTap: () {
-            // TODO: Navigate to specific feature
+            final route = action['route'] as String;
+            final isTab = action['isTab'] as bool;
+            if (isTab) {
+              context.go(route);
+            } else {
+              context.push(route);
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

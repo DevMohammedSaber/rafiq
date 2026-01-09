@@ -1,0 +1,48 @@
+{
+  "app_title": "Muslim Companion",
+  "onboarding": {
+    "title1": "Prayer Times",
+    "desc1": "Get accurate prayer times based on your location.",
+    "title2": "Quran & Audio",
+    "desc2": "Read and listen to the Holy Quran anywhere.",
+    "title3": "Qibla Direction",
+    "desc3": "Find the Qibla direction easily.",
+    "continue": "Continue",
+    "get_started": "Get Started",
+    "skip": "Skip"
+  },
+  "location": {
+    "title": "Location Access",
+    "desc": "We need your location to calculate accurate prayer times and Qibla direction.",
+    "use_current": "Use Current Location",
+    "select_manually": "Select Manually"
+  },
+  "nav": {
+    "home": "Home",
+    "quran": "Quran",
+    "adhkar": "Adhkar",
+    "prayers": "Prayers",
+    "more": "More"
+  },
+  "home": {
+    "next_prayer": "Next Prayer",
+    "next_in": "Next in",
+    "now": "Now",
+    "quick_actions": "Quick Actions",
+    "hadith": "Hadith",
+    "quiz": "Quiz",
+    "tasbih": "Tasbih",
+    "greeting": "Assalamu Alaikum,",
+    "todays_prayers": "Today's Prayers",
+    "continue_reading": "Continue Reading"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "language": "Language",
+    "dark_mode": "Dark Mode",
+    "notifications": "Notifications",
+    "about": "About",
+    "privacy_policy": "Privacy Policy"
+  }
+}

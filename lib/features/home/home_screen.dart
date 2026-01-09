@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'widgets/next_prayer_card.dart';
 import 'widgets/mini_prayer_row.dart';
 import 'widgets/quick_actions.dart';
@@ -24,7 +25,7 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Assalamu Alaikum,",
+                        "home.greeting".tr(),
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Text(
@@ -61,7 +62,7 @@ class HomeScreen extends StatelessWidget {
 
               // Other Prayers
               Text(
-                "Today's Prayers",
+                "home.todays_prayers".tr(),
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -72,7 +73,7 @@ class HomeScreen extends StatelessWidget {
 
               // Quick Actions
               Text(
-                "Quick Actions",
+                "home.quick_actions".tr(),
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -96,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  title: const Text("Continue Reading"),
+                  title: Text("home.continue_reading".tr()),
                   subtitle: const Text("Surah Al-Kahf, Ayah 10"),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 ),

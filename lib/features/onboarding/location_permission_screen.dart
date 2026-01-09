@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/primary_button.dart';
 import '../../core/theme/app_colors.dart';
-import '../home/home_screen.dart';
 
 class LocationPermissionScreen extends StatelessWidget {
   const LocationPermissionScreen({super.key});
@@ -11,66 +12,61 @@ class LocationPermissionScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: AppColors.accent.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.location_on_rounded,
-                  size: 60,
-                  color: AppColors.accent,
-                ),
+              const Icon(
+                Icons.location_on,
+                size: 100,
+                color: AppColors.primary,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
               Text(
-                "Enable Location",
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
+                "location.title".tr(),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
-                "To provide accurate prayer times and Qibla direction, we need access to your location.",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).textTheme.bodyMedium?.color,
-                ),
+                "location.desc".tr(),
                 textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Theme.of(context).disabledColor,
+                ),
               ),
-              const Spacer(),
+              const SizedBox(height: 48),
               PrimaryButton(
-                text: "Use Current Location",
+                text: "location.use_current".tr(),
                 onPressed: () {
-                  // Simulate permission grant and navigate home
+                  // TODO: Implement location logic
+                  // For now, simulate success
                   _navigateToHome(context);
                 },
               ),
               const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: () {
-                  // Manual selection logic placeholder
+                  // TODO: Implement manual selection
                   _navigateToHome(context);
                 },
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: Theme.of(context).primaryColor,
-                  side: BorderSide(color: Theme.of(context).primaryColor),
+                  minimumSize: const Size(double.infinity, 56),
+                  side: const BorderSide(color: AppColors.primary),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 24,
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
                 ),
-                child: const Text("Select Manually (Default: Cairo)"),
+                child: Text(
+                  "location.select_manually".tr(),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -79,9 +75,6 @@ class LocationPermissionScreen extends StatelessWidget {
   }
 
   void _navigateToHome(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
-    );
+    context.go('/home');
   }
 }

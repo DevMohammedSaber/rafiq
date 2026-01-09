@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
-import 'dhikr_counter_screen.dart';
 
 class AdhkarHomeScreen extends StatelessWidget {
   const AdhkarHomeScreen({super.key});
@@ -10,7 +11,7 @@ class AdhkarHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Adhkar & Duas")),
+      appBar: AppBar(title: Text("nav.adhkar".tr())),
       body: GridView.builder(
         padding: const EdgeInsets.all(20),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -25,13 +26,7 @@ class AdhkarHomeScreen extends StatelessWidget {
           return AppCard(
             padding: const EdgeInsets.all(16),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) =>
-                      DhikrCounterScreen(categoryTitle: cat['title'] as String),
-                ),
-              );
+              context.push('/adhkar/counter', extra: cat['title']);
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
