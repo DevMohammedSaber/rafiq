@@ -44,5 +44,14 @@
         "notifications": "الإشعارات",
         "about": "حول التطبيق",
         "privacy_policy": "سياسة الخصوصية"
+    },
+    "auth": {
+        "login_title": "مرحباً بك في رفيق المسلم",
+        "continue_google": "المتابعة باستخدام Google",
+        "continue_apple": "المتابعة باستخدام Apple",
+        "continue_guest": "المتابعة كزائر",
+        "sign_out": "تسجيل الخروج",
+        "error_generic": "فشل تسجيل الدخول",
+        "cancelled": "تم إلغاء تسجيل الدخول"
     }
 }

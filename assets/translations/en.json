@@ -44,5 +44,14 @@
     "notifications": "Notifications",
     "about": "About",
     "privacy_policy": "Privacy Policy"
+  },
+  "auth": {
+    "login_title": "Welcome to Muslim Companion",
+    "continue_google": "Continue with Google",
+    "continue_apple": "Continue with Apple",
+    "continue_guest": "Continue as Guest",
+    "sign_out": "Sign Out",
+    "error_generic": "Authentication failed",
+    "cancelled": "Sign in cancelled"
   }
 }

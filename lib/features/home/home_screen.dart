@@ -3,6 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'widgets/next_prayer_card.dart';
 import 'widgets/mini_prayer_row.dart';
 import 'widgets/quick_actions.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../auth/presentation/cubit/auth_cubit.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -19,40 +21,78 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              BlocBuilder<AuthCubit, AuthState>(
+                builder: (context, state) {
+                  String displayName = "Guest";
+                  String? photoUrl;
+
+                  if (state is AuthAuthenticated) {
+                    displayName = state.user.displayName ?? "User";
+                    photoUrl = state.user.photoURL;
+                  }
+
+                  return Row(
                     children: [
-                      Text(
-                        "home.greeting".tr(),
-                        style: Theme.of(context).textTheme.bodyLarge,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "home.greeting".tr(),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          Text(
+                            displayName,
+                            style: Theme.of(context).textTheme.headlineMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "Mohamed Saber",
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).primaryColor,
+                      const Spacer(),
+                      PopupMenuButton<String>(
+                        onSelected: (value) {
+                          if (value == 'logout') {
+                            context.read<AuthCubit>().signOut();
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.primary,
+                              width: 2,
                             ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 24,
+                            backgroundImage: photoUrl != null
+                                ? NetworkImage(photoUrl)
+                                : const NetworkImage(
+                                    "https://ui-avatars.com/api/?name=Guest&background=006D5B&color=fff",
+                                  ),
+                          ),
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'logout',
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.logout, color: Colors.red),
+                                  const SizedBox(width: 8),
+                                  Text("auth.sign_out".tr()),
+                                ],
+                              ),
+                            ),
+                          ];
+                        },
                       ),
                     ],
-                  ),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.primary, width: 2),
-                    ),
-                    child: const CircleAvatar(
-                      radius: 24,
-                      backgroundImage: NetworkImage(
-                        "https://ui-avatars.com/api/?name=Mohamed+Saber&background=006D5B&color=fff",
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                },
               ),
               const SizedBox(height: 24),
 

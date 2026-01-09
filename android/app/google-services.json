@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "33966536976",
+    "project_id": "rafiq-a37d9",
+    "storage_bucket": "rafiq-a37d9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33966536976:android:90487d1d38f7ce5e52cd95",
+        "android_client_info": {
+          "package_name": "com.example.rafiq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33966536976-ubg5b6keovb9nd1or1ki4ptcqj6kcnrr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2vu-smOCWXYFr05oMG2QgkSvEFg81z_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33966536976-ubg5b6keovb9nd1or1ki4ptcqj6kcnrr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "33966536976-ppj511h76k9fureqqanbdu2kjsqe1hjd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rafiq"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
