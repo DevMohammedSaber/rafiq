@@ -88,5 +88,38 @@
             "manual_adjustments": "تعديلات يدوية",
             "manual_adjustments_desc": "تعديل أوقات الصلاة بالدقائق"
         }
+    },
+    "quran": {
+        "title": "القرآن",
+        "search": "البحث في السور...",
+        "continue_reading": "متابعة القراءة",
+        "ayahs": "آيات",
+        "font_size": "حجم الخط",
+        "font_family": "نوع الخط",
+        "reader_settings": "إعدادات القارئ",
+        "bookmark": "إضافة علامة",
+        "favorite": "مفضلة",
+        "share": "مشاركة",
+        "no_results": "لا توجد نتائج",
+        "Makkiyah": "مكية",
+        "Madaniyah": "مدنية",
+        "view_mode": "طريقة العرض",
+        "view_mode_card": "عرض البطاقات",
+        "view_mode_mushaf": "عرض المصحف",
+        "view_mode_page": "وضع الصفحات",
+        "page_number": "صفحة",
+        "amiri": "أميري",
+        "cairo": "كايرو",
+        "tajawal": "تجاول",
+        "a": "أ"
+    },
+    "common": {
+        "retry": "إعادة المحاولة",
+        "continue": "متابعة",
+        "cancel": "إلغاء",
+        "save": "حفظ"
+    },
+    "errors": {
+        "generic": "حدث خطأ ما"
     }
 }

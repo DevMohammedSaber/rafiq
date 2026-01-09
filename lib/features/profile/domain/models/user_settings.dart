@@ -5,6 +5,7 @@ class UserSettings extends Equatable {
   final String themeMode;
   final UserLocation location;
   final PrayerSettings prayerSettings;
+  final QuranSettings quranSettings;
   final bool setupDone;
 
   const UserSettings({
@@ -12,6 +13,7 @@ class UserSettings extends Equatable {
     this.themeMode = 'system',
     this.location = const UserLocation(),
     this.prayerSettings = const PrayerSettings(),
+    this.quranSettings = const QuranSettings(),
     this.setupDone = false,
   });
 
@@ -25,6 +27,9 @@ class UserSettings extends Equatable {
       prayerSettings: PrayerSettings.fromJson(
         json['prayerSettings'] as Map<String, dynamic>? ?? {},
       ),
+      quranSettings: QuranSettings.fromJson(
+        json['quranSettings'] as Map<String, dynamic>? ?? {},
+      ),
       setupDone: json['setupDone'] as bool? ?? false,
     );
   }
@@ -35,6 +40,7 @@ class UserSettings extends Equatable {
       'themeMode': themeMode,
       'location': location.toJson(),
       'prayerSettings': prayerSettings.toJson(),
+      'quranSettings': quranSettings.toJson(),
       'setupDone': setupDone,
     };
   }
@@ -44,6 +50,7 @@ class UserSettings extends Equatable {
     String? themeMode,
     UserLocation? location,
     PrayerSettings? prayerSettings,
+    QuranSettings? quranSettings,
     bool? setupDone,
   }) {
     return UserSettings(
@@ -51,6 +58,7 @@ class UserSettings extends Equatable {
       themeMode: themeMode ?? this.themeMode,
       location: location ?? this.location,
       prayerSettings: prayerSettings ?? this.prayerSettings,
+      quranSettings: quranSettings ?? this.quranSettings,
       setupDone: setupDone ?? this.setupDone,
     );
   }
@@ -61,6 +69,7 @@ class UserSettings extends Equatable {
     themeMode,
     location,
     prayerSettings,
+    quranSettings,
     setupDone,
   ];
 }
@@ -211,5 +220,66 @@ class PrayerSettings extends Equatable {
     enabledPrayers,
     iqamaAfterMinutes,
     beforeIqamaMinutes,
+  ];
+}
+
+class QuranSettings extends Equatable {
+  final double fontSize;
+  final String fontFamily;
+  final int? lastReadSurahId;
+  final int? lastReadAyahNumber;
+  final String viewMode; // 'card' or 'mushaf'
+
+  const QuranSettings({
+    this.fontSize = 24.0,
+    this.fontFamily = 'Amiri',
+    this.lastReadSurahId,
+    this.lastReadAyahNumber,
+    this.viewMode = 'card',
+  });
+
+  factory QuranSettings.fromJson(Map<String, dynamic> json) {
+    return QuranSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 24.0,
+      fontFamily: json['fontFamily'] as String? ?? 'Amiri',
+      lastReadSurahId: json['lastReadSurahId'] as int?,
+      lastReadAyahNumber: json['lastReadAyahNumber'] as int?,
+      viewMode: json['viewMode'] as String? ?? 'card',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'fontSize': fontSize,
+      'fontFamily': fontFamily,
+      'lastReadSurahId': lastReadSurahId,
+      'lastReadAyahNumber': lastReadAyahNumber,
+      'viewMode': viewMode,
+    };
+  }
+
+  QuranSettings copyWith({
+    double? fontSize,
+    String? fontFamily,
+    int? lastReadSurahId,
+    int? lastReadAyahNumber,
+    String? viewMode,
+  }) {
+    return QuranSettings(
+      fontSize: fontSize ?? this.fontSize,
+      fontFamily: fontFamily ?? this.fontFamily,
+      lastReadSurahId: lastReadSurahId ?? this.lastReadSurahId,
+      lastReadAyahNumber: lastReadAyahNumber ?? this.lastReadAyahNumber,
+      viewMode: viewMode ?? this.viewMode,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    fontSize,
+    fontFamily,
+    lastReadSurahId,
+    lastReadAyahNumber,
+    viewMode,
   ];
 }

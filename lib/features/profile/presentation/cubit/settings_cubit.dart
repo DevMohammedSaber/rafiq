@@ -55,7 +55,15 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> saveSettings(
     UserSettings newSettings, {
     bool finishSetup = false,
+    bool skipNotificationReschedule = false,
   }) async {
+    // Capture previous state before emitting Loading
+    final previousState = state;
+    UserSettings? previousSettings;
+    if (previousState is SettingsLoaded) {
+      previousSettings = previousState.settings;
+    }
+
     emit(SettingsLoading());
     try {
       var settingsToSave = newSettings;
@@ -65,11 +73,24 @@ class SettingsCubit extends Cubit<SettingsState> {
 
       await _repository.saveSettings(settingsToSave);
 
-      // Reschedule if saved
-      await _notificationService.scheduleNotificationsForDays(
-        settingsToSave,
-        3,
-      );
+      // Reschedule ONLY if relevant settings changed and not skipped
+      if (!skipNotificationReschedule) {
+        bool shouldReschedule = true;
+        if (previousSettings != null) {
+          // Only reschedule if prayer settings or location changed
+          if (previousSettings.prayerSettings == settingsToSave.prayerSettings &&
+              previousSettings.location == settingsToSave.location) {
+            shouldReschedule = false;
+          }
+        }
+
+        if (shouldReschedule) {
+          await _notificationService.scheduleNotificationsForDays(
+            settingsToSave,
+            3,
+          );
+        }
+      }
 
       emit(SettingsLoaded(settingsToSave));
     } catch (e) {

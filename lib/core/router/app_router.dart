@@ -8,18 +8,23 @@ import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/onboarding/location_permission_screen.dart';
 import '../../features/onboarding/presentation/pages/setup_page.dart';
 import '../../features/home/home_screen.dart';
-import '../../features/quran/quran_home_screen.dart';
+import '../../features/quran/presentation/pages/quran_home_page.dart';
+import '../../features/quran/presentation/pages/quran_reader_page.dart';
+import '../../features/quran/data/quran_repository.dart';
+import '../../features/quran/data/quran_user_data_repository.dart';
+import '../../features/quran/data/quran_pagination_repository.dart';
+import '../../features/quran/presentation/cubit/quran_home_cubit.dart';
+import '../../features/quran/presentation/cubit/quran_reader_cubit.dart';
 import '../../features/adhkar/adhkar_home_screen.dart';
 import '../../features/prayer/prayer_times_screen.dart';
 import '../../features/more/more_screen.dart';
-import '../../features/quran/quran_reader_screen.dart';
 import '../../features/adhkar/dhikr_counter_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/hadith/hadith_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
 import '../../core/components/bottom_nav_bar.dart';
-
 import '../../features/splash/splash_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -168,14 +173,37 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: '/quran',
-                builder: (context, state) => const QuranHomeScreen(),
+                builder: (context, state) => BlocProvider(
+                  create: (context) => QuranHomeCubit(QuranRepository()),
+                  child: const QuranHomePage(),
+                ),
                 routes: [
                   GoRoute(
-                    path: 'reader',
+                    path: ':surahId',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) {
-                      final surahName = state.extra as String? ?? 'Surah';
-                      return QuranReaderScreen(surahName: surahName);
+                      final surahId =
+                          int.tryParse(
+                            state.pathParameters['surahId'] ?? '1',
+                          ) ??
+                          1;
+                      final ayahStr = state.uri.queryParameters['ayah'];
+                      final scrollToAyah = ayahStr != null
+                          ? int.tryParse(ayahStr)
+                          : null;
+
+                      return BlocProvider(
+                        create: (context) => QuranReaderCubit(
+                          QuranRepository(),
+                          QuranUserDataRepository(),
+                          QuranPaginationRepository(),
+                          context.read<SettingsCubit>(),
+                        ),
+                        child: QuranReaderPage(
+                          surahId: surahId,
+                          scrollToAyah: scrollToAyah,
+                        ),
+                      );
                     },
                   ),
                 ],

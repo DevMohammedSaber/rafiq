@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'widgets/next_prayer_card.dart';
 import 'widgets/mini_prayer_row.dart';
 import 'widgets/quick_actions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
+import '../profile/presentation/cubit/settings_cubit.dart';
+import '../quran/data/quran_repository.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -122,25 +125,63 @@ class HomeScreen extends StatelessWidget {
               const QuickActions(),
               const SizedBox(height: 24),
 
-              // Continue Reading
-              AppCard(
-                child: ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.bookmark,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  title: Text("home.continue_reading".tr()),
-                  subtitle: const Text("Surah Al-Kahf, Ayah 10"),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
+              // Continue Reading - Dynamic
+              BlocBuilder<SettingsCubit, SettingsState>(
+                builder: (context, settingsState) {
+                  if (settingsState is! SettingsLoaded) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final quranSettings = settingsState.settings.quranSettings;
+                  final lastSurahId = quranSettings.lastReadSurahId;
+                  final lastAyahNumber = quranSettings.lastReadAyahNumber;
+
+                  if (lastSurahId == null) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return FutureBuilder(
+                    future: QuranRepository().getSurahById(lastSurahId),
+                    builder: (context, snapshot) {
+                      final surahName =
+                          snapshot.data?.nameAr ?? 'Surah $lastSurahId';
+                      final subtitle = lastAyahNumber != null
+                          ? '$surahName - ${'quran.ayahs'.tr()} $lastAyahNumber'
+                          : surahName;
+
+                      return AppCard(
+                        child: ListTile(
+                          onTap: () {
+                            final path = lastAyahNumber != null
+                                ? '/quran/$lastSurahId?ayah=$lastAyahNumber'
+                                : '/quran/$lastSurahId';
+                            context.push(path);
+                          },
+                          contentPadding: EdgeInsets.zero,
+                          leading: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.bookmark,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          title: Text("home.continue_reading".tr()),
+                          subtitle: Text(subtitle),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
             ],
           ),

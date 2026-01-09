@@ -32,6 +32,7 @@ dependencies:
   timezone: ^0.10.0
   adhan: ^2.0.0
   shared_preferences: ^2.5.1
+  share_plus: ^10.1.4
 
   # UI & Typography
   google_fonts: ^6.1.0
@@ -60,10 +61,25 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_gen: ^5.5.0
+  build_runner: ^2.4.13
+
+  # `dart run build_runner build --delete-conflicting-outputs`
+  # `flutter pub run build_runner build --delete-conflicting-outputs`
+  # `dart run build_runner build --delete-conflicting-outputs --build-filter="lib/core/di/injection.config.dart"`
 
 flutter:
   uses-material-design: true
 
+  generate: true
+
   assets:
     - assets/translations/
+    - assets/source/
+    - assets/quran/
+    - assets/source/surah/
+    - assets/source/tajweed/
+    - assets/source/translation/
+    - assets/source/translation/ar/
+    - assets/source/translation/en/
 

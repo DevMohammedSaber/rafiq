@@ -88,5 +88,38 @@
       "manual_adjustments": "Manual Adjustments",
       "manual_adjustments_desc": "Adjust prayer times by minutes"
     }
+  },
+  "quran": {
+    "title": "Quran",
+    "search": "Search surah...",
+    "continue_reading": "Continue Reading",
+    "ayahs": "verses",
+    "font_size": "Font Size",
+    "font_family": "Font Family",
+    "reader_settings": "Reader Settings",
+    "bookmark": "Bookmark",
+    "favorite": "Favorite",
+    "share": "Share",
+    "no_results": "No surahs found",
+    "Makkiyah": "Makkiyah",
+    "Madaniyah": "Madaniyah",
+    "view_mode": "View Mode",
+    "view_mode_card": "Card View",
+    "view_mode_mushaf": "Mushaf View",
+    "view_mode_page": "Page View",
+    "page_number": "Page",
+    "amiri": "Amiri",
+    "cairo": "Cairo",
+    "tajawal": "Tajawal",
+    "a": "A"
+  },
+  "common": {
+    "retry": "Retry",
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "errors": {
+    "generic": "An error occurred"
   }
 }
