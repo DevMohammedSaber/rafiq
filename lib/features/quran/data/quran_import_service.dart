@@ -1,3 +1,13 @@
+import 'dart:async';
+
+import 'package:csv/csv.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as ArabicNormalizer;
+import 'package:rafiq/core/db/quran_database.dart';
+import 'package:rafiq/features/quran/data/surah_names.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'quran_page_map.dart';
 
 enum QuranImportPhase { idle, importing, completed, error }
@@ -99,8 +109,9 @@ class QuranImportService {
           if (row.length <=
               (textIdx > surahIdx
                   ? (textIdx > ayahIdx ? textIdx : ayahIdx)
-                  : (surahIdx > ayahIdx ? surahIdx : ayahIdx)))
+                  : (surahIdx > ayahIdx ? surahIdx : ayahIdx))) {
             continue;
+          }
 
           final surah = int.tryParse(row[surahIdx].toString());
           final ayah = int.tryParse(row[ayahIdx].toString());

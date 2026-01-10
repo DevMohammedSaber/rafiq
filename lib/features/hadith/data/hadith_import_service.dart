@@ -4,7 +4,6 @@ import 'package:csv/csv.dart';
 import '../../../core/db/hadith_database.dart';
 import '../../../core/utils/hadith_csv_mapper.dart';
 import '../../../core/utils/arabic_normalizer.dart';
-import '../domain/models/hadith_models.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,7 +49,6 @@ class HadithImportService {
   Future<bool> needsImport() async {
     final prefs = await SharedPreferences.getInstance();
     final version = prefs.getInt(_dbVersionKey) ?? 0;
-    final script = prefs.getString(_scriptKey) ?? 'plain';
 
     // Check if DB is empty
     final db = await HadithDatabase.instance.database;
