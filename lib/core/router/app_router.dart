@@ -16,6 +16,9 @@ import '../../features/quran/data/quran_pagination_repository.dart';
 import '../../features/quran/data/mushaf_data_repository.dart';
 import '../../features/quran/presentation/cubit/quran_home_cubit.dart';
 import '../../features/quran/presentation/cubit/quran_reader_cubit.dart';
+import '../../features/quran/presentation/cubit/quran_bootstrap_cubit.dart';
+import '../../features/quran/presentation/pages/quran_import_page.dart';
+import '../../features/quran/data/quran_import_service.dart';
 import '../../features/azkar/presentation/pages/azkar_categories_page.dart';
 import '../../features/azkar/presentation/pages/zikr_list_page.dart';
 import '../../features/azkar/presentation/pages/zikr_reader_page.dart';
@@ -245,9 +248,25 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: '/quran',
-                builder: (context, state) => BlocProvider(
-                  create: (context) => QuranHomeCubit(QuranRepository()),
-                  child: const QuranHomePage(),
+                builder: (context, state) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) =>
+                          QuranBootstrapCubit(QuranImportService())
+                            ..checkStatus(),
+                    ),
+                    BlocProvider(
+                      create: (context) => QuranHomeCubit(QuranRepository()),
+                    ),
+                  ],
+                  child: BlocBuilder<QuranBootstrapCubit, QuranBootstrapState>(
+                    builder: (context, bootstrapState) {
+                      if (bootstrapState is QuranBootstrapReady) {
+                        return const QuranHomePage();
+                      }
+                      return const QuranImportPage();
+                    },
+                  ),
                 ),
                 routes: [
                   GoRoute(
@@ -271,7 +290,6 @@ class AppRouter {
                           QuranPaginationRepository(),
                           MushafDataRepository(
                             quranRepository: QuranRepository(),
-                            paginationRepository: QuranPaginationRepository(),
                           ),
                           context.read<SettingsCubit>(),
                         ),

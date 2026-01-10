@@ -121,7 +121,9 @@
     "invalid_ayah_format": "Invalid format. Please use surah:ayah (e.g., 1:1).",
     "not_found": "Not found",
     "open_mushaf": "Open Mushaf",
-    "surah": "Surah"
+    "surah": "Surah",
+    "preparing_data": "Preparing Quran Data...",
+    "error_preparing_data": "Error preparing data"
   },
   "azkar": {
     "title": "Azkar",

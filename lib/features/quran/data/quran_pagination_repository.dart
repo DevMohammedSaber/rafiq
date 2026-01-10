@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class QuranPaginationRepository {
   Map<String, dynamic>? _pageMap;
-  static const String _assetPath = 'assets/quran/page_map.json';
+  static const String _assetPath = 'assets/source/quran/page_map.json';
 
   Future<void> _ensureLoaded() async {
     if (_pageMap != null) return;

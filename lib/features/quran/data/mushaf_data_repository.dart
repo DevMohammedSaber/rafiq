@@ -3,68 +3,55 @@ import '../domain/models/mushaf_page.dart';
 import '../domain/models/surah_meta.dart';
 import '../domain/models/surah.dart';
 import 'quran_repository.dart';
-import 'quran_pagination_repository.dart';
 
 class MushafDataRepository {
-  static const int _maxCacheSize = 10;
+  static const int _maxCacheSize = 20;
   static const int _totalPages = 604;
 
   final QuranRepository _quranRepository;
-  final QuranPaginationRepository _paginationRepository;
-  
+
   List<Surah>? _cachedSurahs;
   final LinkedHashMap<int, MushafPage> _pageCache = LinkedHashMap();
-  final Map<int, Map<int, int>> _ayahPageMap = {};
 
-  MushafDataRepository({
-    QuranRepository? quranRepository,
-    QuranPaginationRepository? paginationRepository,
-  }) : _quranRepository = quranRepository ?? QuranRepository(),
-       _paginationRepository = paginationRepository ?? QuranPaginationRepository();
+  MushafDataRepository({QuranRepository? quranRepository})
+    : _quranRepository = quranRepository ?? QuranRepository();
 
   Future<void> loadIndex() async {
-    if (_cachedSurahs != null && _ayahPageMap.isNotEmpty) return;
-    
+    if (_cachedSurahs != null) return;
     _cachedSurahs = await _quranRepository.loadSurahs();
-    
-    for (final surah in _cachedSurahs!) {
-      final ayahs = await _quranRepository.loadAyahs(surah.id);
-      _ayahPageMap[surah.id] = {};
-      for (final ayah in ayahs) {
-        final page = await _paginationRepository.getPageForAyah(
-          surah.id,
-          ayah.ayahNumber,
-        );
-        _ayahPageMap[surah.id]![ayah.ayahNumber] = page;
-      }
-    }
   }
 
   int get totalPages => _totalPages;
 
   Future<List<SurahMeta>> getSurahs() async {
     await loadIndex();
-    return _cachedSurahs!.map((surah) {
-      final firstPage = _ayahPageMap[surah.id]?[1];
-      return SurahMeta(
-        id: surah.id,
-        nameAr: surah.nameAr,
-        nameEn: surah.nameEn,
-        firstPage: firstPage,
+    final List<SurahMeta> metas = [];
+
+    // Efficiently get first page for each surah
+    for (final surah in _cachedSurahs!) {
+      final firstAyah = await _quranRepository.getAyah(surah.id, 1);
+      metas.add(
+        SurahMeta(
+          id: surah.id,
+          nameAr: surah.nameAr,
+          nameEn: surah.nameEn,
+          firstPage: firstAyah?.page,
+        ),
       );
-    }).toList();
+    }
+    return metas;
   }
 
   Future<SurahMeta?> getSurahMeta(int id) async {
     await loadIndex();
     try {
       final surah = _cachedSurahs!.firstWhere((s) => s.id == id);
-      final firstPage = _ayahPageMap[id]?[1];
+      final firstAyah = await _quranRepository.getAyah(id, 1);
       return SurahMeta(
         id: surah.id,
         nameAr: surah.nameAr,
         nameEn: surah.nameEn,
-        firstPage: firstPage,
+        firstPage: firstAyah?.page,
       );
     } catch (e) {
       return null;
@@ -72,13 +59,13 @@ class MushafDataRepository {
   }
 
   Future<int?> getPageForAyah(int surahId, int ayahNumber) async {
-    await loadIndex();
-    return _ayahPageMap[surahId]?[ayahNumber];
+    final ayah = await _quranRepository.getAyah(surahId, ayahNumber);
+    return ayah?.page;
   }
 
   Future<int?> getFirstPageForSurah(int surahId) async {
-    await loadIndex();
-    return _ayahPageMap[surahId]?[1];
+    final ayah = await _quranRepository.getAyah(surahId, 1);
+    return ayah?.page;
   }
 
   Future<MushafPage> getPage(int pageNumber) async {
@@ -94,30 +81,26 @@ class MushafDataRepository {
     }
 
     try {
-      await loadIndex();
-      
-      final pageItems = <MushafPageItem>[];
-      
-      for (final surah in _cachedSurahs!) {
-        final ayahs = await _quranRepository.loadAyahs(surah.id);
-        for (final ayah in ayahs) {
-          final ayahPage = _ayahPageMap[surah.id]?[ayah.ayahNumber];
-          if (ayahPage == pageNumber) {
-            pageItems.add(
-              MushafPageItem(
-                surah: surah.id,
-                ayah: ayah.ayahNumber,
-                text: ayah.textAr,
-              ),
-            );
-          }
-        }
-      }
-
-      final page = MushafPage(
-        page: pageNumber,
-        items: pageItems,
+      // Find all ayahs on this page
+      final db = await _quranRepository.getDb(); // I'll add this to repository
+      final result = await db.query(
+        'quran_ayahs',
+        where: 'page = ?',
+        whereArgs: [pageNumber],
+        orderBy: 'surah ASC, ayah ASC',
       );
+
+      final pageItems = result
+          .map(
+            (row) => MushafPageItem(
+              surah: row['surah'] as int,
+              ayah: row['ayah'] as int,
+              text: row['text'] as String,
+            ),
+          )
+          .toList();
+
+      final page = MushafPage(page: pageNumber, items: pageItems);
 
       _pageCache[pageNumber] = page;
 
@@ -135,7 +118,6 @@ class MushafDataRepository {
   Future<void> prefetchPage(int pageNumber) async {
     if (pageNumber < 1 || pageNumber > totalPages) return;
     if (_pageCache.containsKey(pageNumber)) return;
-
     try {
       await getPage(pageNumber);
     } catch (e) {
@@ -145,6 +127,5 @@ class MushafDataRepository {
 
   void clearCache() {
     _pageCache.clear();
-    _ayahPageMap.clear();
   }
 }

@@ -84,12 +84,8 @@ flutter:
   assets:
     - assets/translations/
     - assets/source/
-    - assets/quran/
-    - assets/source/surah/
+    - assets/source/quran/
     - assets/source/tajweed/
-    - assets/source/translation/
-    - assets/source/translation/ar/
-    - assets/source/translation/en/
     - assets/source/azkar/
     - assets/source/azkar/categories.json
     - assets/source/azkar/azkar_sabah.json

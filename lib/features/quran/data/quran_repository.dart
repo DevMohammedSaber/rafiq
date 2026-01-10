@@ -1,95 +1,102 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+import 'package:sqflite/sqflite.dart';
 import '../domain/models/surah.dart';
 import '../domain/models/ayah.dart';
+import '../../../core/db/quran_database.dart';
+import '../../../core/utils/arabic_normalizer.dart';
 
 class QuranRepository {
-  List<Surah>? _cachedSurahs;
-  final Map<int, List<Ayah>> _cachedAyahs = {};
+  Future<Database> getDb() async => QuranDatabase.instance.database;
 
-  // Load all surahs from surah.json
   Future<List<Surah>> loadSurahs() async {
-    if (_cachedSurahs != null) {
-      return _cachedSurahs!;
-    }
-
-    try {
-      final jsonString = await rootBundle.loadString(
-        'assets/source/surah.json',
-      );
-      final List<dynamic> jsonList = json.decode(jsonString);
-      _cachedSurahs = jsonList
-          .map((e) => Surah.fromJson(e as Map<String, dynamic>))
-          .toList();
-      return _cachedSurahs!;
-    } catch (e) {
-      throw Exception('Failed to load surahs: $e');
-    }
+    final db = await QuranDatabase.instance.database;
+    final result = await db.query('quran_surahs', orderBy: 'surah ASC');
+    return result.map((e) => _mapToSurah(e)).toList();
   }
 
-  // Load ayahs for a specific surah
   Future<List<Ayah>> loadAyahs(int surahId) async {
-    if (_cachedAyahs.containsKey(surahId)) {
-      return _cachedAyahs[surahId]!;
-    }
-
-    try {
-      final jsonString = await rootBundle.loadString(
-        'assets/source/surah/surah_$surahId.json',
-      );
-      final Map<String, dynamic> surahData = json.decode(jsonString);
-      final Map<String, dynamic>? verseMap =
-          surahData['verse'] as Map<String, dynamic>?;
-
-      if (verseMap == null) {
-        return [];
-      }
-
-      final List<Ayah> ayahs = [];
-      verseMap.forEach((key, value) {
-        // key format: "verse_1", "verse_2", etc.
-        final ayahNumber = int.tryParse(key.replaceFirst('verse_', '')) ?? 0;
-        if (ayahNumber > 0) {
-          ayahs.add(Ayah.fromJson(surahId, ayahNumber, value as String));
-        }
-      });
-
-      // Sort by ayah number
-      ayahs.sort((a, b) => a.ayahNumber.compareTo(b.ayahNumber));
-      _cachedAyahs[surahId] = ayahs;
-      return ayahs;
-    } catch (e) {
-      throw Exception('Failed to load ayahs for surah $surahId: $e');
-    }
+    final db = await QuranDatabase.instance.database;
+    final result = await db.query(
+      'quran_ayahs',
+      where: 'surah = ?',
+      whereArgs: [surahId],
+      orderBy: 'ayah ASC',
+    );
+    return result.map((e) => _mapToAyah(e)).toList();
   }
 
-  // Get a single surah by ID
   Future<Surah?> getSurahById(int surahId) async {
-    final surahs = await loadSurahs();
-    try {
-      return surahs.firstWhere((s) => s.id == surahId);
-    } catch (e) {
-      return null;
-    }
+    final db = await QuranDatabase.instance.database;
+    final result = await db.query(
+      'quran_surahs',
+      where: 'surah = ?',
+      whereArgs: [surahId],
+    );
+    if (result.isEmpty) return null;
+    return _mapToSurah(result.first);
   }
 
-  // Search surahs by name (Arabic or English)
   Future<List<Surah>> searchSurahs(String query) async {
-    final surahs = await loadSurahs();
-    if (query.isEmpty) {
-      return surahs;
-    }
+    final db = await QuranDatabase.instance.database;
+    if (query.isEmpty) return loadSurahs();
 
-    final lowerQuery = query.toLowerCase();
-    return surahs.where((s) {
-      return s.nameEn.toLowerCase().contains(lowerQuery) ||
-          s.nameAr.contains(query);
-    }).toList();
+    final result = await db.query(
+      'quran_surahs',
+      where: 'name_en LIKE ? OR name_ar LIKE ?',
+      whereArgs: ['%$query%', '%$query%'],
+      orderBy: 'surah ASC',
+    );
+    return result.map((e) => _mapToSurah(e)).toList();
   }
 
-  // Clear cache if needed
-  void clearCache() {
-    _cachedSurahs = null;
-    _cachedAyahs.clear();
+  Future<List<Ayah>> searchAyahs(
+    String query, {
+    int limit = 50,
+    int offset = 0,
+  }) async {
+    final db = await QuranDatabase.instance.database;
+    final normalized = ArabicNormalizer.normalize(query);
+
+    final result = await db.query(
+      'quran_ayahs',
+      where: 'search_text LIKE ?',
+      whereArgs: ['%$normalized%'],
+      limit: limit,
+      offset: offset,
+      orderBy: 'surah ASC, ayah ASC',
+    );
+    return result.map((e) => _mapToAyah(e)).toList();
+  }
+
+  Future<Ayah?> getAyah(int surahId, int ayahNumber) async {
+    final db = await QuranDatabase.instance.database;
+    final result = await db.query(
+      'quran_ayahs',
+      where: 'surah = ? AND ayah = ?',
+      whereArgs: [surahId, ayahNumber],
+    );
+    if (result.isEmpty) return null;
+    return _mapToAyah(result.first);
+  }
+
+  Surah _mapToSurah(Map<String, dynamic> row) {
+    final id = row['surah'] as int;
+    return Surah(
+      id: id,
+      index: id.toString().padLeft(3, '0'),
+      nameEn: row['name_en'] as String,
+      nameAr: row['name_ar'] as String,
+      ayahCount: row['ayah_count'] as int,
+      place: row['place'] as String,
+      type: row['type'] as String,
+    );
+  }
+
+  Ayah _mapToAyah(Map<String, dynamic> row) {
+    return Ayah(
+      surahId: row['surah'] as int,
+      ayahNumber: row['ayah'] as int,
+      textAr: row['text'] as String,
+      page: row['page'] as int?,
+    );
   }
 }

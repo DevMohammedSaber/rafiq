@@ -121,7 +121,9 @@
         "invalid_ayah_format": "تنسيق غير صحيح. يرجى استخدام سورة:آية (مثال: 1:1).",
         "not_found": "غير موجود",
         "open_mushaf": "فتح المصحف",
-        "surah": "سورة"
+        "surah": "سورة",
+        "preparing_data": "جاري تحضير بيانات القرآن...",
+        "error_preparing_data": "خطأ في تحضير البيانات"
     },
     "azkar": {
         "title": "الأذكار",
