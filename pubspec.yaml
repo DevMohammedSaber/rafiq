@@ -82,4 +82,11 @@ flutter:
     - assets/source/translation/
     - assets/source/translation/ar/
     - assets/source/translation/en/
-
+    - assets/source/azkar/
+    - assets/source/azkar/categories.json
+    - assets/source/azkar/azkar_sabah.json
+    - assets/source/azkar/azkar_massa.json
+    - assets/source/azkar/PostPrayer_azkar.json
+    - assets/source/azkar/azkar.json
+    - assets/source/azkar/hisn_almuslim.json
+    - assets/source/hadith/

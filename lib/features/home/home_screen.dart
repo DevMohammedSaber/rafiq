@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
 import '../profile/presentation/cubit/settings_cubit.dart';
 import '../quran/data/quran_repository.dart';
+import '../azkar/data/azkar_reminder_repository.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -125,6 +126,139 @@ class HomeScreen extends StatelessWidget {
               const QuickActions(),
               const SizedBox(height: 24),
 
+              // Azkar Quick Actions
+              Text(
+                "azkar.title".tr(),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppCard(
+                      onTap: () {
+                        context.push('/azkar/category/morning');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.wb_sunny_rounded,
+                                color: Colors.orange,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                "azkar.morning".tr(),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: AppCard(
+                      onTap: () {
+                        context.push('/azkar/category/evening');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.indigo.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.nights_stay_rounded,
+                                color: Colors.indigo,
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                "azkar.evening".tr(),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+
+              // Azkar Reminder Banner
+              FutureBuilder(
+                future: AzkarReminderRepository().loadReminderSettings(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final settings = snapshot.data!;
+                    if (!settings.enabledMorning && !settings.enabledEvening) {
+                      return AppCard(
+                        onTap: () {
+                          context.push('/azkar/reminders');
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.notifications_outlined,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  "azkar.enable_reminders_banner".tr(),
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: AppColors.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+              const SizedBox(height: 24),
+
               // Continue Reading - Dynamic
               BlocBuilder<SettingsCubit, SettingsState>(
                 builder: (context, settingsState) {
@@ -135,6 +269,36 @@ class HomeScreen extends StatelessWidget {
                   final quranSettings = settingsState.settings.quranSettings;
                   final lastSurahId = quranSettings.lastReadSurahId;
                   final lastAyahNumber = quranSettings.lastReadAyahNumber;
+                  final lastMushafPage = quranSettings.lastReadMushafPage;
+
+                  if (lastMushafPage != null) {
+                    return AppCard(
+                      child: ListTile(
+                        onTap: () {
+                          context.push('/quran/1');
+                        },
+                        contentPadding: EdgeInsets.zero,
+                        leading: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.menu_book,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        title: Text("home.continue_reading".tr()),
+                        subtitle: Text(
+                          '${"quran.open_mushaf".tr()} - ${"quran.page_number".tr()} $lastMushafPage',
+                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      ),
+                    );
+                  }
 
                   if (lastSurahId == null) {
                     return const SizedBox.shrink();

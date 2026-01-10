@@ -19,10 +19,10 @@ class QuickActions extends StatelessWidget {
         'isTab': true,
       },
       {
-        'label': 'nav.adhkar'.tr(), // "Adhkar"
+        'label': 'nav.azkar'.tr(), // "Azkar"
         'icon': FontAwesomeIcons.handsPraying,
         'color': AppColors.accent,
-        'route': '/adhkar',
+        'route': '/azkar',
         'isTab': true,
       },
       {

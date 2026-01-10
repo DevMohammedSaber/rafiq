@@ -1,0 +1,32 @@
+[
+  {
+    "id": "morning",
+    "name_ar": "أذكار الصباح",
+    "name_en": "Morning"
+  },
+  {
+    "id": "evening",
+    "name_ar": "أذكار المساء",
+    "name_en": "Evening"
+  },
+  {
+    "id": "sleep",
+    "name_ar": "أذكار النوم",
+    "name_en": "Sleep"
+  },
+  {
+    "id": "after_prayer",
+    "name_ar": "أذكار بعد الصلاة",
+    "name_en": "After Prayer"
+  },
+  {
+    "id": "general",
+    "name_ar": "أذكار عامة",
+    "name_en": "General"
+  },
+  {
+    "id": "hisn_almuslim",
+    "name_ar": "حصن المسلم",
+    "name_en": "Fortress of the Muslim"
+  }
+]

@@ -228,23 +228,34 @@ class QuranSettings extends Equatable {
   final String fontFamily;
   final int? lastReadSurahId;
   final int? lastReadAyahNumber;
-  final String viewMode; // 'card' or 'mushaf'
+  final int? lastReadMushafPage;
+  final String viewMode; // 'card', 'mushaf', or 'page'
+  final Map<int, double> scrollPositions; // surahId -> scroll position
 
   const QuranSettings({
     this.fontSize = 24.0,
     this.fontFamily = 'Amiri',
     this.lastReadSurahId,
     this.lastReadAyahNumber,
+    this.lastReadMushafPage,
     this.viewMode = 'card',
+    this.scrollPositions = const {},
   });
 
   factory QuranSettings.fromJson(Map<String, dynamic> json) {
+    final scrollPositionsJson = json['scrollPositions'] as Map<String, dynamic>?;
+    final scrollPositions = scrollPositionsJson?.map(
+      (key, value) => MapEntry(int.parse(key), (value as num).toDouble()),
+    ) ?? <int, double>{};
+
     return QuranSettings(
       fontSize: (json['fontSize'] as num?)?.toDouble() ?? 24.0,
       fontFamily: json['fontFamily'] as String? ?? 'Amiri',
       lastReadSurahId: json['lastReadSurahId'] as int?,
       lastReadAyahNumber: json['lastReadAyahNumber'] as int?,
+      lastReadMushafPage: json['lastReadMushafPage'] as int?,
       viewMode: json['viewMode'] as String? ?? 'card',
+      scrollPositions: scrollPositions,
     );
   }
 
@@ -254,7 +265,11 @@ class QuranSettings extends Equatable {
       'fontFamily': fontFamily,
       'lastReadSurahId': lastReadSurahId,
       'lastReadAyahNumber': lastReadAyahNumber,
+      'lastReadMushafPage': lastReadMushafPage,
       'viewMode': viewMode,
+      'scrollPositions': scrollPositions.map(
+        (key, value) => MapEntry(key.toString(), value),
+      ),
     };
   }
 
@@ -263,14 +278,18 @@ class QuranSettings extends Equatable {
     String? fontFamily,
     int? lastReadSurahId,
     int? lastReadAyahNumber,
+    int? lastReadMushafPage,
     String? viewMode,
+    Map<int, double>? scrollPositions,
   }) {
     return QuranSettings(
       fontSize: fontSize ?? this.fontSize,
       fontFamily: fontFamily ?? this.fontFamily,
       lastReadSurahId: lastReadSurahId ?? this.lastReadSurahId,
       lastReadAyahNumber: lastReadAyahNumber ?? this.lastReadAyahNumber,
+      lastReadMushafPage: lastReadMushafPage ?? this.lastReadMushafPage,
       viewMode: viewMode ?? this.viewMode,
+      scrollPositions: scrollPositions ?? this.scrollPositions,
     );
   }
 
@@ -280,6 +299,8 @@ class QuranSettings extends Equatable {
     fontFamily,
     lastReadSurahId,
     lastReadAyahNumber,
+    lastReadMushafPage,
     viewMode,
+    scrollPositions,
   ];
 }

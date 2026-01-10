@@ -13,12 +13,23 @@ import '../../features/quran/presentation/pages/quran_reader_page.dart';
 import '../../features/quran/data/quran_repository.dart';
 import '../../features/quran/data/quran_user_data_repository.dart';
 import '../../features/quran/data/quran_pagination_repository.dart';
+import '../../features/quran/data/mushaf_data_repository.dart';
 import '../../features/quran/presentation/cubit/quran_home_cubit.dart';
 import '../../features/quran/presentation/cubit/quran_reader_cubit.dart';
-import '../../features/adhkar/adhkar_home_screen.dart';
+import '../../features/azkar/presentation/pages/azkar_categories_page.dart';
+import '../../features/azkar/presentation/pages/zikr_list_page.dart';
+import '../../features/azkar/presentation/pages/zikr_reader_page.dart';
+import '../../features/azkar/presentation/pages/azkar_reminder_settings_page.dart';
+import '../../features/azkar/presentation/cubit/azkar_categories_cubit.dart';
+import '../../features/azkar/presentation/cubit/zikr_list_cubit.dart';
+import '../../features/azkar/presentation/cubit/zikr_reader_cubit.dart';
+import '../../features/azkar/presentation/cubit/azkar_reminder_cubit.dart';
+import '../../features/azkar/data/azkar_repository.dart';
+import '../../features/azkar/data/azkar_user_repository.dart';
+import '../../features/azkar/data/azkar_reminder_repository.dart';
+import '../../features/azkar/data/azkar_notification_service.dart';
 import '../../features/prayer/prayer_times_screen.dart';
 import '../../features/more/more_screen.dart';
-import '../../features/adhkar/dhikr_counter_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/hadith/hadith_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
@@ -30,8 +41,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _shellNavigatorQuranKey = GlobalKey<NavigatorState>(debugLabel: 'quran');
-final _shellNavigatorAdhkarKey = GlobalKey<NavigatorState>(
-  debugLabel: 'adhkar',
+final _shellNavigatorAzkarKey = GlobalKey<NavigatorState>(
+  debugLabel: 'azkar',
 );
 final _shellNavigatorPrayerKey = GlobalKey<NavigatorState>(
   debugLabel: 'prayer',
@@ -68,7 +79,7 @@ class AppRouter {
           state.fullPath == '/home' ||
           state.fullPath?.startsWith('/home') == true ||
           state.fullPath?.startsWith('/quran') == true ||
-          state.fullPath?.startsWith('/adhkar') == true ||
+          state.fullPath?.startsWith('/azkar') == true ||
           state.fullPath?.startsWith('/prayers') == true ||
           state.fullPath?.startsWith('/more') == true;
 
@@ -197,6 +208,10 @@ class AppRouter {
                           QuranRepository(),
                           QuranUserDataRepository(),
                           QuranPaginationRepository(),
+                          MushafDataRepository(
+                            quranRepository: QuranRepository(),
+                            paginationRepository: QuranPaginationRepository(),
+                          ),
                           context.read<SettingsCubit>(),
                         ),
                         child: QuranReaderPage(
@@ -211,18 +226,63 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _shellNavigatorAdhkarKey,
+            navigatorKey: _shellNavigatorAzkarKey,
             routes: [
               GoRoute(
-                path: '/adhkar',
-                builder: (context, state) => const AdhkarHomeScreen(),
+                path: '/azkar',
+                builder: (context, state) => BlocProvider(
+                  create: (context) => AzkarCategoriesCubit(AzkarRepository()),
+                  child: const AzkarCategoriesPage(),
+                ),
                 routes: [
                   GoRoute(
-                    path: 'counter',
+                    path: 'category/:categoryId',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) {
-                      final title = state.extra as String? ?? 'Dhikr';
-                      return DhikrCounterScreen(categoryTitle: title);
+                      final categoryId =
+                          state.pathParameters['categoryId'] ?? '';
+                      return BlocProvider(
+                        create: (context) => ZikrListCubit(
+                          AzkarRepository(),
+                          AzkarUserRepository(),
+                        ),
+                        child: ZikrListPage(categoryId: categoryId),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'reader/:categoryId',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final categoryId =
+                          state.pathParameters['categoryId'] ?? '';
+                      final indexStr = state.uri.queryParameters['index'];
+                      final initialIndex = indexStr != null
+                          ? int.tryParse(indexStr)
+                          : null;
+                      return BlocProvider(
+                        create: (context) => ZikrReaderCubit(
+                          AzkarRepository(),
+                          AzkarUserRepository(),
+                        ),
+                        child: ZikrReaderPage(
+                          categoryId: categoryId,
+                          initialIndex: initialIndex,
+                        ),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'reminders',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      return BlocProvider(
+                        create: (context) => AzkarReminderCubit(
+                          AzkarReminderRepository(),
+                          AzkarNotificationService(),
+                        ),
+                        child: const AzkarReminderSettingsPage(),
+                      );
                     },
                   ),
                 ],

@@ -52,7 +52,7 @@ class MainBottomNavBar extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.handsPraying),
-            label: "nav.adhkar".tr(),
+            label: "nav.azkar".tr(),
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.access_time_filled_rounded),

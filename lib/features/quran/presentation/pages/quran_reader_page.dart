@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -8,7 +9,9 @@ import '../../domain/models/ayah.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/mushaf_view.dart';
 import '../widgets/quran_page_view.dart';
+import '../widgets/mushaf_page_view.dart';
 import '../../../profile/presentation/cubit/settings_cubit.dart';
+import '../../data/mushaf_data_repository.dart';
 import 'dart:ui' as ui;
 
 class QuranReaderPage extends StatefulWidget {
@@ -25,20 +28,99 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
   final ScrollController _scrollController = ScrollController();
   final Map<int, GlobalKey> _ayahKeys = {};
   String? _lastKnownViewMode; // Preserve viewMode during loading states
+  bool _hasRestoredScroll = false;
 
   @override
   void initState() {
     super.initState();
-    context.read<QuranReaderCubit>().loadSurah(
-      widget.surahId,
-      scrollToAyah: widget.scrollToAyah,
-    );
+    final settingsState = context.read<SettingsCubit>().state;
+    String viewMode = 'card';
+    if (settingsState is SettingsLoaded) {
+      viewMode = settingsState.settings.quranSettings.viewMode;
+    }
+
+    _scrollController.addListener(_onScroll);
+    
+    if (viewMode == 'page') {
+      context.read<QuranReaderCubit>().loadMushaf();
+    } else {
+      context.read<QuranReaderCubit>().loadSurah(
+        widget.surahId,
+        scrollToAyah: widget.scrollToAyah,
+      );
+    }
   }
 
   @override
   void dispose() {
+    _saveScrollPosition();
+    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      _saveScrollPositionDebounced();
+    }
+  }
+
+  Timer? _saveScrollTimer;
+  void _saveScrollPositionDebounced() {
+    _saveScrollTimer?.cancel();
+    _saveScrollTimer = Timer(const Duration(milliseconds: 500), () {
+      _saveScrollPosition();
+    });
+  }
+
+  void _saveScrollPosition() {
+    if (!_scrollController.hasClients) return;
+    
+    final settingsState = context.read<SettingsCubit>().state;
+    if (settingsState is SettingsLoaded) {
+      final currentSettings = settingsState.settings;
+      final quranSettings = currentSettings.quranSettings;
+      final scrollPosition = _scrollController.offset;
+      
+      final updatedScrollPositions = Map<int, double>.from(
+        quranSettings.scrollPositions,
+      );
+      updatedScrollPositions[widget.surahId] = scrollPosition;
+      
+      final newQuranSettings = quranSettings.copyWith(
+        scrollPositions: updatedScrollPositions,
+      );
+      
+      context.read<SettingsCubit>().saveSettings(
+        currentSettings.copyWith(quranSettings: newQuranSettings),
+        skipNotificationReschedule: true,
+      );
+    }
+  }
+
+  void _restoreScrollPosition() {
+    if (_hasRestoredScroll) return;
+    
+    final settingsState = context.read<SettingsCubit>().state;
+    if (settingsState is SettingsLoaded) {
+      final savedPosition = settingsState.settings.quranSettings
+          .scrollPositions[widget.surahId];
+      
+      if (savedPosition != null && savedPosition > 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients && !_hasRestoredScroll) {
+            final maxScroll = _scrollController.position.maxScrollExtent;
+            final positionToRestore = savedPosition > maxScroll 
+                ? maxScroll 
+                : savedPosition;
+            _scrollController.jumpTo(positionToRestore);
+            _hasRestoredScroll = true;
+          }
+        });
+      } else {
+        _hasRestoredScroll = true;
+      }
+    }
   }
 
   void _scrollToAyah(int ayahNumber) {
@@ -70,9 +152,14 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
 
         return BlocConsumer<QuranReaderCubit, QuranReaderState>(
           listener: (context, state) {
-            if (state is QuranReaderLoaded && state.activeAyah != null) {
-              if (viewMode == 'card') {
+            if (state is QuranReaderLoaded && viewMode == 'card') {
+              if (state.activeAyah != null && widget.scrollToAyah != null) {
                 _scrollToAyah(state.activeAyah!);
+                _hasRestoredScroll = true;
+              } else if (!_hasRestoredScroll && widget.scrollToAyah == null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _restoreScrollPosition();
+                });
               }
             }
           },
@@ -96,6 +183,25 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
                       Text(state.message),
                     ],
                   ),
+                ),
+              );
+            }
+
+            if (state is MushafReaderLoaded && viewMode == 'page') {
+              return Scaffold(
+                appBar: _buildMushafAppBar(context, state),
+                body: MushafPageView(
+                  totalPages: state.totalPages,
+                  initialPage: state.currentPage,
+                  fontSize: state.fontSize,
+                  fontFamily: state.fontFamily,
+                  bookmarks: state.bookmarks,
+                  favorites: state.favorites,
+                  onTapAyah: (ayah) => _showMushafAyahActions(context, ayah, state),
+                  onPageChanged: (pageNum) {
+                    context.read<QuranReaderCubit>().jumpToPage(pageNum);
+                  },
+                  cubit: context.read<QuranReaderCubit>(),
                 ),
               );
             }
@@ -209,6 +315,41 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
           },
         );
       },
+    );
+  }
+
+  PreferredSizeWidget _buildMushafAppBar(
+    BuildContext context,
+    MushafReaderLoaded state,
+  ) {
+    return AppBar(
+      title: Text("quran.open_mushaf".tr()),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.numbers),
+          tooltip: "quran.goto_page".tr(),
+          onPressed: () => _showGoToPageDialog(context, state),
+        ),
+        IconButton(
+          icon: const Icon(Icons.list),
+          tooltip: "quran.goto_surah".tr(),
+          onPressed: () => _showSurahListDialog(context, state),
+        ),
+        IconButton(
+          icon: const Icon(Icons.search),
+          tooltip: "quran.goto_ayah".tr(),
+          onPressed: () => _showGoToAyahDialog(context, state),
+        ),
+        IconButton(
+          icon: const Icon(Icons.tune),
+          tooltip: "quran.page_number".tr(),
+          onPressed: () => _showPageSlider(context, state),
+        ),
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () => _showMushafSettingsSheet(context, state),
+        ),
+      ],
     );
   }
 
@@ -715,6 +856,402 @@ class _ReaderSettingsSheet extends StatelessWidget {
         return GoogleFonts.tajawal(fontSize: fontSize, height: 1.8);
       default:
         return GoogleFonts.amiri(fontSize: fontSize, height: 2.0);
+    }
+  }
+}
+
+extension _MushafNavigationMethods on _QuranReaderPageState {
+  void _showGoToPageDialog(BuildContext context, MushafReaderLoaded state) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text("quran.goto_page".tr()),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: "quran.page_number_hint".tr(),
+            labelText: "quran.page_number".tr(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text("common.cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              final pageNum = int.tryParse(controller.text);
+              if (pageNum != null &&
+                  pageNum >= 1 &&
+                  pageNum <= state.totalPages) {
+                context.read<QuranReaderCubit>().jumpToPage(pageNum);
+                Navigator.pop(dialogContext);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("quran.invalid_page".tr()),
+                  ),
+                );
+              }
+            },
+            child: Text("common.continue".tr()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showSurahListDialog(
+    BuildContext context,
+    MushafReaderLoaded state,
+  ) async {
+    final mushafRepo = MushafDataRepository();
+    await mushafRepo.loadIndex();
+    final surahs = await mushafRepo.getSurahs();
+
+    if (!context.mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "quran.goto_surah".tr(),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: surahs.length,
+                itemBuilder: (context, index) {
+                  final surah = surahs[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      child: Text(surah.id.toString()),
+                    ),
+                    title: Text(
+                      surah.nameAr,
+                      textDirection: ui.TextDirection.rtl,
+                    ),
+                    subtitle: Text(surah.nameEn),
+                    onTap: () {
+                      context.read<QuranReaderCubit>().jumpToSurah(surah.id);
+                      Navigator.pop(sheetContext);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showGoToAyahDialog(BuildContext context, MushafReaderLoaded state) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text("quran.goto_ayah".tr()),
+        content: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: "quran.ayah_input_hint".tr(),
+            labelText: "quran.ayah_input_hint".tr(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text("common.cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              final input = controller.text.trim();
+              final parts = input.split(':');
+              if (parts.length == 2) {
+                final surahId = int.tryParse(parts[0]);
+                final ayahNumber = int.tryParse(parts[1]);
+                if (surahId != null && ayahNumber != null) {
+                  context
+                      .read<QuranReaderCubit>()
+                      .jumpToAyah(surahId, ayahNumber);
+                  Navigator.pop(dialogContext);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("quran.invalid_ayah_format".tr()),
+                    ),
+                  );
+                }
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("quran.invalid_ayah_format".tr()),
+                  ),
+                );
+              }
+            },
+            child: Text("common.continue".tr()),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPageSlider(BuildContext context, MushafReaderLoaded state) {
+    double sliderValue = state.currentPage.toDouble();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (context, setState) => Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "${"quran.page_number".tr()} ${sliderValue.toInt()}",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Slider(
+                value: sliderValue,
+                min: 1,
+                max: state.totalPages.toDouble(),
+                divisions: state.totalPages - 1,
+                label: sliderValue.toInt().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    sliderValue = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(sheetContext),
+                    child: Text("common.cancel".tr()),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<QuranReaderCubit>()
+                          .jumpToPage(sliderValue.toInt());
+                      Navigator.pop(sheetContext);
+                    },
+                    child: Text("common.continue".tr()),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showMushafAyahActions(
+    BuildContext context,
+    Ayah ayah,
+    MushafReaderLoaded state,
+  ) {
+    final cubit = context.read<QuranReaderCubit>();
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return BlocProvider.value(
+          value: cubit,
+          child: BlocBuilder<QuranReaderCubit, QuranReaderState>(
+            builder: (context, currentState) {
+              if (currentState is! MushafReaderLoaded) {
+                return const SizedBox.shrink();
+              }
+
+              final isBookmarked = currentState.bookmarks.contains(ayah.key);
+              final isFavorite = currentState.favorites.contains(ayah.key);
+
+              return SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      title: Text(
+                        '${"quran.surah".tr()} ${ayah.surahId} - ${"quran.ayahs".tr()} ${ayah.ayahNumber}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: Icon(
+                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                        color: isBookmarked ? AppColors.primary : null,
+                      ),
+                      title: Text("quran.bookmark".tr()),
+                      onTap: () {
+                        cubit.toggleBookmark(ayah);
+                        Navigator.pop(sheetContext);
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        isFavorite
+                            ? FontAwesomeIcons.solidHeart
+                            : FontAwesomeIcons.heart,
+                        color: isFavorite ? Colors.red : null,
+                      ),
+                      title: Text("quran.favorite".tr()),
+                      onTap: () {
+                        cubit.toggleFavorite(ayah);
+                        Navigator.pop(sheetContext);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showMushafSettingsSheet(
+    BuildContext context,
+    MushafReaderLoaded state,
+  ) {
+    final cubit = context.read<QuranReaderCubit>();
+    final List<String> fontFamilies = ['Amiri', 'Cairo', 'Tajawal'];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) {
+        return BlocProvider.value(
+          value: cubit,
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "quran.reader_settings".tr(),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "quran.font_size".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text('quran.a'.tr(), style: const TextStyle(fontSize: 14)),
+                    Expanded(
+                      child: Slider(
+                        value: state.fontSize,
+                        min: 16,
+                        max: 40,
+                        divisions: 12,
+                        label: state.fontSize.toInt().toString(),
+                        onChanged: (value) {
+                          cubit.setMushafFontSize(value);
+                        },
+                      ),
+                    ),
+                    const Text('A', style: TextStyle(fontSize: 28)),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  "quran.font_family".tr(),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  children: fontFamilies.map((family) {
+                    final isSelected = state.fontFamily == family;
+                    return ChoiceChip(
+                      label: Text(_getLocalizedFontNameForMushaf(family)),
+                      selected: isSelected,
+                      selectedColor: AppColors.primary.withValues(alpha: 0.2),
+                      onSelected: (selected) {
+                        if (selected) {
+                          cubit.setMushafFontFamily(family);
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _getLocalizedFontNameForMushaf(String fontFamily) {
+    switch (fontFamily) {
+      case 'Amiri':
+        return "quran.amiri".tr();
+      case 'Cairo':
+        return "quran.cairo".tr();
+      case 'Tajawal':
+        return "quran.tajawal".tr();
+      default:
+        return fontFamily;
     }
   }
 }

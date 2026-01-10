@@ -20,7 +20,7 @@
     "nav": {
         "home": "الرئيسية",
         "quran": "القرآن",
-        "adhkar": "الأذكار",
+        "azkar": "الأذكار",
         "prayers": "الصلوات",
         "more": "المزيد"
     },
@@ -108,16 +108,48 @@
         "view_mode_mushaf": "عرض المصحف",
         "view_mode_page": "وضع الصفحات",
         "page_number": "صفحة",
-        "amiri": "أميري",
-        "cairo": "كايرو",
-        "tajawal": "تجاول",
-        "a": "أ"
+    "amiri": "أميري",
+    "cairo": "كايرو",
+    "tajawal": "تجاول",
+    "a": "أ",
+    "goto_page": "انتقل إلى صفحة",
+    "page_number_hint": "أدخل رقم الصفحة (1-604)",
+    "invalid_page": "رقم صفحة غير صحيح. يرجى إدخال رقم بين 1 و 604.",
+    "goto_surah": "انتقل إلى سورة",
+    "goto_ayah": "انتقل إلى آية",
+    "ayah_input_hint": "أدخل سورة:آية (مثال: 1:1)",
+    "invalid_ayah_format": "تنسيق غير صحيح. يرجى استخدام سورة:آية (مثال: 1:1).",
+    "not_found": "غير موجود",
+    "open_mushaf": "فتح المصحف",
+    "surah": "سورة"
+  },
+    "azkar": {
+        "title": "الأذكار",
+        "morning": "الصباح",
+        "evening": "المساء",
+        "sleep": "النوم",
+        "after_prayer": "بعد الصلاة",
+        "general": "عامة",
+        "reminders": "التذكيرات",
+        "enable_morning": "تفعيل تذكير الصباح",
+        "enable_evening": "تفعيل تذكير المساء",
+        "morning_time": "وقت الصباح",
+        "evening_time": "وقت المساء",
+        "saved": "تم الحفظ",
+        "repeat": "التكرار",
+        "count": "العد",
+        "reset": "إعادة تعيين",
+        "next": "التالي",
+        "previous": "السابق",
+        "no_zikr": "لا توجد أذكار متاحة",
+        "enable_reminders_banner": "تفعيل تذكيرات الأذكار"
     },
     "common": {
         "retry": "إعادة المحاولة",
         "continue": "متابعة",
         "cancel": "إلغاء",
-        "save": "حفظ"
+        "save": "حفظ",
+        "share": "مشاركة"
     },
     "errors": {
         "generic": "حدث خطأ ما"

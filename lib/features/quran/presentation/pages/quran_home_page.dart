@@ -33,7 +33,18 @@ class _QuranHomePageState extends State<QuranHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("quran.title".tr())),
+      appBar: AppBar(
+        title: Text("quran.title".tr()),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu_book),
+            tooltip: "quran.open_mushaf".tr(),
+            onPressed: () {
+              context.push('/quran/1');
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           // Search bars

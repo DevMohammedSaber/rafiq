@@ -20,7 +20,7 @@
   "nav": {
     "home": "Home",
     "quran": "Quran",
-    "adhkar": "Adhkar",
+    "azkar": "Azkar",
     "prayers": "Prayers",
     "more": "More"
   },
@@ -111,13 +111,45 @@
     "amiri": "Amiri",
     "cairo": "Cairo",
     "tajawal": "Tajawal",
-    "a": "A"
+    "a": "A",
+    "goto_page": "Go to Page",
+    "page_number_hint": "Enter page number (1-604)",
+    "invalid_page": "Invalid page number. Please enter a number between 1 and 604.",
+    "goto_surah": "Go to Surah",
+    "goto_ayah": "Go to Ayah",
+    "ayah_input_hint": "Enter surah:ayah (e.g., 1:1)",
+    "invalid_ayah_format": "Invalid format. Please use surah:ayah (e.g., 1:1).",
+    "not_found": "Not found",
+    "open_mushaf": "Open Mushaf",
+    "surah": "Surah"
+  },
+  "azkar": {
+    "title": "Azkar",
+    "morning": "Morning",
+    "evening": "Evening",
+    "sleep": "Sleep",
+    "after_prayer": "After Prayer",
+    "general": "General",
+    "reminders": "Reminders",
+    "enable_morning": "Enable Morning Reminders",
+    "enable_evening": "Enable Evening Reminders",
+    "morning_time": "Morning Time",
+    "evening_time": "Evening Time",
+    "saved": "Saved",
+    "repeat": "Repeat",
+    "count": "Count",
+    "reset": "Reset",
+    "next": "Next",
+    "previous": "Previous",
+    "no_zikr": "No zikr available",
+    "enable_reminders_banner": "Enable Azkar reminders"
   },
   "common": {
     "retry": "Retry",
     "continue": "Continue",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "share": "Share"
   },
   "errors": {
     "generic": "An error occurred"

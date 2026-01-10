@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class AuthRepository {
   final FirebaseAuth _firebaseAuth;
@@ -17,7 +18,12 @@ class AuthRepository {
     GoogleSignIn? googleSignIn,
     FirebaseFirestore? firestore,
   }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-       _googleSignIn = googleSignIn ?? GoogleSignIn(),
+       _googleSignIn = googleSignIn ?? GoogleSignIn(
+         // Explicitly set iOS client ID for better reliability
+         clientId: Platform.isIOS 
+           ? '33966536976-ppj511h76k9fureqqanbdu2kjsqe1hjd.apps.googleusercontent.com'
+           : null,
+       ),
        _firestore = firestore ?? FirebaseFirestore.instance;
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
