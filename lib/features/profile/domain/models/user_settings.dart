@@ -7,6 +7,7 @@ class UserSettings extends Equatable {
   final PrayerSettings prayerSettings;
   final QuranSettings quranSettings;
   final bool setupDone;
+  final bool hadithWithTashkeel;
 
   const UserSettings({
     this.languageCode = 'ar',
@@ -15,6 +16,7 @@ class UserSettings extends Equatable {
     this.prayerSettings = const PrayerSettings(),
     this.quranSettings = const QuranSettings(),
     this.setupDone = false,
+    this.hadithWithTashkeel = false,
   });
 
   factory UserSettings.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class UserSettings extends Equatable {
         json['quranSettings'] as Map<String, dynamic>? ?? {},
       ),
       setupDone: json['setupDone'] as bool? ?? false,
+      hadithWithTashkeel: json['hadithWithTashkeel'] as bool? ?? false,
     );
   }
 
@@ -42,6 +45,7 @@ class UserSettings extends Equatable {
       'prayerSettings': prayerSettings.toJson(),
       'quranSettings': quranSettings.toJson(),
       'setupDone': setupDone,
+      'hadithWithTashkeel': hadithWithTashkeel,
     };
   }
 
@@ -52,6 +56,7 @@ class UserSettings extends Equatable {
     PrayerSettings? prayerSettings,
     QuranSettings? quranSettings,
     bool? setupDone,
+    bool? hadithWithTashkeel,
   }) {
     return UserSettings(
       languageCode: languageCode ?? this.languageCode,
@@ -60,6 +65,7 @@ class UserSettings extends Equatable {
       prayerSettings: prayerSettings ?? this.prayerSettings,
       quranSettings: quranSettings ?? this.quranSettings,
       setupDone: setupDone ?? this.setupDone,
+      hadithWithTashkeel: hadithWithTashkeel ?? this.hadithWithTashkeel,
     );
   }
 
@@ -71,6 +77,7 @@ class UserSettings extends Equatable {
     prayerSettings,
     quranSettings,
     setupDone,
+    hadithWithTashkeel,
   ];
 }
 
@@ -243,10 +250,13 @@ class QuranSettings extends Equatable {
   });
 
   factory QuranSettings.fromJson(Map<String, dynamic> json) {
-    final scrollPositionsJson = json['scrollPositions'] as Map<String, dynamic>?;
-    final scrollPositions = scrollPositionsJson?.map(
-      (key, value) => MapEntry(int.parse(key), (value as num).toDouble()),
-    ) ?? <int, double>{};
+    final scrollPositionsJson =
+        json['scrollPositions'] as Map<String, dynamic>?;
+    final scrollPositions =
+        scrollPositionsJson?.map(
+          (key, value) => MapEntry(int.parse(key), (value as num).toDouble()),
+        ) ??
+        <int, double>{};
 
     return QuranSettings(
       fontSize: (json['fontSize'] as num?)?.toDouble() ?? 24.0,

@@ -57,7 +57,7 @@ class MoreScreen extends StatelessWidget {
                   "home.hadith".tr(),
                   FontAwesomeIcons.scroll,
                   Colors.indigo,
-                  () => context.push('/more/hadith'),
+                  () => context.push('/hadith'),
                 ),
                 _buildMenuCard(
                   context,

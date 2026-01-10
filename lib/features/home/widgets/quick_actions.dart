@@ -29,7 +29,7 @@ class QuickActions extends StatelessWidget {
         'label': 'home.hadith'.tr(), // "Hadith"
         'icon': FontAwesomeIcons.scroll,
         'color': Colors.indigo,
-        'route': '/more/hadith',
+        'route': '/hadith',
         'isTab': false,
       },
       {

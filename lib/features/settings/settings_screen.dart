@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/theme_cubit.dart';
 import '../profile/presentation/cubit/settings_cubit.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -59,6 +60,24 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
+                const Divider(height: 1),
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  builder: (context, state) {
+                    if (state is SettingsLoaded) {
+                      return ListTile(
+                        leading: const Icon(Icons.text_fields),
+                        title: Text("hadith.settings_tashkeel".tr()),
+                        trailing: Switch(
+                          value: state.settings.hadithWithTashkeel,
+                          onChanged: (val) {
+                            _showTashkeelConfirm(context, val);
+                          },
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
           ),
@@ -96,6 +115,35 @@ class SettingsScreen extends StatelessWidget {
               "${"settings.version".tr()} 1.0.0",
               style: const TextStyle(color: Colors.grey),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showTashkeelConfirm(BuildContext context, bool value) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("hadith.reimport_confirm_title".tr()),
+        content: Text("hadith.reimport_confirm_body".tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("common.cancel".tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              final cubit = context.read<SettingsCubit>();
+              if (cubit.state is SettingsLoaded) {
+                final current = (cubit.state as SettingsLoaded).settings;
+                cubit.saveSettings(current.copyWith(hadithWithTashkeel: value));
+                // Navigate to hadith for re-import
+                context.push('/hadith');
+              }
+            },
+            child: Text("common.continue".tr()),
           ),
         ],
       ),

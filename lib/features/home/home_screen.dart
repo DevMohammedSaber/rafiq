@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'widgets/next_prayer_card.dart';
 import 'widgets/mini_prayer_row.dart';
 import 'widgets/quick_actions.dart';
+import 'widgets/hadith_of_day_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auth/presentation/cubit/auth_cubit.dart';
 import '../profile/presentation/cubit/settings_cubit.dart';
@@ -124,6 +125,10 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const QuickActions(),
+              const SizedBox(height: 24),
+
+              // Hadith of the Day
+              const HadithOfDayCard(),
               const SizedBox(height: 24),
 
               // Azkar Quick Actions

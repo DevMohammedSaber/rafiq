@@ -144,6 +144,25 @@
     "no_zikr": "No zikr available",
     "enable_reminders_banner": "Enable Azkar reminders"
   },
+  "hadith": {
+    "title": "Prophetic Hadiths",
+    "books": "Hadith Collections",
+    "search": "Search Hadiths...",
+    "of_the_day": "Hadith of the Day",
+    "importing": "Importing Hadiths...",
+    "importing_book": "Importing",
+    "ready": "Hadiths Ready",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "copy": "Copy",
+    "copied": "Hadith Copied",
+    "share": "Share",
+    "goto": "View Hadith",
+    "settings_tashkeel": "Hadith with Tashkeel",
+    "reimport_confirm_title": "Re-import Hadiths",
+    "reimport_confirm_body": "Changing tashkeel settings requires re-importing the database. Do you want to continue?",
+    "no_hadith": "No Hadiths found"
+  },
   "common": {
     "retry": "Retry",
     "continue": "Continue",

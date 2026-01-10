@@ -49,6 +49,14 @@ dependencies:
 
   hijri: ^3.0.0
 
+  # SQLite & Persistence
+  sqflite: ^2.4.1
+  path: ^1.9.0
+  path_provider: ^2.1.5
+
+  # Data Processing
+  csv: ^6.0.0
+
   # Location (UI Simulation)
   geolocator: ^10.1.0
   geocoding: ^2.1.1
@@ -90,3 +98,12 @@ flutter:
     - assets/source/azkar/azkar.json
     - assets/source/azkar/hisn_almuslim.json
     - assets/source/hadith/
+    - assets/source/hadith/Maliks_Muwataa/
+    - assets/source/hadith/Musnad_Ahmad_Ibn-Hanbal/
+    - assets/source/hadith/Sahih_Al-Bukhari/
+    - assets/source/hadith/Sahih_Muslim/
+    - assets/source/hadith/Sunan_Abu-Dawud/
+    - assets/source/hadith/Sunan_Al-Darimi/
+    - assets/source/hadith/Sunan_Al-Nasai/
+    - assets/source/hadith/Sunan_Al-Tirmidhi/
+    - assets/source/hadith/Sunan_Ibn-Maja/

@@ -31,19 +31,28 @@ import '../../features/azkar/data/azkar_notification_service.dart';
 import '../../features/prayer/prayer_times_screen.dart';
 import '../../features/more/more_screen.dart';
 import '../../features/settings/settings_screen.dart';
-import '../../features/hadith/hadith_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
 import '../../core/components/bottom_nav_bar.dart';
 import '../../features/splash/splash_screen.dart';
+import '../../features/hadith/data/hadith_repository.dart';
+import '../../features/hadith/data/hadith_import_service.dart';
+import '../../features/hadith/data/hadith_user_repository.dart';
+import '../../features/hadith/data/hadith_daily_repository.dart';
+import '../../features/hadith/presentation/cubit/hadith_bootstrap_cubit.dart';
+import '../../features/hadith/presentation/cubit/hadith_books_cubit.dart';
+import '../../features/hadith/presentation/cubit/hadith_list_cubit.dart';
+import '../../features/hadith/presentation/cubit/hadith_detail_cubit.dart';
+import '../../features/hadith/presentation/cubit/hadith_of_day_cubit.dart';
+import '../../features/hadith/presentation/pages/hadith_home_page.dart';
+import '../../features/hadith/presentation/pages/hadith_list_page.dart';
+import '../../features/hadith/presentation/pages/hadith_detail_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'home');
 final _shellNavigatorQuranKey = GlobalKey<NavigatorState>(debugLabel: 'quran');
-final _shellNavigatorAzkarKey = GlobalKey<NavigatorState>(
-  debugLabel: 'azkar',
-);
+final _shellNavigatorAzkarKey = GlobalKey<NavigatorState>(debugLabel: 'azkar');
 final _shellNavigatorPrayerKey = GlobalKey<NavigatorState>(
   debugLabel: 'prayer',
 );
@@ -165,6 +174,52 @@ class AppRouter {
         path: '/location',
         builder: (context, state) => const LocationPermissionScreen(),
       ),
+      GoRoute(
+        path: '/hadith',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => HadithBootstrapCubit(HadithImportService()),
+            ),
+            BlocProvider(
+              create: (context) => HadithBooksCubit(HadithRepository()),
+            ),
+          ],
+          child: const HadithHomePage(),
+        ),
+        routes: [
+          GoRoute(
+            path: 'book/:bookId',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final bookId = state.pathParameters['bookId']!;
+              return BlocProvider(
+                create: (context) => HadithListCubit(
+                  HadithRepository(),
+                  HadithUserRepository(),
+                  bookId,
+                ),
+                child: HadithListPage(bookId: bookId),
+              );
+            },
+          ),
+          GoRoute(
+            path: 'item/:uid',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final uid = state.pathParameters['uid']!;
+              return BlocProvider(
+                create: (context) => HadithDetailCubit(
+                  HadithRepository(),
+                  HadithUserRepository(),
+                ),
+                child: HadithDetailPage(uid: uid),
+              );
+            },
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainWrapperGoRouter(navigationShell: navigationShell);
@@ -175,7 +230,13 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: '/home',
-                builder: (context, state) => const HomeScreen(),
+                builder: (context, state) => BlocProvider(
+                  create: (context) => HadithOfDayCubit(
+                    HadithRepository(),
+                    HadithDailyRepository(),
+                  ),
+                  child: const HomeScreen(),
+                ),
               ),
             ],
           ),
@@ -309,11 +370,6 @@ class AppRouter {
                     path: 'settings',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) => const SettingsScreen(),
-                  ),
-                  GoRoute(
-                    path: 'hadith',
-                    parentNavigatorKey: _rootNavigatorKey,
-                    builder: (context, state) => const HadithScreen(),
                   ),
                   GoRoute(
                     path: 'quiz',
