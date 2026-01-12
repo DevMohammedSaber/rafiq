@@ -31,7 +31,11 @@ import '../../features/azkar/data/azkar_repository.dart';
 import '../../features/azkar/data/azkar_user_repository.dart';
 import '../../features/azkar/data/azkar_reminder_repository.dart';
 import '../../features/azkar/data/azkar_notification_service.dart';
-import '../../features/prayer/prayer_times_screen.dart';
+import '../../features/prayer/presentation/pages/prayer_page.dart';
+import '../../features/prayer/presentation/pages/prayer_settings_page.dart';
+import '../../features/prayer/presentation/cubit/prayer_cubit.dart';
+import '../../features/prayer/data/prayer_times_service.dart';
+import '../../features/prayer/data/prayer_notification_service.dart';
 import '../../features/more/more_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
@@ -373,7 +377,22 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: '/prayers',
-                builder: (context, state) => const PrayerTimesScreen(),
+                builder: (context, state) => BlocProvider(
+                  create: (context) => PrayerCubit(
+                    prayerTimesService: PrayerTimesService(),
+                    notificationService: context
+                        .read<PrayerNotificationService>(),
+                    settingsCubit: context.read<SettingsCubit>(),
+                  ),
+                  child: const PrayerPage(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'settings',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) => const PrayerSettingsPage(),
+                  ),
+                ],
               ),
             ],
           ),

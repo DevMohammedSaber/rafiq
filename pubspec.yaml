@@ -85,14 +85,7 @@ flutter:
     - assets/translations/
     - assets/source/
     - assets/source/quran/
-    - assets/source/tajweed/
     - assets/source/azkar/
-    - assets/source/azkar/categories.json
-    - assets/source/azkar/azkar_sabah.json
-    - assets/source/azkar/azkar_massa.json
-    - assets/source/azkar/PostPrayer_azkar.json
-    - assets/source/azkar/azkar.json
-    - assets/source/azkar/hisn_almuslim.json
     - assets/source/hadith/
     - assets/source/hadith/Maliks_Muwataa/
     - assets/source/hadith/Musnad_Ahmad_Ibn-Hanbal/
@@ -103,3 +96,4 @@ flutter:
     - assets/source/hadith/Sunan_Al-Nasai/
     - assets/source/hadith/Sunan_Al-Tirmidhi/
     - assets/source/hadith/Sunan_Ibn-Maja/
+    - assets/sounds/

@@ -1,20 +1,45 @@
-import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:csv/csv.dart';
 import '../domain/models/azkar_category.dart';
 import '../domain/models/zikr.dart';
 
 class AzkarRepository {
-  static const String _categoriesPath = 'assets/source/azkar/categories.json';
-  static const String _morningPath = 'assets/source/azkar/azkar_sabah.json';
-  static const String _eveningPath = 'assets/source/azkar/azkar_massa.json';
+  static const String _categoriesPath = 'assets/source/azkar/categories.csv';
+  static const String _morningPath = 'assets/source/azkar/azkar_sabah.csv';
+  static const String _eveningPath = 'assets/source/azkar/azkar_massa.csv';
   static const String _afterPrayerPath =
-      'assets/source/azkar/PostPrayer_azkar.json';
-  static const String _generalPath = 'assets/source/azkar/azkar.json';
+      'assets/source/azkar/PostPrayer_azkar.csv';
+  static const String _generalPath = 'assets/source/azkar/azkar.csv';
   static const String _hisnAlmuslimPath =
-      'assets/source/azkar/hisn_almuslim.json';
+      'assets/source/azkar/hisn_almuslim.csv';
 
   List<AZkarCategory>? _cachedCategories;
   final Map<String, List<Zikr>> _cachedZikr = {};
+
+  // Cache for Hisn AlMuslim raw data
+  List<List<dynamic>>? _hisnData;
+
+  Future<List<List<dynamic>>> _parseCsv(String path) async {
+    try {
+      final csvString = await rootBundle.loadString(path);
+      final List<List<dynamic>> rows = const CsvToListConverter().convert(
+        csvString,
+        eol: '\n',
+      );
+      return rows;
+    } catch (e) {
+      throw Exception('Failed to parse CSV at $path: $e');
+    }
+  }
+
+  Future<void> _ensureHisnLoaded() async {
+    if (_hisnData != null) return;
+    try {
+      _hisnData = await _parseCsv(_hisnAlmuslimPath);
+    } catch (e) {
+      throw Exception('Failed to load hisn almuslim data: $e');
+    }
+  }
 
   Future<List<AZkarCategory>> loadCategories() async {
     if (_cachedCategories != null) {
@@ -22,27 +47,23 @@ class AzkarRepository {
     }
 
     try {
-      final jsonString = await rootBundle.loadString(_categoriesPath);
-      final List<dynamic> jsonList = json.decode(jsonString);
-      _cachedCategories = jsonList
-          .map((e) => AZkarCategory.fromJson(e as Map<String, dynamic>))
-          .toList();
+      final rows = await _parseCsv(_categoriesPath);
+
+      // Skip header row
+      final dataRows = rows.skip(1).toList();
+
+      List<AZkarCategory> categories = dataRows.map((row) {
+        return AZkarCategory(
+          id: row[0].toString(),
+          nameAr: row[1].toString(),
+          nameEn: row[2].toString(),
+        );
+      }).toList();
+
+      _cachedCategories = categories;
       return _cachedCategories!;
     } catch (e) {
-      // Try alternative path if the first one fails
-      try {
-        const altPath = 'assets/azkar/categories.json';
-        final jsonString = await rootBundle.loadString(altPath);
-        final List<dynamic> jsonList = json.decode(jsonString);
-        _cachedCategories = jsonList
-            .map((e) => AZkarCategory.fromJson(e as Map<String, dynamic>))
-            .toList();
-        return _cachedCategories!;
-      } catch (e2) {
-        throw Exception(
-          'Failed to load azkar categories: $e (also tried alternative path: $e2)',
-        );
-      }
+      throw Exception('Failed to load azkar categories: $e');
     }
   }
 
@@ -56,22 +77,25 @@ class AzkarRepository {
 
       switch (categoryId) {
         case 'morning':
-          categoryZikr = await _loadFromSabahFile();
+          categoryZikr = await _loadFromCsvFile(_morningPath, 'morning');
           break;
         case 'evening':
-          categoryZikr = await _loadFromMassaFile();
+          categoryZikr = await _loadFromCsvFile(_eveningPath, 'evening');
           break;
         case 'after_prayer':
-          categoryZikr = await _loadFromPostPrayerFile();
+          categoryZikr = await _loadFromCsvFile(
+            _afterPrayerPath,
+            'after_prayer',
+          );
           break;
         case 'general':
-          categoryZikr = await _loadFromGeneralFile();
+          categoryZikr = await _loadGeneralZikr();
           break;
         case 'sleep':
           categoryZikr = await _loadSleepZikr();
           break;
         case 'hisn_almuslim':
-          categoryZikr = await _loadFromHisnAlmuslimFile();
+          categoryZikr = await _loadHisnAlmuslim();
           break;
         default:
           categoryZikr = [];
@@ -84,145 +108,68 @@ class AzkarRepository {
     }
   }
 
-  Future<List<Zikr>> _loadFromSabahFile() async {
+  Future<List<Zikr>> _loadFromCsvFile(String path, String categoryId) async {
     try {
-      final jsonString = await rootBundle.loadString(_morningPath);
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final content = jsonData['content'];
-      if (content == null || content is! List) {
-        throw Exception('Invalid format: content is not a list');
-      }
-      final List<dynamic> contentList = content;
+      final rows = await _parseCsv(path);
+
+      // Skip header row
+      final dataRows = rows.skip(1).toList();
 
       List<Zikr> zikrList = [];
-      for (int i = 0; i < contentList.length; i++) {
-        final item = contentList[i] as Map<String, dynamic>;
-        final zekr = item['zekr'] as String? ?? '';
-        final repeat = (item['repeat'] as num?)?.toInt() ?? 1;
-        final bless = item['bless'] as String? ?? '';
+      for (int i = 0; i < dataRows.length; i++) {
+        final row = dataRows[i];
+        if (row.isEmpty) continue;
+
+        final zekr = row[0].toString();
+        final repeat = row.length > 1
+            ? int.tryParse(row[1].toString()) ?? 1
+            : 1;
+        final bless = row.length > 2 ? row[2].toString() : '';
+
+        if (zekr.trim().isEmpty) continue;
 
         final title = _extractTitle(zekr);
-        final source = bless.isNotEmpty ? bless : null;
 
         zikrList.add(
           Zikr(
-            id: 'morning_${i + 1}',
-            categoryId: 'morning',
+            id: '${categoryId}_${i + 1}',
+            categoryId: categoryId,
             titleAr: title,
-            titleEn: 'Morning Remembrance ${i + 1}',
+            titleEn: '${_getCategoryDisplayName(categoryId)} ${i + 1}',
             textAr: zekr,
             textEn: '',
             repeat: repeat,
-            sourceAr: source,
+            sourceAr: bless.isNotEmpty ? bless : null,
             sourceEn: null,
           ),
         );
       }
       return zikrList;
     } catch (e) {
-      throw Exception('Failed to load morning azkar from $_morningPath: $e');
+      throw Exception('Failed to load azkar from $path: $e');
     }
   }
 
-  Future<List<Zikr>> _loadFromMassaFile() async {
+  Future<List<Zikr>> _loadGeneralZikr() async {
     try {
-      final jsonString = await rootBundle.loadString(_eveningPath);
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final content = jsonData['content'];
-      if (content == null || content is! List) {
-        throw Exception('Invalid format: content is not a list');
-      }
-      final List<dynamic> contentList = content;
+      final rows = await _parseCsv(_generalPath);
+
+      // Skip header row
+      final dataRows = rows.skip(1).toList();
 
       List<Zikr> zikrList = [];
-      for (int i = 0; i < contentList.length; i++) {
-        final item = contentList[i] as Map<String, dynamic>;
-        final zekr = item['zekr'] as String? ?? '';
-        final repeat = (item['repeat'] as num?)?.toInt() ?? 1;
-        final bless = item['bless'] as String? ?? '';
+      for (int i = 0; i < dataRows.length; i++) {
+        final row = dataRows[i];
+        if (row.isEmpty) continue;
 
-        final title = _extractTitle(zekr);
-        final source = bless.isNotEmpty ? bless : null;
+        // General CSV format may differ - adapt as needed
+        final content = row[0].toString();
+        final count = row.length > 1 ? int.tryParse(row[1].toString()) ?? 1 : 1;
+        final source = row.length > 2 ? row[2].toString() : '';
 
-        zikrList.add(
-          Zikr(
-            id: 'evening_${i + 1}',
-            categoryId: 'evening',
-            titleAr: title,
-            titleEn: 'Evening Remembrance ${i + 1}',
-            textAr: zekr,
-            textEn: '',
-            repeat: repeat,
-            sourceAr: source,
-            sourceEn: null,
-          ),
-        );
-      }
-      return zikrList;
-    } catch (e) {
-      throw Exception('Failed to load evening azkar from $_eveningPath: $e');
-    }
-  }
-
-  Future<List<Zikr>> _loadFromPostPrayerFile() async {
-    try {
-      final jsonString = await rootBundle.loadString(_afterPrayerPath);
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final content = jsonData['content'];
-      if (content == null || content is! List) {
-        throw Exception('Invalid format: content is not a list');
-      }
-      final List<dynamic> contentList = content;
-
-      List<Zikr> zikrList = [];
-      for (int i = 0; i < contentList.length; i++) {
-        final item = contentList[i] as Map<String, dynamic>;
-        final zekr = item['zekr'] as String? ?? '';
-        final repeat = (item['repeat'] as num?)?.toInt() ?? 1;
-        final bless = item['bless'] as String? ?? '';
-
-        final title = _extractTitle(zekr);
-        final source = bless.isNotEmpty ? bless : null;
-
-        zikrList.add(
-          Zikr(
-            id: 'after_prayer_${i + 1}',
-            categoryId: 'after_prayer',
-            titleAr: title,
-            titleEn: 'After Prayer Remembrance ${i + 1}',
-            textAr: zekr,
-            textEn: '',
-            repeat: repeat,
-            sourceAr: source,
-            sourceEn: null,
-          ),
-        );
-      }
-      return zikrList;
-    } catch (e) {
-      throw Exception(
-        'Failed to load after prayer azkar from $_afterPrayerPath: $e',
-      );
-    }
-  }
-
-  Future<List<Zikr>> _loadFromGeneralFile() async {
-    try {
-      final jsonString = await rootBundle.loadString(_generalPath);
-      final List<dynamic> jsonList = json.decode(jsonString);
-
-      List<Zikr> zikrList = [];
-      for (int i = 0; i < jsonList.length; i++) {
-        final item = jsonList[i] as Map<String, dynamic>;
-        final content = item['content'] as String? ?? '';
-        final count = (item['count'] as num?)?.toInt() ?? 1;
-        final fadl = item['fadl'] as String? ?? '';
-        final source = item['source'] as String? ?? '';
+        if (content.trim().isEmpty) continue;
 
         final title = _extractTitle(content);
-        final sourceText = source.isNotEmpty
-            ? source
-            : (fadl.isNotEmpty ? fadl : null);
 
         zikrList.add(
           Zikr(
@@ -233,7 +180,7 @@ class AzkarRepository {
             textAr: content,
             textEn: '',
             repeat: count,
-            sourceAr: sourceText,
+            sourceAr: source.isNotEmpty ? source : null,
             sourceEn: null,
           ),
         );
@@ -245,135 +192,113 @@ class AzkarRepository {
   }
 
   Future<List<Zikr>> _loadSleepZikr() async {
+    // Return default sleep azkar
+    return [
+      Zikr(
+        id: 'sleep_1',
+        categoryId: 'sleep',
+        titleAr: 'المعوذات قبل النوم',
+        titleEn: 'Seeking Refuge Before Sleep',
+        textAr:
+            'بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِن شَرِّ مَا خَلَقَ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَهِ النَّاسِ، مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ',
+        textEn: '',
+        repeat: 3,
+        sourceAr: 'البخاري ومسلم',
+        sourceEn: null,
+      ),
+      Zikr(
+        id: 'sleep_2',
+        categoryId: 'sleep',
+        titleAr: 'دعاء النوم',
+        titleEn: 'Sleep Supplication',
+        textAr: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
+        textEn: 'In Your name, O Allah, I die and I live.',
+        repeat: 1,
+        sourceAr: 'البخاري',
+        sourceEn: null,
+      ),
+      Zikr(
+        id: 'sleep_3',
+        categoryId: 'sleep',
+        titleAr: 'دعاء الاستيقاظ',
+        titleEn: 'Waking Up Supplication',
+        textAr:
+            'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
+        textEn:
+            'All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.',
+        repeat: 1,
+        sourceAr: 'البخاري',
+        sourceEn: null,
+      ),
+      Zikr(
+        id: 'sleep_4',
+        categoryId: 'sleep',
+        titleAr: 'آية الكرسي',
+        titleEn: 'Ayat Al-Kursi',
+        textAr:
+            'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+        textEn: '',
+        repeat: 1,
+        sourceAr: 'البقرة: 255',
+        sourceEn: null,
+      ),
+    ];
+  }
+
+  Future<List<Zikr>> _loadHisnAlmuslim() async {
     try {
-      final jsonString = await rootBundle.loadString(_generalPath);
-      final List<dynamic> jsonList = json.decode(jsonString);
+      await _ensureHisnLoaded();
+      if (_hisnData == null || _hisnData!.isEmpty) return [];
 
-      List<Zikr> sleepZikr = [];
-      int sleepIndex = 0;
+      // Skip header row
+      final dataRows = _hisnData!.skip(1).toList();
 
-      for (int i = 0; i < jsonList.length; i++) {
-        final item = jsonList[i] as Map<String, dynamic>;
-        final type = (item['type'] as num?)?.toInt() ?? 0;
+      List<Zikr> zikrList = [];
+      for (int i = 0; i < dataRows.length; i++) {
+        final row = dataRows[i];
+        if (row.isEmpty) continue;
 
-        if (type == 2) {
-          final content = item['content'] as String? ?? '';
-          final count = (item['count'] as num?)?.toInt() ?? 1;
-          final fadl = item['fadl'] as String? ?? '';
-          final source = item['source'] as String? ?? '';
+        final text = row[0].toString();
+        if (text.trim().isEmpty) continue;
 
-          final title = _extractTitle(content);
-          final sourceText = source.isNotEmpty
-              ? source
-              : (fadl.isNotEmpty ? fadl : null);
+        final title = _extractTitle(text);
 
-          sleepZikr.add(
-            Zikr(
-              id: 'sleep_${sleepIndex + 1}',
-              categoryId: 'sleep',
-              titleAr: title,
-              titleEn: 'Sleep Remembrance ${sleepIndex + 1}',
-              textAr: content,
-              textEn: '',
-              repeat: count,
-              sourceAr: sourceText,
-              sourceEn: null,
-            ),
-          );
-          sleepIndex++;
-        }
-      }
-
-      if (sleepZikr.isEmpty) {
-        sleepZikr.addAll([
+        zikrList.add(
           Zikr(
-            id: 'sleep_1',
-            categoryId: 'sleep',
-            titleAr: 'المعوذات قبل النوم',
-            titleEn: 'Seeking Refuge Before Sleep',
-            textAr:
-                'بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِن شَرِّ مَا خَلَقَ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَهِ النَّاسِ، مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ',
+            id: 'hisn_${i + 1}',
+            categoryId: 'hisn_almuslim',
+            titleAr: title,
+            titleEn: 'Fortress of the Muslim ${i + 1}',
+            textAr: text,
             textEn: '',
-            repeat: 3,
-            sourceAr: 'البخاري ومسلم',
+            repeat: 1,
+            sourceAr: null,
             sourceEn: null,
           ),
-        ]);
+        );
       }
-
-      return sleepZikr;
+      return zikrList;
     } catch (e) {
-      throw Exception('Failed to load sleep azkar from $_generalPath: $e');
+      return [];
     }
   }
 
-  Future<List<Zikr>> _loadFromHisnAlmuslimFile() async {
-    try {
-      final jsonString = await rootBundle.loadString(_hisnAlmuslimPath);
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-
-      List<Zikr> zikrList = [];
-      int globalIndex = 0;
-
-      jsonData.forEach((sectionName, sectionData) {
-        final section = sectionData as Map<String, dynamic>;
-        final textList = section['text'] as List<dynamic>? ?? [];
-        final footnoteList = section['footnote'] as List<dynamic>? ?? [];
-
-        for (int i = 0; i < textList.length; i++) {
-          final text = textList[i] as String? ?? '';
-          if (text.trim().isEmpty) continue;
-
-          final extractedTitle = _extractTitle(text);
-          final titleAr = extractedTitle.length > 60
-              ? '${extractedTitle.substring(0, 60)}...'
-              : extractedTitle;
-
-          String? source;
-          // Match footnote to text item by index
-          if (footnoteList.isNotEmpty) {
-            if (i < footnoteList.length) {
-              final footnote = footnoteList[i].toString().trim();
-              if (footnote.isNotEmpty) {
-                source = footnote;
-                if (source.length > 150) {
-                  source = '${source.substring(0, 150)}...';
-                }
-              }
-            } else if (footnoteList.length == 1 && textList.length > 1) {
-              // If there's only one footnote for multiple texts, use it for all
-              final footnote = footnoteList[0].toString().trim();
-              if (footnote.isNotEmpty) {
-                source = footnote;
-                if (source.length > 150) {
-                  source = '${source.substring(0, 150)}...';
-                }
-              }
-            }
-          }
-
-          zikrList.add(
-            Zikr(
-              id: 'hisn_almuslim_${globalIndex + 1}',
-              categoryId: 'hisn_almuslim',
-              titleAr: titleAr,
-              titleEn: 'Fortress of the Muslim ${globalIndex + 1}',
-              textAr: text,
-              textEn: '',
-              repeat: 1,
-              sourceAr: source,
-              sourceEn: null,
-            ),
-          );
-          globalIndex++;
-        }
-      });
-
-      return zikrList;
-    } catch (e) {
-      throw Exception(
-        'Failed to load hisn almuslim from $_hisnAlmuslimPath: $e',
-      );
+  String _getCategoryDisplayName(String categoryId) {
+    switch (categoryId) {
+      case 'morning':
+        return 'Morning Remembrance';
+      case 'evening':
+        return 'Evening Remembrance';
+      case 'after_prayer':
+        return 'After Prayer Remembrance';
+      case 'sleep':
+        return 'Sleep Remembrance';
+      case 'general':
+        return 'General Remembrance';
+      case 'hisn_almuslim':
+        return 'Fortress of the Muslim';
+      default:
+        return 'Remembrance';
     }
   }
 
@@ -423,17 +348,17 @@ class AzkarRepository {
 
   Future<Zikr?> getZikrById(String zikrId) async {
     try {
-      final parts = zikrId.split('_');
-      if (parts.length < 2) return null;
-
-      final categoryId = parts[0];
-      final zikrList = await loadZikrByCategory(categoryId);
-
-      try {
-        return zikrList.firstWhere((zikr) => zikr.id == zikrId);
-      } catch (e) {
-        return null;
+      // Trying to find zikr in cache
+      for (var catId in _cachedZikr.keys) {
+        try {
+          final zikr = _cachedZikr[catId]!.firstWhere(
+            (z) => z.id == zikrId,
+            orElse: () => throw 'NotFound',
+          );
+          if (zikr.id == zikrId) return zikr;
+        } catch (_) {}
       }
+      return null;
     } catch (e) {
       return null;
     }
@@ -442,5 +367,6 @@ class AzkarRepository {
   void clearCache() {
     _cachedCategories = null;
     _cachedZikr.clear();
+    _hisnData = null;
   }
 }

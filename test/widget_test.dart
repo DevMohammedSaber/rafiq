@@ -16,7 +16,7 @@ class MockPrayerNotificationService extends PrayerNotificationService {
   @override
   Future<void> init() async {}
   @override
-  Future<void> requestPermissions() async {}
+  Future<bool> requestPermissions() async => true;
 }
 
 class MockAuthCubit extends AuthCubit {

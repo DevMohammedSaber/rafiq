@@ -136,18 +136,91 @@ class UserLocation extends Equatable {
   List<Object?> get props => [useAutoLocation, countryCode, city, lat, lng];
 }
 
+/// Per-prayer notification settings
+class PerPrayerSettings extends Equatable {
+  final bool enabled;
+  final bool adhanEnabled;
+  final bool iqamaEnabled;
+  final int iqamaAfterMin;
+
+  const PerPrayerSettings({
+    this.enabled = true,
+    this.adhanEnabled = true,
+    this.iqamaEnabled = true,
+    this.iqamaAfterMin = 15,
+  });
+
+  factory PerPrayerSettings.fromJson(Map<String, dynamic> json) {
+    return PerPrayerSettings(
+      enabled: json['enabled'] as bool? ?? true,
+      adhanEnabled: json['adhanEnabled'] as bool? ?? true,
+      iqamaEnabled: json['iqamaEnabled'] as bool? ?? true,
+      iqamaAfterMin: json['iqamaAfterMin'] as int? ?? 15,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'adhanEnabled': adhanEnabled,
+      'iqamaEnabled': iqamaEnabled,
+      'iqamaAfterMin': iqamaAfterMin,
+    };
+  }
+
+  PerPrayerSettings copyWith({
+    bool? enabled,
+    bool? adhanEnabled,
+    bool? iqamaEnabled,
+    int? iqamaAfterMin,
+  }) {
+    return PerPrayerSettings(
+      enabled: enabled ?? this.enabled,
+      adhanEnabled: adhanEnabled ?? this.adhanEnabled,
+      iqamaEnabled: iqamaEnabled ?? this.iqamaEnabled,
+      iqamaAfterMin: iqamaAfterMin ?? this.iqamaAfterMin,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    enabled,
+    adhanEnabled,
+    iqamaEnabled,
+    iqamaAfterMin,
+  ];
+}
+
 class PrayerSettings extends Equatable {
-  final String calculationMethod; // EGYPTIAN, etc.
+  final String calculationMethod; // EGYPTIAN, MWL, KARACHI, etc.
   final String asrMethod; // shafi, hanafi
+  final bool remindersEnabled;
   final int beforeAdhanMinutes;
+  final int beforeIqamaMinutes;
+  final Map<String, PerPrayerSettings> perPrayerSettings;
+  final DateTime? lastScheduledAt;
+
+  // Legacy fields for backward compatibility
   final Map<String, bool> enabledPrayers;
   final Map<String, int> iqamaAfterMinutes;
-  final int beforeIqamaMinutes;
+
+  static const Map<String, PerPrayerSettings> defaultPerPrayerSettings = {
+    'fajr': PerPrayerSettings(iqamaAfterMin: 20),
+    'dhuhr': PerPrayerSettings(iqamaAfterMin: 15),
+    'asr': PerPrayerSettings(iqamaAfterMin: 15),
+    'maghrib': PerPrayerSettings(iqamaAfterMin: 10),
+    'isha': PerPrayerSettings(iqamaAfterMin: 20),
+  };
 
   const PrayerSettings({
     this.calculationMethod = 'EGYPTIAN',
     this.asrMethod = 'shafi',
+    this.remindersEnabled = true,
     this.beforeAdhanMinutes = 10,
+    this.beforeIqamaMinutes = 5,
+    this.perPrayerSettings = defaultPerPrayerSettings,
+    this.lastScheduledAt,
+    // Legacy fields
     this.enabledPrayers = const {
       'fajr': true,
       'dhuhr': true,
@@ -162,14 +235,34 @@ class PrayerSettings extends Equatable {
       'maghrib': 10,
       'isha': 20,
     },
-    this.beforeIqamaMinutes = 5,
   });
 
   factory PrayerSettings.fromJson(Map<String, dynamic> json) {
+    // Parse perPrayerSettings
+    Map<String, PerPrayerSettings> perPrayer = {};
+    final perPrayerJson = json['perPrayerSettings'] as Map<String, dynamic>?;
+    if (perPrayerJson != null) {
+      perPrayerJson.forEach((key, value) {
+        perPrayer[key] = PerPrayerSettings.fromJson(
+          value as Map<String, dynamic>,
+        );
+      });
+    } else {
+      // Default values
+      perPrayer = Map.from(defaultPerPrayerSettings);
+    }
+
     return PrayerSettings(
       calculationMethod: json['calculationMethod'] as String? ?? 'EGYPTIAN',
       asrMethod: json['asrMethod'] as String? ?? 'shafi',
+      remindersEnabled: json['remindersEnabled'] as bool? ?? true,
       beforeAdhanMinutes: json['beforeAdhanMinutes'] as int? ?? 10,
+      beforeIqamaMinutes: json['beforeIqamaMinutes'] as int? ?? 5,
+      perPrayerSettings: perPrayer,
+      lastScheduledAt: json['lastScheduledAt'] != null
+          ? DateTime.tryParse(json['lastScheduledAt'] as String)
+          : null,
+      // Legacy fields
       enabledPrayers:
           (json['enabledPrayers'] as Map<String, dynamic>?)?.map(
             (k, v) => MapEntry(k, v as bool),
@@ -186,7 +279,6 @@ class PrayerSettings extends Equatable {
             (k, v) => MapEntry(k, v as int),
           ) ??
           const {'fajr': 20, 'dhuhr': 15, 'asr': 15, 'maghrib': 10, 'isha': 20},
-      beforeIqamaMinutes: json['beforeIqamaMinutes'] as int? ?? 5,
     );
   }
 
@@ -194,39 +286,68 @@ class PrayerSettings extends Equatable {
     return {
       'calculationMethod': calculationMethod,
       'asrMethod': asrMethod,
+      'remindersEnabled': remindersEnabled,
       'beforeAdhanMinutes': beforeAdhanMinutes,
+      'beforeIqamaMinutes': beforeIqamaMinutes,
+      'perPrayerSettings': perPrayerSettings.map(
+        (key, value) => MapEntry(key, value.toJson()),
+      ),
+      'lastScheduledAt': lastScheduledAt?.toIso8601String(),
+      // Legacy fields
       'enabledPrayers': enabledPrayers,
       'iqamaAfterMinutes': iqamaAfterMinutes,
-      'beforeIqamaMinutes': beforeIqamaMinutes,
     };
   }
 
   PrayerSettings copyWith({
     String? calculationMethod,
     String? asrMethod,
+    bool? remindersEnabled,
     int? beforeAdhanMinutes,
+    int? beforeIqamaMinutes,
+    Map<String, PerPrayerSettings>? perPrayerSettings,
+    DateTime? lastScheduledAt,
     Map<String, bool>? enabledPrayers,
     Map<String, int>? iqamaAfterMinutes,
-    int? beforeIqamaMinutes,
   }) {
     return PrayerSettings(
       calculationMethod: calculationMethod ?? this.calculationMethod,
       asrMethod: asrMethod ?? this.asrMethod,
+      remindersEnabled: remindersEnabled ?? this.remindersEnabled,
       beforeAdhanMinutes: beforeAdhanMinutes ?? this.beforeAdhanMinutes,
+      beforeIqamaMinutes: beforeIqamaMinutes ?? this.beforeIqamaMinutes,
+      perPrayerSettings: perPrayerSettings ?? this.perPrayerSettings,
+      lastScheduledAt: lastScheduledAt ?? this.lastScheduledAt,
       enabledPrayers: enabledPrayers ?? this.enabledPrayers,
       iqamaAfterMinutes: iqamaAfterMinutes ?? this.iqamaAfterMinutes,
-      beforeIqamaMinutes: beforeIqamaMinutes ?? this.beforeIqamaMinutes,
     );
+  }
+
+  /// Get PerPrayerSettings for a specific prayer, with fallback to defaults
+  PerPrayerSettings getPerPrayer(String prayerKey) {
+    return perPrayerSettings[prayerKey] ??
+        defaultPerPrayerSettings[prayerKey] ??
+        const PerPrayerSettings();
+  }
+
+  /// Update a specific prayer's settings
+  PrayerSettings updatePerPrayer(String prayerKey, PerPrayerSettings settings) {
+    final updated = Map<String, PerPrayerSettings>.from(perPrayerSettings);
+    updated[prayerKey] = settings;
+    return copyWith(perPrayerSettings: updated);
   }
 
   @override
   List<Object?> get props => [
     calculationMethod,
     asrMethod,
+    remindersEnabled,
     beforeAdhanMinutes,
+    beforeIqamaMinutes,
+    perPrayerSettings,
+    lastScheduledAt,
     enabledPrayers,
     iqamaAfterMinutes,
-    beforeIqamaMinutes,
   ];
 }
 

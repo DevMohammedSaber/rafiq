@@ -82,6 +82,13 @@ class MoreScreen extends StatelessWidget {
                 ),
                 _buildMenuCard(
                   context,
+                  "nav.prayers".tr(),
+                  Icons.access_time_filled_rounded,
+                  AppColors.primary,
+                  () => context.go('/prayers'),
+                ),
+                _buildMenuCard(
+                  context,
                   "settings.title".tr(),
                   Icons.settings,
                   Colors.grey,
