@@ -40,7 +40,7 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
     }
 
     _scrollController.addListener(_onScroll);
-    
+
     if (viewMode == 'page') {
       context.read<QuranReaderCubit>().loadMushaf();
     } else {
@@ -75,22 +75,22 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
 
   void _saveScrollPosition() {
     if (!_scrollController.hasClients) return;
-    
+
     final settingsState = context.read<SettingsCubit>().state;
     if (settingsState is SettingsLoaded) {
       final currentSettings = settingsState.settings;
       final quranSettings = currentSettings.quranSettings;
       final scrollPosition = _scrollController.offset;
-      
+
       final updatedScrollPositions = Map<int, double>.from(
         quranSettings.scrollPositions,
       );
       updatedScrollPositions[widget.surahId] = scrollPosition;
-      
+
       final newQuranSettings = quranSettings.copyWith(
         scrollPositions: updatedScrollPositions,
       );
-      
+
       context.read<SettingsCubit>().saveSettings(
         currentSettings.copyWith(quranSettings: newQuranSettings),
         skipNotificationReschedule: true,
@@ -100,18 +100,18 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
 
   void _restoreScrollPosition() {
     if (_hasRestoredScroll) return;
-    
+
     final settingsState = context.read<SettingsCubit>().state;
     if (settingsState is SettingsLoaded) {
-      final savedPosition = settingsState.settings.quranSettings
-          .scrollPositions[widget.surahId];
-      
+      final savedPosition =
+          settingsState.settings.quranSettings.scrollPositions[widget.surahId];
+
       if (savedPosition != null && savedPosition > 0) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_scrollController.hasClients && !_hasRestoredScroll) {
             final maxScroll = _scrollController.position.maxScrollExtent;
-            final positionToRestore = savedPosition > maxScroll 
-                ? maxScroll 
+            final positionToRestore = savedPosition > maxScroll
+                ? maxScroll
                 : savedPosition;
             _scrollController.jumpTo(positionToRestore);
             _hasRestoredScroll = true;
@@ -197,7 +197,8 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
                   fontFamily: state.fontFamily,
                   bookmarks: state.bookmarks,
                   favorites: state.favorites,
-                  onTapAyah: (ayah) => _showMushafAyahActions(context, ayah, state),
+                  onTapAyah: (ayah) =>
+                      _showMushafAyahActions(context, ayah, state),
                   onPageChanged: (pageNum) {
                     context.read<QuranReaderCubit>().jumpToPage(pageNum);
                   },
@@ -262,8 +263,16 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
                         activeAyah: state.activeAyah,
                         onTapAyah: (ayah) =>
                             _showAyahActions(context, ayah, state),
-                        onShareAyah: (ayah) =>
-                            context.read<QuranReaderCubit>().shareAyah(ayah),
+                        onShareAyah: (ayah) {
+                          final RenderBox? box =
+                              context.findRenderObject() as RenderBox?;
+                          context.read<QuranReaderCubit>().shareAyah(
+                            ayah,
+                            sharePositionOrigin: box != null
+                                ? box.localToGlobal(Offset.zero) & box.size
+                                : null,
+                          );
+                        },
                         onToggleBookmark: (ayah) => context
                             .read<QuranReaderCubit>()
                             .toggleBookmark(ayah),
@@ -303,7 +312,14 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
                               );
                             },
                             onShare: () {
-                              context.read<QuranReaderCubit>().shareAyah(ayah);
+                              final RenderBox? box =
+                                  context.findRenderObject() as RenderBox?;
+                              context.read<QuranReaderCubit>().shareAyah(
+                                ayah,
+                                sharePositionOrigin: box != null
+                                    ? box.localToGlobal(Offset.zero) & box.size
+                                    : null,
+                              );
                             },
                           );
                         },
@@ -489,7 +505,16 @@ class _QuranReaderPageState extends State<QuranReaderPage> {
                       leading: const Icon(Icons.share),
                       title: Text("quran.share".tr()),
                       onTap: () {
-                        context.read<QuranReaderCubit>().shareAyah(ayah);
+                        // For bottom sheet, we can use the sheet's own context or just null
+                        // but it's better to provide something.
+                        final RenderBox? box =
+                            context.findRenderObject() as RenderBox?;
+                        context.read<QuranReaderCubit>().shareAyah(
+                          ayah,
+                          sharePositionOrigin: box != null
+                              ? box.localToGlobal(Offset.zero) & box.size
+                              : null,
+                        );
                         Navigator.pop(sheetContext);
                       },
                     ),
@@ -890,9 +915,7 @@ extension _MushafNavigationMethods on _QuranReaderPageState {
                 Navigator.pop(dialogContext);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("quran.invalid_page".tr()),
-                  ),
+                  SnackBar(content: Text("quran.invalid_page".tr())),
                 );
               }
             },
@@ -926,10 +949,7 @@ extension _MushafNavigationMethods on _QuranReaderPageState {
           children: [
             Text(
               "quran.goto_surah".tr(),
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Flexible(
@@ -939,9 +959,7 @@ extension _MushafNavigationMethods on _QuranReaderPageState {
                 itemBuilder: (context, index) {
                   final surah = surahs[index];
                   return ListTile(
-                    leading: CircleAvatar(
-                      child: Text(surah.id.toString()),
-                    ),
+                    leading: CircleAvatar(child: Text(surah.id.toString())),
                     title: Text(
                       surah.nameAr,
                       textDirection: ui.TextDirection.rtl,
@@ -987,22 +1005,19 @@ extension _MushafNavigationMethods on _QuranReaderPageState {
                 final surahId = int.tryParse(parts[0]);
                 final ayahNumber = int.tryParse(parts[1]);
                 if (surahId != null && ayahNumber != null) {
-                  context
-                      .read<QuranReaderCubit>()
-                      .jumpToAyah(surahId, ayahNumber);
+                  context.read<QuranReaderCubit>().jumpToAyah(
+                    surahId,
+                    ayahNumber,
+                  );
                   Navigator.pop(dialogContext);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("quran.invalid_ayah_format".tr()),
-                    ),
+                    SnackBar(content: Text("quran.invalid_ayah_format".tr())),
                   );
                 }
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("quran.invalid_ayah_format".tr()),
-                  ),
+                  SnackBar(content: Text("quran.invalid_ayah_format".tr())),
                 );
               }
             },
@@ -1057,9 +1072,9 @@ extension _MushafNavigationMethods on _QuranReaderPageState {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      context
-                          .read<QuranReaderCubit>()
-                          .jumpToPage(sliderValue.toInt());
+                      context.read<QuranReaderCubit>().jumpToPage(
+                        sliderValue.toInt(),
+                      );
                       Navigator.pop(sheetContext);
                     },
                     child: Text("common.continue".tr()),

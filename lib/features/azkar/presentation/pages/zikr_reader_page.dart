@@ -74,11 +74,20 @@ class _ZikrReaderPageState extends State<ZikrReaderPage> {
                     context.read<ZikrReaderCubit>().toggleFavorite();
                   },
                 ),
-                IconButton(
-                  icon: const Icon(Icons.share),
-                  onPressed: () {
-                    Share.share(
-                      '${zikr.textAr}\n\n${isRTL ? zikr.titleAr : zikr.titleEn}',
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: const Icon(Icons.share),
+                      onPressed: () {
+                        final RenderBox? box =
+                            context.findRenderObject() as RenderBox?;
+                        Share.share(
+                          '${zikr.textAr}\n\n${isRTL ? zikr.titleAr : zikr.titleEn}',
+                          sharePositionOrigin: box != null
+                              ? box.localToGlobal(Offset.zero) & box.size
+                              : null,
+                        );
+                      },
                     );
                   },
                 ),

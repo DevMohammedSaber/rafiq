@@ -42,13 +42,24 @@ class _HadithDetailPageState extends State<HadithDetailPage> {
               return const SizedBox.shrink();
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              final state = context.read<HadithDetailCubit>().state;
-              if (state is HadithDetailLoaded) {
-                Share.share(state.item.textAr);
-              }
+          Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () {
+                  final RenderBox? box =
+                      context.findRenderObject() as RenderBox?;
+                  final state = context.read<HadithDetailCubit>().state;
+                  if (state is HadithDetailLoaded) {
+                    Share.share(
+                      state.item.textAr,
+                      sharePositionOrigin: box != null
+                          ? box.localToGlobal(Offset.zero) & box.size
+                          : null,
+                    );
+                  }
+                },
+              );
             },
           ),
           IconButton(

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
@@ -308,13 +309,13 @@ class QuranReaderCubit extends Cubit<QuranReaderState> {
     }
   }
 
-  Future<void> shareAyah(Ayah ayah) async {
+  Future<void> shareAyah(Ayah ayah, {Rect? sharePositionOrigin}) async {
     if (state is! QuranReaderLoaded) return;
     final currentState = state as QuranReaderLoaded;
 
     final text =
-        '${ayah.textAr}\\n\\n- ${currentState.surah.nameAr} (${ayah.ayahNumber})';
-    await Share.share(text);
+        '${ayah.textAr}\n\n- ${currentState.surah.nameAr} (${ayah.ayahNumber})';
+    await Share.share(text, sharePositionOrigin: sharePositionOrigin);
   }
 
   Future<void> loadMushaf({int? initialPage}) async {
@@ -333,7 +334,8 @@ class QuranReaderCubit extends Cubit<QuranReaderState> {
       if (settingsState is SettingsLoaded) {
         fontSize = settingsState.settings.quranSettings.fontSize;
         fontFamily = settingsState.settings.quranSettings.fontFamily;
-        startPage = initialPage ??
+        startPage =
+            initialPage ??
             settingsState.settings.quranSettings.lastReadMushafPage ??
             1;
       } else {
@@ -345,9 +347,7 @@ class QuranReaderCubit extends Cubit<QuranReaderState> {
       }
 
       final firstPage = await _mushafRepository.getPage(startPage);
-      final loadedPages = <int, List<Ayah>>{
-        startPage: firstPage.toAyahs(),
-      };
+      final loadedPages = <int, List<Ayah>>{startPage: firstPage.toAyahs()};
 
       emit(
         MushafReaderLoaded(
@@ -377,7 +377,9 @@ class QuranReaderCubit extends Cubit<QuranReaderState> {
 
     try {
       final page = await _mushafRepository.getPage(pageNumber);
-      final newLoadedPages = Map<int, List<Ayah>>.from(currentState.loadedPages);
+      final newLoadedPages = Map<int, List<Ayah>>.from(
+        currentState.loadedPages,
+      );
       newLoadedPages[pageNumber] = page.toAyahs();
 
       emit(
@@ -430,7 +432,9 @@ class QuranReaderCubit extends Cubit<QuranReaderState> {
 
     try {
       final page = await _mushafRepository.getPage(pageNumber);
-      final newLoadedPages = Map<int, List<Ayah>>.from(currentState.loadedPages);
+      final newLoadedPages = Map<int, List<Ayah>>.from(
+        currentState.loadedPages,
+      );
       newLoadedPages[pageNumber] = page.toAyahs();
 
       emit(currentState.copyWith(loadedPages: newLoadedPages));
