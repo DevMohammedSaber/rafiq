@@ -45,9 +45,14 @@ import '../../features/tasbeeh/data/tasbeeh_local_repository.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/profile/presentation/pages/edit_profile_page.dart';
 import '../../features/profile/presentation/cubit/profile_cubit.dart';
+import '../../features/quiz/presentation/pages/quiz_home_page.dart';
+import '../../features/quiz/presentation/pages/quiz_game_page.dart';
+import '../../features/quiz/presentation/pages/quiz_result_page.dart';
+import '../../features/quiz/presentation/cubit/quiz_home_cubit.dart';
+import '../../features/quiz/presentation/cubit/quiz_game_cubit.dart';
+import '../../features/quiz/domain/models/quiz_result.dart';
 import '../../features/more/more_screen.dart';
 import '../../features/settings/settings_screen.dart';
-import '../../features/quiz/quiz_screen.dart';
 import '../../core/components/bottom_nav_bar.dart';
 import '../../features/splash/splash_screen.dart';
 import '../../features/hadith/data/hadith_repository.dart';
@@ -495,11 +500,63 @@ class AppRouter {
                   GoRoute(
                     path: 'quiz',
                     parentNavigatorKey: _rootNavigatorKey,
-                    builder: (context, state) => const QuizScreen(),
+                    builder: (context, state) => BlocProvider(
+                      create: (context) => QuizHomeCubit(),
+                      child: const QuizHomePage(),
+                    ),
                   ),
                 ],
               ),
             ],
+          ),
+        ],
+      ),
+      // Quiz game route (outside shell)
+      GoRoute(
+        path: '/quiz',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => BlocProvider(
+          create: (context) => QuizHomeCubit(),
+          child: const QuizHomePage(),
+        ),
+        routes: [
+          GoRoute(
+            path: 'game',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final categoryId = extra?['categoryId'] as String? ?? 'general';
+              final mode = extra?['mode'] as QuizMode? ?? QuizMode.quick;
+
+              // Get user ID if authenticated
+              final authState = context.read<AuthCubit>().state;
+              String? userId;
+              if (authState is AuthAuthenticated) {
+                userId = authState.user.uid;
+              }
+
+              return BlocProvider(
+                create: (context) => QuizGameCubit(
+                  categoryId: categoryId,
+                  mode: mode,
+                  userId: userId,
+                ),
+                child: const QuizGamePage(),
+              );
+            },
+          ),
+          GoRoute(
+            path: 'result',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final result = state.extra as QuizResult?;
+              if (result == null) {
+                return const Scaffold(
+                  body: Center(child: Text('No result data')),
+                );
+              }
+              return QuizResultPage(result: result);
+            },
           ),
         ],
       ),

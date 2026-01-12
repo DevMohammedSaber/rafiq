@@ -1,0 +1,37 @@
+[
+    {
+        "id": "quran",
+        "name_ar": "القرآن الكريم",
+        "name_en": "Quran",
+        "icon": "book",
+        "color": "#4CAF50"
+    },
+    {
+        "id": "hadith",
+        "name_ar": "الحديث الشريف",
+        "name_en": "Hadith",
+        "icon": "scroll",
+        "color": "#2196F3"
+    },
+    {
+        "id": "fiqh",
+        "name_ar": "الفقه",
+        "name_en": "Fiqh",
+        "icon": "balance",
+        "color": "#9C27B0"
+    },
+    {
+        "id": "seerah",
+        "name_ar": "السيرة النبوية",
+        "name_en": "Seerah",
+        "icon": "history",
+        "color": "#FF9800"
+    },
+    {
+        "id": "general",
+        "name_ar": "معلومات عامة",
+        "name_en": "General",
+        "icon": "star",
+        "color": "#607D8B"
+    }
+]

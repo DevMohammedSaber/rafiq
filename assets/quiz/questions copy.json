@@ -1,0 +1,572 @@
+[
+    {
+        "id": "q1",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد سور القرآن الكريم؟",
+        "question_en": "How many surahs are in the Quran?",
+        "options_ar": [
+            "110",
+            "114",
+            "120",
+            "104"
+        ],
+        "options_en": [
+            "110",
+            "114",
+            "120",
+            "104"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "عدد سور القرآن الكريم 114 سورة.",
+        "explanation_en": "The Quran contains 114 surahs."
+    },
+    {
+        "id": "q2",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي أطول سورة في القرآن الكريم؟",
+        "question_en": "What is the longest surah in the Quran?",
+        "options_ar": [
+            "آل عمران",
+            "النساء",
+            "البقرة",
+            "المائدة"
+        ],
+        "options_en": [
+            "Al-Imran",
+            "An-Nisa",
+            "Al-Baqarah",
+            "Al-Maida"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "سورة البقرة هي أطول سورة في القرآن الكريم.",
+        "explanation_en": "Al-Baqarah is the longest surah in the Quran."
+    },
+    {
+        "id": "q3",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هي السورة التي تسمى قلب القرآن؟",
+        "question_en": "Which surah is called the heart of the Quran?",
+        "options_ar": [
+            "الرحمن",
+            "الملك",
+            "الكهف",
+            "يس"
+        ],
+        "options_en": [
+            "Ar-Rahman",
+            "Al-Mulk",
+            "Al-Kahf",
+            "Yaseen"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "سورة يس تسمى قلب القرآن.",
+        "explanation_en": "Surah Yaseen is called the heart of the Quran."
+    },
+    {
+        "id": "q4",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "سورة الفاتحة هي أول سورة في القرآن الكريم.",
+        "question_en": "Al-Fatiha is the first surah in the Quran.",
+        "correctBool": true,
+        "explanation_ar": "سورة الفاتحة هي أول سورة في ترتيب المصحف.",
+        "explanation_en": "Al-Fatiha is the first surah in the Quran's order."
+    },
+    {
+        "id": "q5",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم مرة ذُكر اسم النبي محمد صلى الله عليه وسلم في القرآن؟",
+        "question_en": "How many times is Prophet Muhammad (PBUH) mentioned by name in the Quran?",
+        "options_ar": [
+            "5 مرات",
+            "3 مرات",
+            "4 مرات",
+            "6 مرات"
+        ],
+        "options_en": [
+            "5 times",
+            "3 times",
+            "4 times",
+            "6 times"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "ذُكر اسم محمد 4 مرات في القرآن الكريم.",
+        "explanation_en": "Muhammad is mentioned by name 4 times in the Quran."
+    },
+    {
+        "id": "q6",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "من هو صاحب أكبر مجموعة أحاديث صحيحة؟",
+        "question_en": "Who compiled the most authentic collection of hadiths?",
+        "options_ar": [
+            "مسلم",
+            "الترمذي",
+            "البخاري",
+            "أبو داود"
+        ],
+        "options_en": [
+            "Muslim",
+            "At-Tirmidhi",
+            "Al-Bukhari",
+            "Abu Dawud"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "صحيح البخاري يعتبر أصح كتاب بعد القرآن.",
+        "explanation_en": "Sahih Al-Bukhari is considered the most authentic book after the Quran."
+    },
+    {
+        "id": "q7",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الحديث القدسي هو كلام الله بلفظ النبي.",
+        "question_en": "Hadith Qudsi is Allah's words in the Prophet's wording.",
+        "correctBool": true,
+        "explanation_ar": "الحديث القدسي معناه من الله ولفظه من النبي.",
+        "explanation_en": "Hadith Qudsi has meaning from Allah but wording from the Prophet."
+    },
+    {
+        "id": "q8",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "أول حديث في صحيح البخاري هو حديث:",
+        "question_en": "The first hadith in Sahih Bukhari is about:",
+        "options_ar": [
+            "الصلاة",
+            "النية",
+            "الصوم",
+            "الزكاة"
+        ],
+        "options_en": [
+            "Prayer",
+            "Intention",
+            "Fasting",
+            "Zakat"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "أول حديث: إنما الأعمال بالنيات.",
+        "explanation_en": "The first hadith: Actions are by intentions."
+    },
+    {
+        "id": "q9",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم عدد الأحاديث في صحيح البخاري بدون المكرر؟",
+        "question_en": "How many hadiths are in Sahih Bukhari without repetition?",
+        "options_ar": [
+            "7563",
+            "4000",
+            "3000",
+            "2602"
+        ],
+        "options_en": [
+            "7563",
+            "4000",
+            "3000",
+            "2602"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "صحيح البخاري يحتوي على 2602 حديث بدون المكرر.",
+        "explanation_en": "Sahih Bukhari contains 2602 hadiths without repetition."
+    },
+    {
+        "id": "q10",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الكتب الستة هي أشهر كتب الحديث.",
+        "question_en": "The Six Books are the most famous hadith collections.",
+        "correctBool": true,
+        "explanation_ar": "الكتب الستة: البخاري، مسلم، الترمذي، أبو داود، النسائي، ابن ماجه.",
+        "explanation_en": "The Six Books: Bukhari, Muslim, Tirmidhi, Abu Dawud, Nasai, Ibn Majah."
+    },
+    {
+        "id": "q11",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد الصلوات المفروضة في اليوم والليلة؟",
+        "question_en": "How many obligatory prayers are there daily?",
+        "options_ar": [
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "options_en": [
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "الصلوات الخمس: الفجر، الظهر، العصر، المغرب، العشاء.",
+        "explanation_en": "Five prayers: Fajr, Dhuhr, Asr, Maghrib, and Isha."
+    },
+    {
+        "id": "q12",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هو ركن الإسلام الثالث؟",
+        "question_en": "What is the third pillar of Islam?",
+        "options_ar": [
+            "الصوم",
+            "الحج",
+            "الصلاة",
+            "الزكاة"
+        ],
+        "options_en": [
+            "Fasting",
+            "Hajj",
+            "Prayer",
+            "Zakat"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "أركان الإسلام: الشهادتان، الصلاة، الزكاة، الصوم، الحج.",
+        "explanation_en": "Pillars: Shahada, Prayer, Zakat, Fasting, Hajj."
+    },
+    {
+        "id": "q13",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "صلاة الجمعة فرض على كل مسلم بالغ عاقل.",
+        "question_en": "Friday prayer is obligatory for every adult Muslim.",
+        "correctBool": true,
+        "explanation_ar": "صلاة الجمعة فرض عين على الرجال المقيمين.",
+        "explanation_en": "Friday prayer is obligatory for resident Muslim men."
+    },
+    {
+        "id": "q14",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو نصاب الذهب للزكاة؟",
+        "question_en": "What is the gold nisab for zakat?",
+        "options_ar": [
+            "100 جرام",
+            "85 جرام",
+            "50 جرام",
+            "200 جرام"
+        ],
+        "options_en": [
+            "100 grams",
+            "85 grams",
+            "50 grams",
+            "200 grams"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "نصاب الذهب 85 جرام من الذهب الخالص.",
+        "explanation_en": "The gold nisab is 85 grams of pure gold."
+    },
+    {
+        "id": "q15",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد ركعات صلاة المغرب؟",
+        "question_en": "How many rakats are in Maghrib prayer?",
+        "options_ar": [
+            "2",
+            "4",
+            "3",
+            "5"
+        ],
+        "options_en": [
+            "2",
+            "4",
+            "3",
+            "5"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "صلاة المغرب ثلاث ركعات.",
+        "explanation_en": "Maghrib prayer has 3 rakats."
+    },
+    {
+        "id": "q16",
+        "categoryId": "seerah",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "في أي عام ولد النبي صلى الله عليه وسلم؟",
+        "question_en": "In which year was Prophet Muhammad (PBUH) born?",
+        "options_ar": [
+            "عام الحزن",
+            "عام الفيل",
+            "عام الوفود",
+            "عام الفتح"
+        ],
+        "options_en": [
+            "Year of Sorrow",
+            "Year of the Elephant",
+            "Year of Delegations",
+            "Year of Conquest"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "ولد النبي في عام الفيل 571م.",
+        "explanation_en": "The Prophet was born in the Year of the Elephant, 571 CE."
+    },
+    {
+        "id": "q17",
+        "categoryId": "seerah",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما اسم أم النبي صلى الله عليه وسلم؟",
+        "question_en": "What is the name of Prophet Muhammad's mother?",
+        "options_ar": [
+            "خديجة",
+            "فاطمة",
+            "عائشة",
+            "آمنة بنت وهب"
+        ],
+        "options_en": [
+            "Khadijah",
+            "Fatima",
+            "Aisha",
+            "Amina bint Wahb"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "أم النبي هي آمنة بنت وهب.",
+        "explanation_en": "The Prophet's mother is Amina bint Wahb."
+    },
+    {
+        "id": "q18",
+        "categoryId": "seerah",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "هاجر النبي صلى الله عليه وسلم من مكة إلى المدينة.",
+        "question_en": "The Prophet migrated from Mecca to Medina.",
+        "correctBool": true,
+        "explanation_ar": "هاجر النبي إلى المدينة عام 622م.",
+        "explanation_en": "The Prophet migrated to Medina in 622 CE."
+    },
+    {
+        "id": "q19",
+        "categoryId": "seerah",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم كان عمر النبي عند نزول الوحي؟",
+        "question_en": "How old was the Prophet when revelation began?",
+        "options_ar": [
+            "35 سنة",
+            "45 سنة",
+            "40 سنة",
+            "30 سنة"
+        ],
+        "options_en": [
+            "35 years",
+            "45 years",
+            "40 years",
+            "30 years"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "نزل الوحي على النبي وهو في الأربعين من عمره.",
+        "explanation_en": "Revelation began when the Prophet was 40 years old."
+    },
+    {
+        "id": "q20",
+        "categoryId": "seerah",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "أول غزوة في الإسلام هي:",
+        "question_en": "The first battle in Islam was:",
+        "options_ar": [
+            "أحد",
+            "الخندق",
+            "تبوك",
+            "بدر"
+        ],
+        "options_en": [
+            "Uhud",
+            "Khandaq",
+            "Tabuk",
+            "Badr"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "غزوة بدر الكبرى في السنة الثانية للهجرة.",
+        "explanation_en": "The Battle of Badr was in the 2nd year of Hijra."
+    },
+    {
+        "id": "q21",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي قبلة المسلمين؟",
+        "question_en": "What is the Qibla of Muslims?",
+        "options_ar": [
+            "المسجد النبوي",
+            "الكعبة",
+            "المسجد الأقصى",
+            "مسجد قباء"
+        ],
+        "options_en": [
+            "Prophet's Mosque",
+            "Kaaba",
+            "Al-Aqsa Mosque",
+            "Quba Mosque"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "الكعبة المشرفة في مكة هي قبلة المسلمين.",
+        "explanation_en": "The Kaaba in Mecca is the Qibla of Muslims."
+    },
+    {
+        "id": "q22",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "شهر رمضان هو الشهر التاسع في التقويم الهجري.",
+        "question_en": "Ramadan is the ninth month in the Islamic calendar.",
+        "correctBool": true,
+        "explanation_ar": "رمضان هو الشهر التاسع في التقويم الهجري.",
+        "explanation_en": "Ramadan is the 9th month in the Hijri calendar."
+    },
+    {
+        "id": "q23",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد أركان الإيمان؟",
+        "question_en": "How many pillars of faith are there?",
+        "options_ar": [
+            "5",
+            "7",
+            "6",
+            "4"
+        ],
+        "options_en": [
+            "5",
+            "7",
+            "6",
+            "4"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "أركان الإيمان ستة: الإيمان بالله وملائكته وكتبه ورسله واليوم الآخر والقدر.",
+        "explanation_en": "Six pillars: Belief in Allah, Angels, Books, Messengers, Last Day, and Destiny."
+    },
+    {
+        "id": "q24",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو أول مسجد بني في الإسلام؟",
+        "question_en": "What is the first mosque built in Islam?",
+        "options_ar": [
+            "المسجد الحرام",
+            "المسجد النبوي",
+            "مسجد قباء",
+            "المسجد الأقصى"
+        ],
+        "options_en": [
+            "Masjid al-Haram",
+            "Prophet's Mosque",
+            "Quba Mosque",
+            "Al-Aqsa"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "مسجد قباء هو أول مسجد بني في الإسلام.",
+        "explanation_en": "Quba Mosque was the first mosque built in Islam."
+    },
+    {
+        "id": "q25",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "يوم الجمعة هو سيد الأيام عند المسلمين.",
+        "question_en": "Friday is the master of days for Muslims.",
+        "correctBool": true,
+        "explanation_ar": "يوم الجمعة هو خير يوم طلعت عليه الشمس.",
+        "explanation_en": "Friday is the best day on which the sun rises."
+    },
+    {
+        "id": "q26",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "سورة النمل تحتوي على بسملتين.",
+        "question_en": "Surah An-Naml contains two Bismillahs.",
+        "correctBool": true,
+        "explanation_ar": "سورة النمل فيها بسملة في بداية السورة وبسملة في قصة سليمان.",
+        "explanation_en": "Surah An-Naml has Bismillah at the start and another in Solomon's story."
+    },
+    {
+        "id": "q27",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هي السورة التي لا تبدأ بالبسملة؟",
+        "question_en": "Which surah does not begin with Bismillah?",
+        "options_ar": [
+            "الفاتحة",
+            "البقرة",
+            "التوبة",
+            "الناس"
+        ],
+        "options_en": [
+            "Al-Fatiha",
+            "Al-Baqarah",
+            "At-Tawbah",
+            "An-Nas"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "سورة التوبة هي السورة الوحيدة التي لا تبدأ بالبسملة.",
+        "explanation_en": "Surah At-Tawbah is the only surah without Bismillah at the start."
+    },
+    {
+        "id": "q28",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "الحديث الضعيف لا يُعمل به في الأحكام الشرعية.",
+        "question_en": "Weak hadith should not be used for legal rulings.",
+        "correctBool": true,
+        "explanation_ar": "الحديث الضعيف لا يُحتج به في الأحكام، وبعض العلماء يستخدمه في فضائل الأعمال.",
+        "explanation_en": "Weak hadith is not used for rulings, though some scholars use it for virtuous deeds."
+    },
+    {
+        "id": "q29",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هي نسبة الزكاة في الأموال النقدية؟",
+        "question_en": "What is the zakat rate for cash money?",
+        "options_ar": [
+            "5%",
+            "10%",
+            "2.5%",
+            "1%"
+        ],
+        "options_en": [
+            "5%",
+            "10%",
+            "2.5%",
+            "1%"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "نسبة الزكاة في الأموال النقدية هي 2.5% (ربع العشر).",
+        "explanation_en": "The zakat rate for cash is 2.5% (quarter of a tenth)."
+    },
+    {
+        "id": "q30",
+        "categoryId": "seerah",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "توفي النبي صلى الله عليه وسلم وعمره 63 سنة.",
+        "question_en": "The Prophet (PBUH) passed away at the age of 63.",
+        "correctBool": true,
+        "explanation_ar": "توفي النبي صلى الله عليه وسلم في المدينة المنورة عن عمر يناهز 63 سنة.",
+        "explanation_en": "The Prophet passed away in Medina at approximately 63 years of age."
+    }
+]

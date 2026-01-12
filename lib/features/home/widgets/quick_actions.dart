@@ -39,6 +39,13 @@ class QuickActions extends StatelessWidget {
         'route': '/tasbeeh',
         'isTab': false,
       },
+      // {
+      //   'label': 'quiz.title'.tr(), // "Quiz"
+      //   'icon': FontAwesomeIcons.gamepad,
+      //   'color': Colors.deepOrange,
+      //   'route': '/quiz',
+      //   'isTab': false,
+      // },
     ];
 
     return GridView.builder(

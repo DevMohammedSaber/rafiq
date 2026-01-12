@@ -10,6 +10,8 @@ import '../auth/presentation/cubit/auth_cubit.dart';
 import '../profile/presentation/cubit/settings_cubit.dart';
 import '../quran/data/quran_repository.dart';
 import '../azkar/data/azkar_reminder_repository.dart';
+import '../quiz/presentation/cubit/daily_question_cubit.dart';
+import '../quiz/presentation/widgets/daily_question_card.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
 
@@ -126,6 +128,13 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const QuickActions(),
+              const SizedBox(height: 24),
+
+              // Daily Question
+              BlocProvider(
+                create: (context) => DailyQuestionCubit()..load(),
+                child: const DailyQuestionCard(),
+              ),
               const SizedBox(height: 24),
 
               // Hadith of the Day
