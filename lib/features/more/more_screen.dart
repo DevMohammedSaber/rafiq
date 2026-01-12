@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/components/app_card.dart';
 import '../../core/theme/app_colors.dart';
+import '../auth/presentation/cubit/auth_cubit.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
@@ -16,31 +18,76 @@ class MoreScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Profile Card (Optional)
-            AppCard(
-              color: AppColors.primary,
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    "https://ui-avatars.com/api/?name=Mohamed+Saber&background=fff&color=006D5B",
+            // Profile Card
+            BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, authState) {
+                String displayName = 'profile.guest'.tr();
+                String subtitle = 'profile.upgrade_title'.tr();
+                String? photoUrl;
+                bool isGuest = true;
+
+                if (authState is AuthAuthenticated) {
+                  displayName = authState.user.displayName ?? 'User';
+                  subtitle = authState.user.email ?? '';
+                  photoUrl = authState.user.photoURL;
+                  isGuest = false;
+                }
+
+                final avatarUrl = (photoUrl != null && photoUrl.isNotEmpty)
+                    ? photoUrl
+                    : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(displayName)}&background=fff&color=006D5B';
+
+                return AppCard(
+                  color: AppColors.primary,
+                  onTap: () => context.push('/profile'),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(avatarUrl),
+                    ),
+                    title: Text(
+                      displayName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      subtitle,
+                      style: const TextStyle(color: Colors.white70),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isGuest)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              'profile.guest'.tr(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                title: const Text(
-                  "Mohamed Saber",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  "Cairo, Egypt",
-                  style: TextStyle(color: Colors.white70),
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.white),
-                  onPressed: () {},
-                ),
-              ),
+                );
+              },
             ),
             const SizedBox(height: 24),
 
@@ -68,17 +115,17 @@ class MoreScreen extends StatelessWidget {
                 ),
                 _buildMenuCard(
                   context,
-                  "onboarding.title3".tr(), // Qibla
+                  "onboarding.title3".tr(),
                   FontAwesomeIcons.compass,
                   Colors.teal,
-                  () {}, // Placeholder
+                  () => context.push('/prayers/qibla'),
                 ),
                 _buildMenuCard(
                   context,
                   "home.tasbih".tr(),
                   FontAwesomeIcons.handsHoldingCircle,
                   Colors.purple,
-                  () {}, // Placeholder
+                  () => context.push('/tasbeeh'),
                 ),
                 _buildMenuCard(
                   context,

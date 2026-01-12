@@ -31,6 +31,11 @@ class _PrayerPageState extends State<PrayerPage> {
         title: Text('prayer.title'.tr()),
         actions: [
           IconButton(
+            icon: const Icon(Icons.explore_outlined),
+            tooltip: 'qibla.title'.tr(),
+            onPressed: () => context.push('/prayers/qibla'),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => context.push('/prayers/settings'),
           ),

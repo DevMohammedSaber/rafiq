@@ -36,6 +36,15 @@ import '../../features/prayer/presentation/pages/prayer_settings_page.dart';
 import '../../features/prayer/presentation/cubit/prayer_cubit.dart';
 import '../../features/prayer/data/prayer_times_service.dart';
 import '../../features/prayer/data/prayer_notification_service.dart';
+import '../../features/qibla/presentation/pages/qibla_page.dart';
+import '../../features/qibla/presentation/cubit/qibla_cubit.dart';
+import '../../features/tasbeeh/presentation/pages/tasbeeh_page.dart';
+import '../../features/tasbeeh/presentation/pages/tasbeeh_presets_page.dart';
+import '../../features/tasbeeh/presentation/cubit/tasbeeh_cubit.dart';
+import '../../features/tasbeeh/data/tasbeeh_local_repository.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/edit_profile_page.dart';
+import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../../features/more/more_screen.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
@@ -227,6 +236,66 @@ class AppRouter {
           ),
         ],
       ),
+      GoRoute(
+        path: '/tasbeeh',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final authState = context.read<AuthCubit>().state;
+          String? userId;
+          if (authState is AuthAuthenticated) {
+            userId = authState.user.uid;
+          }
+          return BlocProvider(
+            create: (context) => TasbeehCubit(
+              localRepository: TasbeehLocalRepository(),
+              userId: userId,
+            ),
+            child: const TasbeehPage(),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'presets',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final authState = context.read<AuthCubit>().state;
+              String? userId;
+              if (authState is AuthAuthenticated) {
+                userId = authState.user.uid;
+              }
+              return BlocProvider(
+                create: (context) => TasbeehCubit(
+                  localRepository: TasbeehLocalRepository(),
+                  userId: userId,
+                )..init(),
+                child: const TasbeehPresetsPage(),
+              );
+            },
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/profile',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => ProfileCubit(),
+            child: const ProfilePage(),
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'edit',
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              return BlocProvider(
+                create: (context) => ProfileCubit()..load(),
+                child: const EditProfilePage(),
+              );
+            },
+          ),
+        ],
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainWrapperGoRouter(navigationShell: navigationShell);
@@ -391,6 +460,21 @@ class AppRouter {
                     path: 'settings',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) => const PrayerSettingsPage(),
+                  ),
+                  GoRoute(
+                    path: 'qibla',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final settingsState = context.read<SettingsCubit>().state;
+                      final userLocation = settingsState is SettingsLoaded
+                          ? settingsState.settings.location
+                          : null;
+                      return BlocProvider(
+                        create: (context) =>
+                            QiblaCubit(userLocation: userLocation),
+                        child: const QiblaPage(),
+                      );
+                    },
                   ),
                 ],
               ),

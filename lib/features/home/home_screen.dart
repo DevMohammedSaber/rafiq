@@ -73,7 +73,8 @@ class HomeScreen extends StatelessWidget {
                           ),
                           child: CircleAvatar(
                             radius: 24,
-                            backgroundImage: photoUrl != null
+                            backgroundImage:
+                                (photoUrl != null && photoUrl.isNotEmpty)
                                 ? NetworkImage(photoUrl)
                                 : const NetworkImage(
                                     "https://ui-avatars.com/api/?name=Guest&background=006D5B&color=fff",

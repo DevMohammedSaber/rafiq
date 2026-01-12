@@ -33,10 +33,10 @@ class QuickActions extends StatelessWidget {
         'isTab': false,
       },
       {
-        'label': 'home.quiz'.tr(), // "Quiz"
-        'icon': FontAwesomeIcons.brain,
-        'color': Colors.orange,
-        'route': '/more/quiz',
+        'label': 'home.tasbih'.tr(), // "Tasbeeh"
+        'icon': FontAwesomeIcons.handsHoldingCircle,
+        'color': Colors.purple,
+        'route': '/tasbeeh',
         'isTab': false,
       },
     ];
