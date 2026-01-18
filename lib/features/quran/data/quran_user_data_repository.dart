@@ -192,4 +192,66 @@ class QuranUserDataRepository {
       return true;
     }
   }
+
+  // View Settings
+  static const String _guestQuranViewModeKey = 'guest_quran_view_mode';
+  static const String _guestSelectedMushafIdKey = 'guest_selected_mushaf_id';
+
+  Future<String> getQuranViewMode() async {
+    if (_isAuthenticated && _userId != null) {
+      final doc = await _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('settings')
+          .doc('quran')
+          .get();
+      return doc.data()?['viewMode'] as String? ?? "text_cards";
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_guestQuranViewModeKey) ?? "text_cards";
+    }
+  }
+
+  Future<void> setQuranViewMode(String mode) async {
+    if (_isAuthenticated && _userId != null) {
+      await _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('settings')
+          .doc('quran')
+          .set({'viewMode': mode}, SetOptions(merge: true));
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_guestQuranViewModeKey, mode);
+    }
+  }
+
+  Future<String?> getSelectedMushafId() async {
+    if (_isAuthenticated && _userId != null) {
+      final doc = await _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('settings')
+          .doc('quran')
+          .get();
+      return doc.data()?['selectedMushafId'] as String?;
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_guestSelectedMushafIdKey);
+    }
+  }
+
+  Future<void> setSelectedMushafId(String mushafId) async {
+    if (_isAuthenticated && _userId != null) {
+      await _firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('settings')
+          .doc('quran')
+          .set({'selectedMushafId': mushafId}, SetOptions(merge: true));
+    } else {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_guestSelectedMushafIdKey, mushafId);
+    }
+  }
 }

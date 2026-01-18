@@ -1,305 +1,100 @@
-import 'package:flutter/services.dart';
-import 'package:csv/csv.dart';
+import 'package:sqflite/sqflite.dart';
 import '../domain/models/azkar_category.dart';
 import '../domain/models/zikr.dart';
+import 'azkar_database_cdn.dart';
 
 class AzkarRepository {
-  static const String _categoriesPath = 'assets/source/azkar/categories.csv';
-  static const String _morningPath = 'assets/source/azkar/azkar_sabah.csv';
-  static const String _eveningPath = 'assets/source/azkar/azkar_massa.csv';
-  static const String _afterPrayerPath =
-      'assets/source/azkar/PostPrayer_azkar.csv';
-  static const String _generalPath = 'assets/source/azkar/azkar.csv';
-  static const String _hisnAlmuslimPath =
-      'assets/source/azkar/hisn_almuslim.csv';
+  Future<Database> get _db async => AzkarDatabaseCdn.instance.database;
 
-  List<AZkarCategory>? _cachedCategories;
-  final Map<String, List<Zikr>> _cachedZikr = {};
-
-  // Cache for Hisn AlMuslim raw data
-  List<List<dynamic>>? _hisnData;
-
-  Future<List<List<dynamic>>> _parseCsv(String path) async {
-    try {
-      final csvString = await rootBundle.loadString(path);
-      final List<List<dynamic>> rows = const CsvToListConverter().convert(
-        csvString,
-        eol: '\n',
-      );
-      return rows;
-    } catch (e) {
-      throw Exception('Failed to parse CSV at $path: $e');
-    }
-  }
-
-  Future<void> _ensureHisnLoaded() async {
-    if (_hisnData != null) return;
-    try {
-      _hisnData = await _parseCsv(_hisnAlmuslimPath);
-    } catch (e) {
-      throw Exception('Failed to load hisn almuslim data: $e');
-    }
+  void clearCache() {
+    // No-op for database implementation
   }
 
   Future<List<AZkarCategory>> loadCategories() async {
-    if (_cachedCategories != null) {
-      return _cachedCategories!;
-    }
-
-    try {
-      final rows = await _parseCsv(_categoriesPath);
-
-      // Skip header row
-      final dataRows = rows.skip(1).toList();
-
-      List<AZkarCategory> categories = dataRows.map((row) {
-        return AZkarCategory(
-          id: row[0].toString(),
-          nameAr: row[1].toString(),
-          nameEn: row[2].toString(),
-        );
-      }).toList();
-
-      _cachedCategories = categories;
-      return _cachedCategories!;
-    } catch (e) {
-      throw Exception('Failed to load azkar categories: $e');
-    }
+    final db = await _db;
+    final result = await db.query(
+      'azkar_categories',
+      orderBy: 'order_index ASC',
+    );
+    return result.map((row) {
+      return AZkarCategory(
+        id: row['id'] as String,
+        nameAr: row['name_ar'] as String,
+        nameEn: row['name_en'] as String? ?? '',
+      );
+    }).toList();
   }
 
   Future<List<Zikr>> loadZikrByCategory(String categoryId) async {
-    if (_cachedZikr.containsKey(categoryId)) {
-      return _cachedZikr[categoryId]!;
-    }
+    final db = await _db;
+    final result = await db.query(
+      'azkar',
+      where: 'category_id = ?',
+      whereArgs: [categoryId],
+      orderBy: 'order_index ASC',
+    );
 
-    try {
-      List<Zikr> categoryZikr = [];
+    return result.asMap().entries.map((entry) {
+      final index = entry.key;
+      final row = entry.value;
+      return _mapToZikr(row, categoryId, index);
+    }).toList();
+  }
 
-      switch (categoryId) {
-        case 'morning':
-          categoryZikr = await _loadFromCsvFile(_morningPath, 'morning');
-          break;
-        case 'evening':
-          categoryZikr = await _loadFromCsvFile(_eveningPath, 'evening');
-          break;
-        case 'after_prayer':
-          categoryZikr = await _loadFromCsvFile(
-            _afterPrayerPath,
-            'after_prayer',
-          );
-          break;
-        case 'general':
-          categoryZikr = await _loadGeneralZikr();
-          break;
-        case 'sleep':
-          categoryZikr = await _loadSleepZikr();
-          break;
-        case 'hisn_almuslim':
-          categoryZikr = await _loadHisnAlmuslim();
-          break;
-        default:
-          categoryZikr = [];
+  Future<Zikr?> getZikrById(String zikrId) async {
+    // This is tricky because old IDs were synthetic.
+    // If zikrId is strictly numeric (new DB ID), try that.
+    // If it looks like 'cat_idx', try to parse.
+    // For now, let's assume we can't easily reverse lookup 'cat_idx' efficiently without scanning.
+    // But since this is likely for deep links or favorites, let's try to support the new ID format (numeric string).
+
+    // Attempt 1: Fetch by numeric ID
+    final db = await _db;
+    if (int.tryParse(zikrId) != null) {
+      final result = await db.query(
+        'azkar',
+        where: 'id = ?',
+        whereArgs: [int.parse(zikrId)],
+      );
+      if (result.isNotEmpty) {
+        final row = result.first;
+        // We might miss categoryId needed for ID reconstruction if we don't query it or it's in row
+        return _mapToZikr(row, row['category_id'] as String, -1);
       }
-
-      _cachedZikr[categoryId] = categoryZikr;
-      return categoryZikr;
-    } catch (e) {
-      throw Exception('Failed to load zikr for category $categoryId: $e');
     }
+
+    // Fallback: If we can't find it, return null.
+    // Reconstructing legacy IDs is too expensive here without better DB support.
+    return null;
   }
 
-  Future<List<Zikr>> _loadFromCsvFile(String path, String categoryId) async {
-    try {
-      final rows = await _parseCsv(path);
+  Zikr _mapToZikr(Map<String, dynamic> row, String categoryId, int index) {
+    final textAr = row['text_ar'] as String;
+    final textEn = row['text_en'] as String? ?? '';
+    final count = row['count'] as int? ?? 1;
+    final benefit = row['benefit'] as String?;
+    final reference = row['reference'] as String?;
 
-      // Skip header row
-      final dataRows = rows.skip(1).toList();
+    // Reconstruct ID: Use database ID as stable identifier now
+    final id = row['id'].toString();
 
-      List<Zikr> zikrList = [];
-      for (int i = 0; i < dataRows.length; i++) {
-        final row = dataRows[i];
-        if (row.isEmpty) continue;
+    // Dynamic title extraction
+    final titleAr = _extractTitle(textAr);
 
-        final zekr = row[0].toString();
-        final repeat = row.length > 1
-            ? int.tryParse(row[1].toString()) ?? 1
-            : 1;
-        final bless = row.length > 2 ? row[2].toString() : '';
+    // Approximate English title
+    final titleEn = 'Zikr $id';
 
-        if (zekr.trim().isEmpty) continue;
-
-        final title = _extractTitle(zekr);
-
-        zikrList.add(
-          Zikr(
-            id: '${categoryId}_${i + 1}',
-            categoryId: categoryId,
-            titleAr: title,
-            titleEn: '${_getCategoryDisplayName(categoryId)} ${i + 1}',
-            textAr: zekr,
-            textEn: '',
-            repeat: repeat,
-            sourceAr: bless.isNotEmpty ? bless : null,
-            sourceEn: null,
-          ),
-        );
-      }
-      return zikrList;
-    } catch (e) {
-      throw Exception('Failed to load azkar from $path: $e');
-    }
-  }
-
-  Future<List<Zikr>> _loadGeneralZikr() async {
-    try {
-      final rows = await _parseCsv(_generalPath);
-
-      // Skip header row
-      final dataRows = rows.skip(1).toList();
-
-      List<Zikr> zikrList = [];
-      for (int i = 0; i < dataRows.length; i++) {
-        final row = dataRows[i];
-        if (row.isEmpty) continue;
-
-        // General CSV format may differ - adapt as needed
-        final content = row[0].toString();
-        final count = row.length > 1 ? int.tryParse(row[1].toString()) ?? 1 : 1;
-        final source = row.length > 2 ? row[2].toString() : '';
-
-        if (content.trim().isEmpty) continue;
-
-        final title = _extractTitle(content);
-
-        zikrList.add(
-          Zikr(
-            id: 'general_${i + 1}',
-            categoryId: 'general',
-            titleAr: title,
-            titleEn: 'General Remembrance ${i + 1}',
-            textAr: content,
-            textEn: '',
-            repeat: count,
-            sourceAr: source.isNotEmpty ? source : null,
-            sourceEn: null,
-          ),
-        );
-      }
-      return zikrList;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  Future<List<Zikr>> _loadSleepZikr() async {
-    // Return default sleep azkar
-    return [
-      Zikr(
-        id: 'sleep_1',
-        categoryId: 'sleep',
-        titleAr: 'المعوذات قبل النوم',
-        titleEn: 'Seeking Refuge Before Sleep',
-        textAr:
-            'بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِن شَرِّ مَا خَلَقَ، وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ. بِسْمِ اللهِ الرَّحْمنِ الرَّحِيم قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَهِ النَّاسِ، مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ',
-        textEn: '',
-        repeat: 3,
-        sourceAr: 'البخاري ومسلم',
-        sourceEn: null,
-      ),
-      Zikr(
-        id: 'sleep_2',
-        categoryId: 'sleep',
-        titleAr: 'دعاء النوم',
-        titleEn: 'Sleep Supplication',
-        textAr: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
-        textEn: 'In Your name, O Allah, I die and I live.',
-        repeat: 1,
-        sourceAr: 'البخاري',
-        sourceEn: null,
-      ),
-      Zikr(
-        id: 'sleep_3',
-        categoryId: 'sleep',
-        titleAr: 'دعاء الاستيقاظ',
-        titleEn: 'Waking Up Supplication',
-        textAr:
-            'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
-        textEn:
-            'All praise is for Allah who gave us life after having taken it from us and unto Him is the resurrection.',
-        repeat: 1,
-        sourceAr: 'البخاري',
-        sourceEn: null,
-      ),
-      Zikr(
-        id: 'sleep_4',
-        categoryId: 'sleep',
-        titleAr: 'آية الكرسي',
-        titleEn: 'Ayat Al-Kursi',
-        textAr:
-            'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
-        textEn: '',
-        repeat: 1,
-        sourceAr: 'البقرة: 255',
-        sourceEn: null,
-      ),
-    ];
-  }
-
-  Future<List<Zikr>> _loadHisnAlmuslim() async {
-    try {
-      await _ensureHisnLoaded();
-      if (_hisnData == null || _hisnData!.isEmpty) return [];
-
-      // Skip header row
-      final dataRows = _hisnData!.skip(1).toList();
-
-      List<Zikr> zikrList = [];
-      for (int i = 0; i < dataRows.length; i++) {
-        final row = dataRows[i];
-        if (row.isEmpty) continue;
-
-        final text = row[0].toString();
-        if (text.trim().isEmpty) continue;
-
-        final title = _extractTitle(text);
-
-        zikrList.add(
-          Zikr(
-            id: 'hisn_${i + 1}',
-            categoryId: 'hisn_almuslim',
-            titleAr: title,
-            titleEn: 'Fortress of the Muslim ${i + 1}',
-            textAr: text,
-            textEn: '',
-            repeat: 1,
-            sourceAr: null,
-            sourceEn: null,
-          ),
-        );
-      }
-      return zikrList;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  String _getCategoryDisplayName(String categoryId) {
-    switch (categoryId) {
-      case 'morning':
-        return 'Morning Remembrance';
-      case 'evening':
-        return 'Evening Remembrance';
-      case 'after_prayer':
-        return 'After Prayer Remembrance';
-      case 'sleep':
-        return 'Sleep Remembrance';
-      case 'general':
-        return 'General Remembrance';
-      case 'hisn_almuslim':
-        return 'Fortress of the Muslim';
-      default:
-        return 'Remembrance';
-    }
+    return Zikr(
+      id: id,
+      categoryId: categoryId,
+      titleAr: titleAr,
+      titleEn: titleEn,
+      textAr: textAr,
+      textEn: textEn,
+      repeat: count,
+      sourceAr: benefit, // Using benefit field for source/benefit
+      sourceEn: reference,
+    );
   }
 
   String _extractTitle(String text) {
@@ -344,29 +139,5 @@ class AzkarRepository {
       return '${cleaned.substring(0, 50)}...';
     }
     return cleaned.isEmpty ? 'ذكر' : cleaned;
-  }
-
-  Future<Zikr?> getZikrById(String zikrId) async {
-    try {
-      // Trying to find zikr in cache
-      for (var catId in _cachedZikr.keys) {
-        try {
-          final zikr = _cachedZikr[catId]!.firstWhere(
-            (z) => z.id == zikrId,
-            orElse: () => throw 'NotFound',
-          );
-          if (zikr.id == zikrId) return zikr;
-        } catch (_) {}
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  void clearCache() {
-    _cachedCategories = null;
-    _cachedZikr.clear();
-    _hisnData = null;
   }
 }

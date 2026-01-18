@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../core/content/content_update_manager.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/profile/presentation/cubit/settings_cubit.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -9,16 +12,20 @@ import '../../features/onboarding/location_permission_screen.dart';
 import '../../features/onboarding/presentation/pages/setup_page.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/quran/presentation/pages/quran_home_page.dart';
-import '../../features/quran/presentation/pages/quran_reader_page.dart';
+import '../../features/quran/presentation/pages/quran_ayah_reader_page.dart';
+import '../../features/quran/presentation/pages/quran_mushaf_images_reader_page.dart';
+import '../../features/quran/presentation/pages/quran_search_page.dart';
 import '../../features/quran/data/quran_repository.dart';
-import '../../features/quran/data/quran_user_data_repository.dart';
-import '../../features/quran/data/quran_pagination_repository.dart';
-import '../../features/quran/data/mushaf_data_repository.dart';
 import '../../features/quran/presentation/cubit/quran_home_cubit.dart';
-import '../../features/quran/presentation/cubit/quran_reader_cubit.dart';
 import '../../features/quran/presentation/cubit/quran_bootstrap_cubit.dart';
+import '../../features/quran/presentation/cubit/quran_search_cubit.dart';
 import '../../features/quran/presentation/pages/quran_import_page.dart';
 import '../../features/quran/data/quran_import_service.dart';
+import '../../features/quran/mushaf/presentation/pages/mushaf_store_page.dart';
+import '../../features/quran/tafsir/presentation/cubit/tafsir_cubit.dart';
+import '../../features/quran/tafsir/presentation/pages/tafsir_page.dart';
+import '../../features/quran/audio/presentation/cubit/quran_audio_cubit.dart';
+import '../../features/quran/audio/presentation/pages/quran_audio_settings_page.dart';
 import '../../features/azkar/presentation/pages/azkar_categories_page.dart';
 import '../../features/azkar/presentation/pages/zikr_list_page.dart';
 import '../../features/azkar/presentation/pages/zikr_reader_page.dart';
@@ -67,7 +74,9 @@ import '../../features/hadith/presentation/cubit/hadith_of_day_cubit.dart';
 import '../../features/hadith/presentation/pages/hadith_home_page.dart';
 import '../../features/hadith/presentation/pages/hadith_list_page.dart';
 import '../../features/hadith/presentation/pages/hadith_detail_page.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../features/bootstrap/presentation/pages/content_selection_page.dart';
+import '../../features/bootstrap/presentation/cubit/content_selection_cubit.dart';
+import '../../features/settings/presentation/pages/content_downloads_page.dart';
 
 // Private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -92,7 +101,7 @@ class AppRouter {
       GoRouterRefreshStream(authCubit.stream),
       GoRouterRefreshStream(settingsCubit.stream),
     ]),
-    redirect: (context, state) {
+    redirect: (context, state) async {
       final authState = authCubit.state;
       final settingsState = settingsCubit.state;
 
@@ -105,88 +114,71 @@ class AppRouter {
       final bool onLoginPage = state.fullPath == '/login';
       final bool onSetupPage = state.fullPath == '/setup';
       final bool onOnboardingPage = state.fullPath == '/';
-      final bool onHomePage =
-          state.fullPath == '/home' ||
-          state.fullPath?.startsWith('/home') == true ||
-          state.fullPath?.startsWith('/quran') == true ||
-          state.fullPath?.startsWith('/azkar') == true ||
-          state.fullPath?.startsWith('/prayers') == true ||
-          state.fullPath?.startsWith('/more') == true;
-
       final bool onSplashPage = state.fullPath == '/splash';
-
-      // 1. Always show splash first (managed by initialLocation and Splash widget timer)
-      // The Splash screen itself will navigate to '/' after animation/timer.
-      // However, we need to protect other routes.
-
-      // If we are on splash, stay there until manual navigation or logic kicks in.
-      // Actually, to keep it simple with GoRouter:
-      // We can let the Splash screen handle the "minimum duration".
-      // When Splash calls context.go('/'), this redirect logic will run again.
+      final bool onContentSelectionPage =
+          state.fullPath == '/content/select-download';
 
       if (onSplashPage) return null;
 
-      // If auth is still initializing, only redirect away from protected routes to splash?
-      // No, let's keep it simple.
+      // 0. Check Content Readiness
+      bool isContentReady = false;
+      try {
+        isContentReady = await ContentUpdateManager().isContentReady();
+      } catch (_) {}
+
+      if (!isContentReady) {
+        if (onContentSelectionPage) return null;
+        return '/content/select-download';
+      }
 
       if (isAuthInitial || isAuthLoading) {
-        // If on splash, stay.
-        // If on protected route, go to splash or login.
         return null;
       }
 
-      // 1. Unauthenticated -> Login (unless already on login or onboarding)
+      // 1. Unauthenticated -> Login
       if (isUnauthenticated) {
         if (onLoginPage || onOnboardingPage) {
           return null;
         }
-        // If on protected routes, redirect to login
-        if (onHomePage || onSetupPage) {
-          return '/login';
-        }
         return '/login';
       }
 
-      // 2. Authenticated - check setup status
+      // 2. Authenticated
       if (isAuthenticated) {
-        // If settings are loading, allow current page but prevent onboarding/login
         if (settingsState is SettingsLoading) {
-          if (onOnboardingPage || onLoginPage) {
-            // Wait for settings
-            return null;
-          }
           return null;
         }
 
-        // Settings loaded - check setup status
         if (settingsState is SettingsLoaded) {
-          // Setup not done -> go to setup (unless already there)
           if (!settingsState.settings.setupDone) {
-            if (onSetupPage) {
-              return null;
-            }
+            if (onSetupPage) return null;
             return '/setup';
           }
 
-          // Setup done -> go to home (if on login/setup/onboarding/splash)
-          if (settingsState.settings.setupDone) {
-            if (onLoginPage ||
-                onSetupPage ||
-                onOnboardingPage ||
-                onSplashPage) {
-              return '/home';
-            }
+          if (onLoginPage ||
+              onSetupPage ||
+              onOnboardingPage ||
+              onSplashPage ||
+              onContentSelectionPage) {
+            return '/home';
           }
         }
       }
 
-      // Default - no redirect needed
       return null;
     },
     routes: [
       GoRoute(
         path: '/splash',
         builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/content/select-download',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => BlocProvider(
+          create: (context) => ContentSelectionCubit(),
+          child: const ContentSelectionPage(),
+        ),
       ),
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(path: '/setup', builder: (context, state) => const SetupPage()),
@@ -348,7 +340,53 @@ class AppRouter {
                 ),
                 routes: [
                   GoRoute(
-                    path: ':surahId',
+                    path: 'search',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      return BlocProvider(
+                        create: (context) => QuranSearchCubit(),
+                        child: const QuranSearchPage(),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'audio-settings',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      return BlocProvider(
+                        create: (context) => QuranAudioCubit(),
+                        child: const QuranAudioSettingsPage(),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'tafsir/:surahId/:ayahNumber',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final surahId =
+                          int.tryParse(
+                            state.pathParameters['surahId'] ?? '1',
+                          ) ??
+                          1;
+                      final ayahNumber =
+                          int.tryParse(
+                            state.pathParameters['ayahNumber'] ?? '1',
+                          ) ??
+                          1;
+                      final ayahText = state.uri.queryParameters['text'] ?? '';
+
+                      return BlocProvider(
+                        create: (context) => TafsirCubit(),
+                        child: TafsirPage(
+                          surahId: surahId,
+                          ayahNumber: ayahNumber,
+                          ayahText: ayahText,
+                        ),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'text/:surahId',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) {
                       final surahId =
@@ -361,22 +399,31 @@ class AppRouter {
                           ? int.tryParse(ayahStr)
                           : null;
 
-                      return BlocProvider(
-                        create: (context) => QuranReaderCubit(
-                          QuranRepository(),
-                          QuranUserDataRepository(),
-                          QuranPaginationRepository(),
-                          MushafDataRepository(
-                            quranRepository: QuranRepository(),
-                          ),
-                          context.read<SettingsCubit>(),
-                        ),
-                        child: QuranReaderPage(
-                          surahId: surahId,
-                          scrollToAyah: scrollToAyah,
-                        ),
+                      // Use the new QuranAyahReaderPage (Mode 1: Ayah-by-Ayah)
+                      return QuranAyahReaderPage(
+                        surahId: surahId,
+                        scrollToAyah: scrollToAyah,
                       );
                     },
+                  ),
+                  GoRoute(
+                    path: 'mushaf',
+                    parentNavigatorKey: _rootNavigatorKey,
+                    builder: (context, state) {
+                      final pageStr = state.uri.queryParameters['page'];
+                      final page = pageStr != null
+                          ? int.tryParse(pageStr)
+                          : null;
+                      // Use the new QuranMushafImagesReaderPage (Mode 2: Mushaf Images)
+                      return QuranMushafImagesReaderPage(initialPage: page);
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'store',
+                        parentNavigatorKey: _rootNavigatorKey,
+                        builder: (context, state) => const MushafStorePage(),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -496,6 +543,14 @@ class AppRouter {
                     path: 'settings',
                     parentNavigatorKey: _rootNavigatorKey,
                     builder: (context, state) => const SettingsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'downloads',
+                        parentNavigatorKey: _rootNavigatorKey,
+                        builder: (context, state) =>
+                            const ContentDownloadsPage(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'quiz',

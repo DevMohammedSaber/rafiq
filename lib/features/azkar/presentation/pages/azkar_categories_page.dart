@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../cubit/azkar_categories_cubit.dart';
 import '../../domain/models/azkar_category.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/components/missing_content_placeholder.dart';
 
 class AzkarCategoriesPage extends StatefulWidget {
   const AzkarCategoriesPage({super.key});
@@ -62,6 +63,13 @@ class _AzkarCategoriesPageState extends State<AzkarCategoriesPage> {
           }
 
           if (state is AzkarCategoriesLoaded) {
+            if (state.categories.isEmpty) {
+              return MissingContentPlaceholder(
+                title: "azkar.title".tr(),
+                description: "azkar.missing_content_desc".tr(),
+                icon: Icons.dataset,
+              );
+            }
             return GridView.builder(
               padding: const EdgeInsets.all(20),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

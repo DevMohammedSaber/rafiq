@@ -68,8 +68,7 @@ class _MushafPageViewState extends State<MushafPageView> {
           itemCount: widget.totalPages,
           onPageChanged: (index) {
             final pageNum = index + 1;
-            setState(() {
-            });
+            setState(() {});
             widget.onPageChanged(pageNum);
             widget.cubit.jumpToPage(pageNum);
             widget.cubit.loadPageIfNeeded(pageNum);
@@ -152,10 +151,7 @@ class _PageContent extends StatelessWidget {
             ),
             child: Column(
               children: [
-                _PageHeader(
-                  pageNumber: pageNumber,
-                  surahName: surahName,
-                ),
+                _PageHeader(pageNumber: pageNumber, surahName: surahName),
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -284,10 +280,7 @@ class _PageHeader extends StatelessWidget {
   final int pageNumber;
   final String? surahName;
 
-  const _PageHeader({
-    required this.pageNumber,
-    this.surahName,
-  });
+  const _PageHeader({required this.pageNumber, this.surahName});
 
   @override
   Widget build(BuildContext context) {

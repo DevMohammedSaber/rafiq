@@ -1,20 +1,20 @@
 import 'package:sqflite/sqflite.dart';
+import 'quran_database_cdn.dart';
 import '../domain/models/surah.dart';
 import '../domain/models/ayah.dart';
-import '../../../core/db/quran_database.dart';
 import '../../../core/utils/arabic_normalizer.dart';
 
 class QuranRepository {
-  Future<Database> getDb() async => QuranDatabase.instance.database;
+  Future<Database> getDb() async => QuranDatabaseCdn.instance.database;
 
   Future<List<Surah>> loadSurahs() async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final result = await db.query('quran_surahs', orderBy: 'surah ASC');
     return result.map((e) => _mapToSurah(e)).toList();
   }
 
   Future<List<Ayah>> loadAyahs(int surahId) async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final result = await db.query(
       'quran_ayahs',
       where: 'surah = ?',
@@ -25,7 +25,7 @@ class QuranRepository {
   }
 
   Future<Surah?> getSurahById(int surahId) async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final result = await db.query(
       'quran_surahs',
       where: 'surah = ?',
@@ -36,7 +36,7 @@ class QuranRepository {
   }
 
   Future<List<Surah>> searchSurahs(String query) async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     if (query.isEmpty) return loadSurahs();
 
     final result = await db.query(
@@ -53,7 +53,7 @@ class QuranRepository {
     int limit = 50,
     int offset = 0,
   }) async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final normalized = ArabicNormalizer.normalize(query);
 
     final result = await db.query(
@@ -68,7 +68,7 @@ class QuranRepository {
   }
 
   Future<Ayah?> getAyah(int surahId, int ayahNumber) async {
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final result = await db.query(
       'quran_ayahs',
       where: 'surah = ? AND ayah = ?',
@@ -98,5 +98,16 @@ class QuranRepository {
       textAr: row['text'] as String,
       page: row['page'] as int?,
     );
+  }
+
+  Future<List<Ayah>> getAyahsByPage(int page) async {
+    final db = await QuranDatabaseCdn.instance.database;
+    final result = await db.query(
+      'quran_ayahs',
+      where: 'page = ?',
+      whereArgs: [page],
+      orderBy: 'surah ASC, ayah ASC',
+    );
+    return result.map((e) => _mapToAyah(e)).toList();
   }
 }

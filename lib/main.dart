@@ -12,10 +12,12 @@ import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/profile/data/user_profile_repository.dart';
 import 'features/profile/presentation/cubit/settings_cubit.dart';
 import 'features/prayer/data/prayer_notification_service.dart';
+import 'core/content/content_cache_paths.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await ContentCachePaths.init();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

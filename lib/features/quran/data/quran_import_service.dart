@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart' as ArabicNormalizer;
-import 'package:rafiq/core/db/quran_database.dart';
+import 'package:rafiq/core/utils/arabic_normalizer.dart';
+import 'package:rafiq/core/config/content_config.dart';
+import 'package:rafiq/core/content/content_cache_paths.dart';
+import 'package:rafiq/features/quran/data/quran_database_cdn.dart';
 import 'package:rafiq/features/quran/data/surah_names.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,27 +38,22 @@ class QuranImportService {
 
   Future<bool> needsImport() async {
     final prefs = await SharedPreferences.getInstance();
-    final version = prefs.getInt(_dbVersionKey) ?? 0;
+    // Use the same key as ContentDownloadService for consistency
+    final version = prefs.getInt(ContentConfig.prefKeyQuranVersion) ?? 0;
 
-    final db = await QuranDatabase.instance.database;
+    final db = await QuranDatabaseCdn.instance.database;
     final ayahCount =
         Sqflite.firstIntValue(
           await db.rawQuery('SELECT COUNT(*) FROM quran_ayahs'),
         ) ??
         0;
 
-    return version < currentVersion || ayahCount == 0;
+    return version == 0 || ayahCount == 0;
   }
 
   Future<void> startImport() async {
     try {
-      final db = await QuranDatabase.instance.database;
-
-      // Clear existing data for fresh import
-      await db.transaction((txn) async {
-        await txn.delete('quran_ayahs');
-        await txn.delete('quran_surahs');
-      });
+      final db = await QuranDatabaseCdn.instance.database;
 
       _progressController.add(
         QuranImportProgress(
@@ -65,9 +63,22 @@ class QuranImportService {
         ),
       );
 
-      final data = await rootBundle.loadString(
-        'assets/source/quran/quran.csv',
-      );
+      String data;
+      final csvPath = ContentCachePaths.quranCsvPath;
+
+      if (await File(csvPath).exists()) {
+        data = await File(csvPath).readAsString();
+      } else {
+        // Fallback to assets ONLY if bundled (might not be in future)
+        try {
+          data = await rootBundle.loadString('assets/source/quran/quran.csv');
+        } catch (e) {
+          throw Exception(
+            "Quran data not found. Please download it from settings.",
+          );
+        }
+      }
+
       final rows = const CsvToListConverter(
         fieldDelimiter: '|',
         eol: '\n',

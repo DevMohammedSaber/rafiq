@@ -1,0 +1,89 @@
+{
+  "baseUrl": "https://rafiq-content.m-s-e12300.workers.dev",
+  "datasets": {
+    "quran": {
+      "version": 1,
+      "format": "csv",
+      "apply": "reimport_sqlite",
+      "path": "quran/quran.csv",
+      "sha256": ""
+    },
+    "azkar": {
+      "version": 1,
+      "format": "multi_file",
+      "apply": "replace_file",
+      "files": [
+        {
+          "id": "morning",
+          "path": "azkar/azkar_sabah.csv"
+        },
+        {
+          "id": "evening",
+          "path": "azkar/azkar_massa.csv"
+        },
+        {
+          "id": "after_prayer",
+          "path": "azkar/PostPrayer_azkar.csv"
+        },
+        {
+          "id": "general",
+          "path": "azkar/azkar.csv"
+        },
+        {
+          "id": "hisn_almuslim",
+          "path": "azkar/hisn_almuslim.csv"
+        },
+        {
+          "id": "categories",
+          "path": "azkar/categories.csv"
+        }
+      ],
+      "sha256": ""
+    },
+    "hadith_plain": {
+      "version": 1,
+      "format": "multi_csv",
+      "apply": "reimport_sqlite",
+      "basePath": "hadith",
+      "books": [
+        {
+          "id": "Sahih_Al-Bukhari",
+          "csv": "sahih_al-bukhari_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sahih_Muslim",
+          "csv": "sahih_muslim_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sunan_Abu-Dawud",
+          "csv": "sunan_abu-dawud_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sunan_Al-Tirmidhi",
+          "csv": "sunan_al-tirmidhi_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sunan_Al-Nasai",
+          "csv": "sunan_al-nasai_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sunan_Ibn-Maja",
+          "csv": "sunan_ibn-maja_ahadith.utf8.csv"
+        },
+        {
+          "id": "Musnad_Ahmad_Ibn-Hanbal",
+          "csv": "musnad_ahmad_ibn-hanbal_ahadith.utf8.csv"
+        },
+        {
+          "id": "Maliks_Muwataa",
+          "csv": "maliks_muwataa_ahadith.utf8.csv"
+        },
+        {
+          "id": "Sunan_Al-Darimi",
+          "csv": "sunan_al-darimi_ahadith.utf8.csv"
+        }
+      ],
+      "sha256": ""
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+    "version": 1,
+    "packages": [
+        {
+            "id": "en_translation_sahih",
+            "type": "translation",
+            "name_ar": "ترجمة صحيح انترناشونال",
+            "name_en": "Sahih International Translation",
+            "language": "en",
+            "version": 1,
+            "format": "json",
+            "url": "https://api.quran.com/api/v4/quran/translations/131",
+            "sha256": "",
+            "size_mb": 2.5,
+            "description_ar": "ترجمة إنجليزية معتمدة للقرآن الكريم",
+            "description_en": "Authentic English translation of the Holy Quran"
+        },
+        {
+            "id": "ar_tafsir_muyassar",
+            "type": "tafsir",
+            "name_ar": "التفسير الميسر",
+            "name_en": "Al-Tafsir Al-Muyassar",
+            "language": "ar",
+            "version": 1,
+            "format": "json",
+            "url": "https://api.quran.com/api/v4/quran/tafsirs/16",
+            "sha256": "",
+            "size_mb": 5.0,
+            "description_ar": "تفسير ميسر للقرآن الكريم",
+            "description_en": "Simplified Arabic Tafsir"
+        },
+        {
+            "id": "ar_tafsir_ibn_kathir",
+            "type": "tafsir",
+            "name_ar": "تفسير ابن كثير",
+            "name_en": "Tafsir Ibn Kathir",
+            "language": "ar",
+            "version": 1,
+            "format": "json",
+            "url": "https://api.quran.com/api/v4/quran/tafsirs/169",
+            "sha256": "",
+            "size_mb": 15.0,
+            "description_ar": "تفسير القرآن العظيم للإمام ابن كثير",
+            "description_en": "Comprehensive Tafsir by Imam Ibn Kathir"
+        }
+    ]
+}

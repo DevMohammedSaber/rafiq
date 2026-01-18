@@ -82,7 +82,7 @@ class MushafDataRepository {
 
     try {
       // Find all ayahs on this page
-      final db = await _quranRepository.getDb(); // I'll add this to repository
+      final db = await _quranRepository.getDb();
       final result = await db.query(
         'quran_ayahs',
         where: 'page = ?',
@@ -90,15 +90,22 @@ class MushafDataRepository {
         orderBy: 'surah ASC, ayah ASC',
       );
 
-      final pageItems = result
-          .map(
-            (row) => MushafPageItem(
-              surah: row['surah'] as int,
-              ayah: row['ayah'] as int,
-              text: row['text'] as String,
-            ),
-          )
-          .toList();
+      List<MushafPageItem> pageItems;
+
+      // If no results found with page data, use estimated fallback
+      if (result.isEmpty) {
+        pageItems = await _getEstimatedPageItems(pageNumber);
+      } else {
+        pageItems = result
+            .map(
+              (row) => MushafPageItem(
+                surah: row['surah'] as int,
+                ayah: row['ayah'] as int,
+                text: row['text'] as String,
+              ),
+            )
+            .toList();
+      }
 
       final page = MushafPage(page: pageNumber, items: pageItems);
 
@@ -112,6 +119,41 @@ class MushafDataRepository {
       return page;
     } catch (e) {
       throw Exception('Failed to load page $pageNumber: $e');
+    }
+  }
+
+  /// Fallback: estimate which ayahs belong to a page based on position
+  /// This is used when the database doesn't have page column populated
+  Future<List<MushafPageItem>> _getEstimatedPageItems(int pageNumber) async {
+    // 604 pages, ~6236 ayahs = ~10.3 ayahs per page on average
+    // This is a rough estimation for when page data is missing
+    const avgAyahsPerPage = 10;
+
+    // Calculate start ayah offset for this page
+    final startAyahIndex = (pageNumber - 1) * avgAyahsPerPage;
+
+    try {
+      final db = await _quranRepository.getDb();
+
+      // Get ayahs by row offset
+      final result = await db.query(
+        'quran_ayahs',
+        orderBy: 'surah ASC, ayah ASC',
+        limit: avgAyahsPerPage,
+        offset: startAyahIndex,
+      );
+
+      return result
+          .map(
+            (row) => MushafPageItem(
+              surah: row['surah'] as int,
+              ayah: row['ayah'] as int,
+              text: row['text'] as String,
+            ),
+          )
+          .toList();
+    } catch (e) {
+      return [];
     }
   }
 

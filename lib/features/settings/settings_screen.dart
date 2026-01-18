@@ -78,6 +78,15 @@ class SettingsScreen extends StatelessWidget {
                     return const SizedBox.shrink();
                   },
                 ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.download_for_offline_outlined),
+                  title: Text("content.downloads".tr()),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () {
+                    context.push('/more/settings/downloads');
+                  },
+                ),
               ],
             ),
           ),
