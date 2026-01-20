@@ -17,12 +17,100 @@ class AzkarRepository {
       orderBy: 'order_index ASC',
     );
     return result.map((row) {
-      return AZkarCategory(
-        id: row['id'] as String,
-        nameAr: row['name_ar'] as String,
-        nameEn: row['name_en'] as String? ?? '',
-      );
+      final id = row['id'] as String;
+      var nameAr = row['name_ar'] as String? ?? '';
+      var nameEn = row['name_en'] as String? ?? '';
+
+      // If Arabic name is empty or looks like English ID, get proper Arabic name
+      if (nameAr.isEmpty || _isEnglishText(nameAr)) {
+        nameAr = _getArabicName(id);
+      }
+
+      // If English name is empty or looks like it's derived from ID, get proper English name
+      if (nameEn.isEmpty || nameEn == id) {
+        nameEn = _getEnglishName(id);
+      }
+
+      return AZkarCategory(id: id, nameAr: nameAr, nameEn: nameEn);
     }).toList();
+  }
+
+  bool _isEnglishText(String text) {
+    // Check if text contains only English letters, spaces, and underscores
+    return RegExp(r'^[a-zA-Z_\s]+$').hasMatch(text);
+  }
+
+  String _formatCategoryId(String id) {
+    // First try to get a proper localized name
+    final localizedAr = _getLocalizedArabicName(id);
+    if (localizedAr != null) return localizedAr;
+
+    // Fallback: Convert snake_case or space-separated to Title Case
+    return id
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map(
+          (word) => word.isEmpty
+              ? ''
+              : word[0].toUpperCase() + word.substring(1).toLowerCase(),
+        )
+        .join(' ');
+  }
+
+  String? _getLocalizedArabicName(String id) {
+    // Map of common category IDs to proper Arabic names
+    final Map<String, String> arabicNames = {
+      'morning': 'أذكار الصباح',
+      'azkar sabah': 'أذكار الصباح',
+      'evening': 'أذكار المساء',
+      'azkar massa': 'أذكار المساء',
+      'sleep': 'أذكار النوم',
+      'after_prayer': 'أذكار بعد الصلاة',
+      'postprayer azkar': 'أذكار بعد الصلاة',
+      'hisn almuslim': 'حصن المسلم',
+      'hisn_almuslim': 'حصن المسلم',
+      'azkar': 'أذكار',
+      'general': 'أذكار عامة',
+    };
+
+    return arabicNames[id.toLowerCase().trim()];
+  }
+
+  String? _getLocalizedEnglishName(String id) {
+    // Map of common category IDs to proper English names
+    final Map<String, String> englishNames = {
+      'morning': 'Morning Azkar',
+      'azkar sabah': 'Morning Azkar',
+      'evening': 'Evening Azkar',
+      'azkar massa': 'Evening Azkar',
+      'sleep': 'Sleep Azkar',
+      'after_prayer': 'Post-Prayer Azkar',
+      'postprayer azkar': 'Post-Prayer Azkar',
+      'hisn almuslim': 'Fortress of the Muslim',
+      'hisn_almuslim': 'Fortress of the Muslim',
+      'azkar': 'Azkar',
+      'general': 'General Azkar',
+    };
+
+    return englishNames[id.toLowerCase().trim()];
+  }
+
+  String _getArabicName(String id) {
+    // Try to get localized Arabic name first
+    final localized = _getLocalizedArabicName(id);
+    if (localized != null) return localized;
+
+    // Fallback to formatted ID
+    return _formatCategoryId(id);
+  }
+
+  String _getEnglishName(String id) {
+    // Try to get localized English name first
+    final localized = _getLocalizedEnglishName(id);
+    if (localized != null) return localized;
+
+    // Fallback to formatted ID
+    return _formatCategoryId(id);
   }
 
   Future<List<Zikr>> loadZikrByCategory(String categoryId) async {

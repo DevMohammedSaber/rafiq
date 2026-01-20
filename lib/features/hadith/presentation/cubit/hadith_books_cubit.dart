@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../data/hadith_repository.dart';
 import '../../domain/models/hadith_models.dart';
+import '../../../../core/content/content_update_event_bus.dart';
 
 abstract class HadithBooksState extends Equatable {
   @override
@@ -28,8 +30,19 @@ class HadithBooksError extends HadithBooksState {
 
 class HadithBooksCubit extends Cubit<HadithBooksState> {
   final HadithRepository _repository;
+  StreamSubscription<ContentUpdateEvent>? _contentUpdateSubscription;
 
-  HadithBooksCubit(this._repository) : super(HadithBooksInitial());
+  HadithBooksCubit(this._repository) : super(HadithBooksInitial()) {
+    // Listen for content updates
+    _contentUpdateSubscription = ContentUpdateEventBus.instance.stream.listen((
+      event,
+    ) {
+      if (event.hasHadith) {
+        // Reload books when hadith content is updated
+        loadBooks();
+      }
+    });
+  }
 
   Future<void> loadBooks() async {
     emit(HadithBooksLoading());
@@ -39,5 +52,11 @@ class HadithBooksCubit extends Cubit<HadithBooksState> {
     } catch (e) {
       emit(HadithBooksError(e.toString()));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _contentUpdateSubscription?.cancel();
+    return super.close();
   }
 }

@@ -1,0 +1,1711 @@
+[
+    {
+        "id": "q1",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد سور القرآن الكريم؟",
+        "question_en": "How many Surahs are in the Holy Quran?",
+        "options_ar": [
+            "100",
+            "114",
+            "120",
+            "99"
+        ],
+        "options_en": [
+            "100",
+            "114",
+            "120",
+            "99"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "القرآن الكريم يحتوي على 114 سورة، بدءاً من الفاتحة وانتهاءً بالناس.",
+        "explanation_en": "The Holy Quran contains 114 Surahs, starting with Al-Fatiha and ending with An-Nas."
+    },
+    {
+        "id": "q2",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي أطول سورة في القرآن الكريم؟",
+        "question_en": "What is the longest Surah in the Quran?",
+        "options_ar": [
+            "البقرة",
+            "آل عمران",
+            "النساء",
+            "المائدة"
+        ],
+        "options_en": [
+            "Al-Baqarah",
+            "Al-Imran",
+            "An-Nisa",
+            "Al-Ma'idah"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "سورة البقرة هي أطول سورة في القرآن الكريم وتحتوي على 286 آية.",
+        "explanation_en": "Surah Al-Baqarah is the longest Surah in the Quran with 286 verses."
+    },
+    {
+        "id": "q3",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "سورة الإخلاص تعادل ثلث القرآن",
+        "question_en": "Surah Al-Ikhlas is equivalent to one-third of the Quran",
+        "correctBool": true,
+        "explanation_ar": "نعم، قال النبي ﷺ: 'قل هو الله أحد تعدل ثلث القرآن'",
+        "explanation_en": "Yes, the Prophet ﷺ said: 'Qul Huwa Allahu Ahad is equivalent to one-third of the Quran'"
+    },
+    {
+        "id": "q4",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "في أي سورة ذكرت قصة أصحاب الكهف؟",
+        "question_en": "In which Surah is the story of the People of the Cave mentioned?",
+        "options_ar": [
+            "الكهف",
+            "البقرة",
+            "يوسف",
+            "مريم"
+        ],
+        "options_en": [
+            "Al-Kahf",
+            "Al-Baqarah",
+            "Yusuf",
+            "Maryam"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "قصة أصحاب الكهف ذكرت في سورة الكهف.",
+        "explanation_en": "The story of the People of the Cave is mentioned in Surah Al-Kahf."
+    },
+    {
+        "id": "q5",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "من قال: 'إنما الأعمال بالنيات'؟",
+        "question_en": "Who said: 'Actions are judged by intentions'?",
+        "options_ar": [
+            "النبي محمد ﷺ",
+            "عمر بن الخطاب",
+            "أبو بكر الصديق",
+            "علي بن أبي طالب"
+        ],
+        "options_en": [
+            "Prophet Muhammad ﷺ",
+            "Umar ibn Al-Khattab",
+            "Abu Bakr As-Siddiq",
+            "Ali ibn Abi Talib"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "هذا الحديث الشريف قاله النبي محمد ﷺ ويعتبر من أصول الإسلام.",
+        "explanation_en": "This hadith was said by Prophet Muhammad ﷺ and is considered one of the foundations of Islam."
+    },
+    {
+        "id": "q6",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "من كتب الحديث الستة: صحيح البخاري وصحيح مسلم",
+        "question_en": "Sahih Al-Bukhari and Sahih Muslim are among the Six Books of Hadith",
+        "correctBool": true,
+        "explanation_ar": "نعم، الكتب الستة هي: البخاري، مسلم، أبو داود، الترمذي، النسائي، وابن ماجه.",
+        "explanation_en": "Yes, the Six Books are: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa'i, and Ibn Majah."
+    },
+    {
+        "id": "q7",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد أركان الإسلام؟",
+        "question_en": "How many pillars of Islam are there?",
+        "options_ar": [
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "options_en": [
+            "3",
+            "4",
+            "5",
+            "6"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "أركان الإسلام خمسة: الشهادتان، الصلاة، الزكاة، الصوم، والحج.",
+        "explanation_en": "The five pillars of Islam are: Shahada, Prayer, Zakat, Fasting, and Hajj."
+    },
+    {
+        "id": "q8",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم عدد ركعات صلاة الظهر الفرض؟",
+        "question_en": "How many Rakats are in the obligatory Dhuhr prayer?",
+        "options_ar": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "options_en": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "صلاة الظهر الفرض أربع ركعات.",
+        "explanation_en": "The obligatory Dhuhr prayer consists of 4 Rakats."
+    },
+    {
+        "id": "q9",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الزكاة واجبة على كل مسلم بالغ عاقل يملك النصاب",
+        "question_en": "Zakat is obligatory for every sane adult Muslim who possesses the Nisab",
+        "correctBool": true,
+        "explanation_ar": "نعم، الزكاة ركن من أركان الإسلام وواجبة على من يملك النصاب.",
+        "explanation_en": "Yes, Zakat is a pillar of Islam and obligatory for those who possess the Nisab threshold."
+    },
+    {
+        "id": "q10",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "في أي عام هاجر النبي ﷺ من مكة إلى المدينة؟",
+        "question_en": "In which year did the Prophet ﷺ migrate from Makkah to Madinah?",
+        "options_ar": [
+            "610 م",
+            "622 م",
+            "630 م",
+            "632 م"
+        ],
+        "options_en": [
+            "610 CE",
+            "622 CE",
+            "630 CE",
+            "632 CE"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "الهجرة النبوية كانت في عام 622 ميلادية، وهو بداية التقويم الهجري.",
+        "explanation_en": "The Prophet's migration was in 622 CE, marking the beginning of the Islamic calendar."
+    },
+    {
+        "id": "q11",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من هو أول خليفة للمسلمين بعد وفاة النبي ﷺ؟",
+        "question_en": "Who was the first Caliph after the death of Prophet Muhammad ﷺ?",
+        "options_ar": [
+            "عمر بن الخطاب",
+            "أبو بكر الصديق",
+            "عثمان بن عفان",
+            "علي بن أبي طالب"
+        ],
+        "options_en": [
+            "Umar ibn Al-Khattab",
+            "Abu Bakr As-Siddiq",
+            "Uthman ibn Affan",
+            "Ali ibn Abi Talib"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "أبو بكر الصديق رضي الله عنه كان أول خليفة للمسلمين.",
+        "explanation_en": "Abu Bakr As-Siddiq (may Allah be pleased with him) was the first Caliph of Muslims."
+    },
+    {
+        "id": "q12",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "فتح مكة كان في السنة الثامنة من الهجرة",
+        "question_en": "The Conquest of Makkah occurred in the 8th year of Hijrah",
+        "correctBool": true,
+        "explanation_ar": "نعم، فتح مكة كان في السنة الثامنة من الهجرة (630 ميلادية).",
+        "explanation_en": "Yes, the Conquest of Makkah was in the 8th year of Hijrah (630 CE)."
+    },
+    {
+        "id": "q13",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي القبلة في الإسلام؟",
+        "question_en": "What is the Qibla in Islam?",
+        "options_ar": [
+            "اتجاه الكعبة المشرفة",
+            "اتجاه المسجد النبوي",
+            "اتجاه القدس",
+            "اتجاه الشمس"
+        ],
+        "options_en": [
+            "Direction of the Kaaba",
+            "Direction of Prophet's Mosque",
+            "Direction of Jerusalem",
+            "Direction of the Sun"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "القبلة هي اتجاه الكعبة المشرفة في مكة المكرمة، وهي الاتجاه الذي يتوجه إليه المسلمون في صلاتهم.",
+        "explanation_en": "The Qibla is the direction of the Kaaba in Makkah, which Muslims face during prayer."
+    },
+    {
+        "id": "q14",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هو الشهر الذي يصوم فيه المسلمون؟",
+        "question_en": "Which month do Muslims fast?",
+        "options_ar": [
+            "شعبان",
+            "رمضان",
+            "شوال",
+            "ذو الحجة"
+        ],
+        "options_en": [
+            "Sha'ban",
+            "Ramadan",
+            "Shawwal",
+            "Dhul Hijjah"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "شهر رمضان هو الشهر الذي فرض الله فيه الصيام على المسلمين.",
+        "explanation_en": "Ramadan is the month in which Allah ordained fasting for Muslims."
+    },
+    {
+        "id": "q15",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الحج واجب مرة واحدة في العمر على المستطيع",
+        "question_en": "Hajj is obligatory once in a lifetime for those who are able",
+        "correctBool": true,
+        "explanation_ar": "نعم، الحج واجب مرة واحدة في العمر على كل مسلم بالغ عاقل مستطيع.",
+        "explanation_en": "Yes, Hajj is obligatory once in a lifetime for every sane, adult Muslim who is financially and physically able."
+    },
+    {
+        "id": "q16",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم مرة ذكرت كلمة 'الله' في القرآن الكريم تقريباً؟",
+        "question_en": "Approximately how many times is the word 'Allah' mentioned in the Quran?",
+        "options_ar": [
+            "1000",
+            "1500",
+            "2300",
+            "2699"
+        ],
+        "options_en": [
+            "1000",
+            "1500",
+            "2300",
+            "2699"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "ذكرت كلمة 'الله' في القرآن الكريم 2699 مرة.",
+        "explanation_en": "The word 'Allah' is mentioned in the Quran 2699 times."
+    },
+    {
+        "id": "q17",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من أول من جمع الأحاديث النبوية؟",
+        "question_en": "Who was the first to compile the Hadith?",
+        "options_ar": [
+            "الإمام البخاري",
+            "الإمام أحمد",
+            "الإمام مالك",
+            "محمد بن شهاب الزهري"
+        ],
+        "options_en": [
+            "Imam Bukhari",
+            "Imam Ahmad",
+            "Imam Malik",
+            "Muhammad ibn Shihab Al-Zuhri"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "محمد بن شهاب الزهري كان أول من جمع الأحاديث بأمر من الخليفة عمر بن عبد العزيز.",
+        "explanation_en": "Muhammad ibn Shihab Al-Zuhri was the first to compile Hadith by order of Caliph Umar ibn Abdul Aziz."
+    },
+    {
+        "id": "q18",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هي الأشهر الحرم في الإسلام؟",
+        "question_en": "What are the sacred months in Islam?",
+        "options_ar": [
+            "محرم، رجب، ذو القعدة، ذو الحجة",
+            "رمضان، شوال، ذو القعدة، ذو الحجة",
+            "محرم، صفر، ربيع الأول، ربيع الثاني",
+            "رجب، شعبان، رمضان، شوال"
+        ],
+        "options_en": [
+            "Muharram, Rajab, Dhul-Qa'dah, Dhul-Hijjah",
+            "Ramadan, Shawwal, Dhul-Qa'dah, Dhul-Hijjah",
+            "Muharram, Safar, Rabi' Al-Awwal, Rabi' Al-Thani",
+            "Rajab, Sha'ban, Ramadan, Shawwal"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "الأشهر الحرم الأربعة هي: محرم، رجب، ذو القعدة، وذو الحجة.",
+        "explanation_en": "The four sacred months are: Muharram, Rajab, Dhul-Qa'dah, and Dhul-Hijjah."
+    }
+        ,{
+        "id": "q19",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "أقصر سورة في القرآن هي سورة الكوثر",
+        "question_en": "The shortest Surah in the Quran is Surah Al-Kawthar",
+        "correctBool": true,
+        "explanation_ar": "سورة الكوثر هي أقصر سور القرآن وتتكون من 3 آيات فقط.",
+        "explanation_en": "Surah Al-Kawthar is the shortest Surah with only 3 verses."
+    },
+    {
+        "id": "q20",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم عدد أجزاء القرآن الكريم؟",
+        "question_en": "How many Juz are in the Quran?",
+        "options_ar": ["25", "30", "35", "40"],
+        "options_en": ["25", "30", "35", "40"],
+        "correctIndex": 1,
+        "explanation_ar": "القرآن الكريم مقسم إلى 30 جزءاً.",
+        "explanation_en": "The Quran is divided into 30 Juz (parts)."
+    },
+    {
+        "id": "q21",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد ركعات صلاة المغرب؟",
+        "question_en": "How many Rakats are in Maghrib prayer?",
+        "options_ar": ["2", "3", "4", "5"],
+        "options_en": ["2", "3", "4", "5"],
+        "correctIndex": 1,
+        "explanation_ar": "صلاة المغرب ثلاث ركعات.",
+        "explanation_en": "Maghrib prayer consists of 3 Rakats."
+    },
+    {
+        "id": "q22",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "يجب على المسلم أن يصلي خمس صلوات في اليوم",
+        "question_en": "A Muslim must pray five times a day",
+        "correctBool": true,
+        "explanation_ar": "الصلوات الخمس المفروضة هي: الفجر، الظهر، العصر، المغرب، والعشاء.",
+        "explanation_en": "The five obligatory prayers are: Fajr, Dhuhr, Asr, Maghrib, and Isha."
+    },
+    {
+        "id": "q23",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من هو راوي أكثر الأحاديث عن النبي ﷺ؟",
+        "question_en": "Who narrated the most Hadith from the Prophet ﷺ?",
+        "options_ar": ["أبو هريرة", "عائشة", "ابن عمر", "أنس بن مالك"],
+        "options_en": ["Abu Hurairah", "Aisha", "Ibn Umar", "Anas ibn Malik"],
+        "correctIndex": 0,
+        "explanation_ar": "أبو هريرة رضي الله عنه روى أكثر من 5000 حديث.",
+        "explanation_en": "Abu Hurairah (may Allah be pleased with him) narrated more than 5000 Hadith."
+    },
+    {
+        "id": "q24",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم سنة دامت الدعوة في مكة قبل الهجرة؟",
+        "question_en": "How many years did the Dawah in Makkah last before Hijrah?",
+        "options_ar": ["10 سنوات", "13 سنة", "15 سنة", "20 سنة"],
+        "options_en": ["10 years", "13 years", "15 years", "20 years"],
+        "correctIndex": 1,
+        "explanation_ar": "دامت الدعوة في مكة 13 سنة قبل الهجرة إلى المدينة.",
+        "explanation_en": "The Dawah in Makkah lasted 13 years before the migration to Madinah."
+    },
+    {
+        "id": "q25",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "ليلة القدر خير من ألف شهر",
+        "question_en": "Laylat Al-Qadr is better than a thousand months",
+        "correctBool": true,
+        "explanation_ar": "قال الله تعالى: 'ليلة القدر خير من ألف شهر'.",
+        "explanation_en": "Allah says: 'Laylat Al-Qadr is better than a thousand months'."
+    }    ,
+    {
+        "id": "q26",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هي السورة التي تسمى قلب القرآن؟",
+        "question_en": "Which Surah is called the heart of the Quran?",
+        "options_ar": [
+            "الفاتحة",
+            "البقرة",
+            "يس",
+            "الرحمن"
+        ],
+        "options_en": [
+            "Al-Fatiha",
+            "Al-Baqarah",
+            "Yasin",
+            "Ar-Rahman"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "سورة يس تسمى قلب القرآن كما ورد في الحديث.",
+        "explanation_en": "Surah Yasin is called the heart of the Quran as mentioned in Hadith."
+    },
+    {
+        "id": "q27",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "hard",
+        "question_ar": "سورة الحشر تحتوي على أسماء الله الحسنى",
+        "question_en": "Surah Al-Hashr contains the Beautiful Names of Allah",
+        "correctBool": true,
+        "explanation_ar": "نعم، خواتيم سورة الحشر تحتوي على العديد من أسماء الله الحسنى.",
+        "explanation_en": "Yes, the end of Surah Al-Hashr contains many Beautiful Names of Allah."
+    },
+    {
+        "id": "q28",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو نصاب الزكاة في الذهب؟",
+        "question_en": "What is the Nisab for Zakat on gold?",
+        "options_ar": [
+            "50 جرام",
+            "85 جرام",
+            "100 جرام",
+            "120 جرام"
+        ],
+        "options_en": [
+            "50 grams",
+            "85 grams",
+            "100 grams",
+            "120 grams"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "نصاب الزكاة في الذهب هو 85 جراماً من الذهب الخالص.",
+        "explanation_en": "The Nisab for Zakat on gold is 85 grams of pure gold."
+    },
+    {
+        "id": "q29",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "يجوز للمسافر أن يقصر الصلاة الرباعية إلى ركعتين",
+        "question_en": "A traveler may shorten the four-Rakat prayer to two Rakats",
+        "correctBool": true,
+        "explanation_ar": "نعم، يجوز للمسافر قصر الصلاة الرباعية (الظهر والعصر والعشاء) إلى ركعتين.",
+        "explanation_en": "Yes, a traveler may shorten four-Rakat prayers (Dhuhr, Asr, Isha) to two Rakats."
+    },
+    {
+        "id": "q30",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "من قال: 'المسلم من سلم المسلمون من لسانه ويده'؟",
+        "question_en": "Who said: 'A Muslim is one from whose tongue and hand other Muslims are safe'?",
+        "options_ar": [
+            "النبي محمد ﷺ",
+            "أبو بكر",
+            "عمر بن الخطاب",
+            "عثمان بن عفان"
+        ],
+        "options_en": [
+            "Prophet Muhammad ﷺ",
+            "Abu Bakr",
+            "Umar ibn Al-Khattab",
+            "Uthman ibn Affan"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "هذا حديث نبوي شريف قاله الرسول ﷺ.",
+        "explanation_en": "This is a prophetic Hadith said by the Prophet ﷺ."
+    },
+    {
+        "id": "q31",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "من السنن الرواتب: ركعتان قبل الفجر",
+        "question_en": "Among the regular Sunnah prayers: two Rakats before Fajr",
+        "correctBool": true,
+        "explanation_ar": "نعم، ركعتا الفجر القبلية من السنن الرواتب المؤكدة.",
+        "explanation_en": "Yes, the two Rakats before Fajr are among the confirmed Sunnah prayers."
+    },
+    {
+        "id": "q32",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "أين حدثت معجزة انشقاق القمر؟",
+        "question_en": "Where did the miracle of the splitting of the moon occur?",
+        "options_ar": [
+            "في المدينة",
+            "في مكة",
+            "في الطائف",
+            "في الشام"
+        ],
+        "options_en": [
+            "In Madinah",
+            "In Makkah",
+            "In Taif",
+            "In Sham"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "معجزة انشقاق القمر حدثت في مكة قبل الهجرة.",
+        "explanation_en": "The miracle of the splitting of the moon happened in Makkah before the Hijrah."
+    },
+    {
+        "id": "q33",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "من هو الصحابي الذي لُقب بـ 'سيف الله المسلول'؟",
+        "question_en": "Which companion was titled 'The Drawn Sword of Allah'?",
+        "options_ar": [
+            "علي بن أبي طالب",
+            "خالد بن الوليد",
+            "سعد بن أبي وقاص",
+            "عمرو بن العاص"
+        ],
+        "options_en": [
+            "Ali ibn Abi Talib",
+            "Khalid ibn Al-Walid",
+            "Saad ibn Abi Waqqas",
+            "Amr ibn Al-As"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "خالد بن الوليد رضي الله عنه لقبه النبي ﷺ بسيف الله المسلول.",
+        "explanation_en": "Khalid ibn Al-Walid was given this title by the Prophet ﷺ."
+    },
+    {
+        "id": "q34",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي الليلة المباركة في شهر رمضان؟",
+        "question_en": "What is the blessed night in Ramadan?",
+        "options_ar": [
+            "ليلة الإسراء والمعراج",
+            "ليلة القدر",
+            "ليلة النصف من شعبان",
+            "ليلة العيد"
+        ],
+        "options_en": [
+            "Laylat Al-Isra Wal-Miraj",
+            "Laylat Al-Qadr",
+            "Mid-Sha'ban Night",
+            "Eid Night"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "ليلة القدر هي الليلة المباركة التي أنزل فيها القرآن وهي خير من ألف شهر.",
+        "explanation_en": "Laylat Al-Qadr is the blessed night when the Quran was revealed and is better than a thousand months."
+    },
+    {
+        "id": "q35",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "صيام رمضان هو الركن الرابع من أركان الإسلام",
+        "question_en": "Fasting Ramadan is the fourth pillar of Islam",
+        "correctBool": true,
+        "explanation_ar": "نعم، الصوم هو الركن الرابع من أركان الإسلام الخمسة.",
+        "explanation_en": "Yes, fasting is the fourth pillar of the five pillars of Islam."
+    },
+    {
+        "id": "q36",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم عدد السجدات في القرآن الكريم؟",
+        "question_en": "How many prostrations (Sajdah) are in the Quran?",
+        "options_ar": [
+            "10",
+            "14",
+            "15",
+            "20"
+        ],
+        "options_en": [
+            "10",
+            "14",
+            "15",
+            "20"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "يوجد في القرآن 14 موضعاً للسجدة.",
+        "explanation_en": "There are 14 places of prostration in the Quran."
+    },
+    {
+        "id": "q37",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "سورة الفاتحة تسمى أيضاً بأم الكتاب",
+        "question_en": "Surah Al-Fatiha is also called Umm Al-Kitab (Mother of the Book)",
+        "correctBool": true,
+        "explanation_ar": "نعم، من أسماء سورة الفاتحة: أم الكتاب، وأم القرآن، والسبع المثاني.",
+        "explanation_en": "Yes, among the names of Surah Al-Fatiha are: Umm Al-Kitab, Umm Al-Quran, and As-Sab' Al-Mathani."
+    },
+    {
+        "id": "q38",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو حكم صلاة الجماعة للرجال؟",
+        "question_en": "What is the ruling on congregational prayer for men?",
+        "options_ar": [
+            "واجب",
+            "سنة مؤكدة",
+            "مستحب",
+            "فرض كفاية"
+        ],
+        "options_en": [
+            "Obligatory",
+            "Confirmed Sunnah",
+            "Recommended",
+            "Collective Obligation"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "صلاة الجماعة للرجال سنة مؤكدة عند جمهور العلماء.",
+        "explanation_en": "Congregational prayer for men is a confirmed Sunnah according to the majority of scholars."
+    },
+    {
+        "id": "q39",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "يجب على المسلم أن يتوضأ قبل كل صلاة",
+        "question_en": "A Muslim must perform Wudu before every prayer",
+        "correctBool": false,
+        "explanation_ar": "لا، الوضوء يجب فقط إذا انتقض، وليس قبل كل صلاة بالضرورة.",
+        "explanation_en": "No, Wudu is required only if it is broken, not necessarily before every prayer."
+    },
+    {
+        "id": "q40",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو أصح كتاب بعد القرآن الكريم؟",
+        "question_en": "What is the most authentic book after the Quran?",
+        "options_ar": [
+            "صحيح مسلم",
+            "صحيح البخاري",
+            "سنن أبي داود",
+            "موطأ مالك"
+        ],
+        "options_en": [
+            "Sahih Muslim",
+            "Sahih Al-Bukhari",
+            "Sunan Abu Dawud",
+            "Muwatta Malik"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "صحيح البخاري هو أصح كتاب بعد كتاب الله.",
+        "explanation_en": "Sahih Al-Bukhari is the most authentic book after the Book of Allah."
+    },
+    {
+        "id": "q41",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "hard",
+        "question_ar": "موطأ الإمام مالك هو أقدم كتب الحديث المصنفة",
+        "question_en": "Muwatta Imam Malik is the oldest classified Hadith book",
+        "correctBool": true,
+        "explanation_ar": "نعم، موطأ الإمام مالك هو من أقدم كتب الحديث المصنفة.",
+        "explanation_en": "Yes, Muwatta Imam Malik is among the oldest classified Hadith books."
+    },
+    {
+        "id": "q42",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم عدد غزوات النبي ﷺ التي شارك فيها بنفسه؟",
+        "question_en": "How many battles did the Prophet ﷺ personally participate in?",
+        "options_ar": [
+            "19",
+            "27",
+            "35",
+            "40"
+        ],
+        "options_en": [
+            "19",
+            "27",
+            "35",
+            "40"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "شارك النبي ﷺ في 27 غزوة، وقاتل في 9 منها.",
+        "explanation_en": "The Prophet ﷺ participated in 27 battles and fought in 9 of them."
+    },
+    {
+        "id": "q43",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "غزوة بدر كانت في السنة الثانية من الهجرة",
+        "question_en": "The Battle of Badr was in the second year of Hijrah",
+        "correctBool": true,
+        "explanation_ar": "نعم، وقعت غزوة بدر الكبرى في السنة الثانية من الهجرة.",
+        "explanation_en": "Yes, the Battle of Badr occurred in the second year of Hijrah."
+    },
+    {
+        "id": "q44",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هي الكلمة التي تقال عند الأذان؟",
+        "question_en": "What word is repeated during the Adhan?",
+        "options_ar": [
+            "سبحان الله",
+            "الله أكبر",
+            "لا إله إلا الله",
+            "الحمد لله"
+        ],
+        "options_en": [
+            "Subhan Allah",
+            "Allahu Akbar",
+            "La ilaha illa Allah",
+            "Alhamdulillah"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "الله أكبر هي أول وأكثر كلمة تُقال في الأذان.",
+        "explanation_en": "Allahu Akbar is the first and most repeated phrase in the Adhan."
+    },
+    {
+        "id": "q45",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "يوم الجمعة هو يوم عيد المسلمين الأسبوعي",
+        "question_en": "Friday is the weekly day of celebration for Muslims",
+        "correctBool": true,
+        "explanation_ar": "نعم، يوم الجمعة هو عيد المسلمين الأسبوعي وخير يوم طلعت فيه الشمس.",
+        "explanation_en": "Yes, Friday is the weekly day of celebration for Muslims and the best day on which the sun has risen."
+    }    ,
+    {
+        "id": "q46",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من هو النبي الذي ذكر اسمه أكثر في القرآن؟",
+        "question_en": "Which Prophet is mentioned most in the Quran?",
+        "options_ar": [
+            "محمد ﷺ",
+            "موسى",
+            "إبراهيم",
+            "عيسى"
+        ],
+        "options_en": [
+            "Muhammad ﷺ",
+            "Musa (Moses)",
+            "Ibrahim (Abraham)",
+            "Isa (Jesus)"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "موسى عليه السلام ذكر في القرآن أكثر من 130 مرة.",
+        "explanation_en": "Prophet Musa (peace be upon him) is mentioned in the Quran more than 130 times."
+    },
+    {
+        "id": "q47",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "القرآن الكريم نزل على النبي محمد ﷺ في 23 سنة",
+        "question_en": "The Quran was revealed to Prophet Muhammad ﷺ over 23 years",
+        "correctBool": true,
+        "explanation_ar": "نعم، نزل القرآن على مدى 23 سنة (13 في مكة و10 في المدينة).",
+        "explanation_en": "Yes, the Quran was revealed over 23 years (13 in Makkah and 10 in Madinah)."
+    },
+    {
+        "id": "q48",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هو مقدار الزكاة الواجبة في المال؟",
+        "question_en": "What is the amount of Zakat due on wealth?",
+        "options_ar": [
+            "2%",
+            "2.5%",
+            "5%",
+            "10%"
+        ],
+        "options_en": [
+            "2%",
+            "2.5%",
+            "5%",
+            "10%"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "الزكاة واجبة بنسبة 2.5% (ربع العشر) من المال.",
+        "explanation_en": "Zakat is due at 2.5% (one-quarter of one-tenth) of wealth."
+    },
+    {
+        "id": "q49",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "يجوز الجمع بين صلاتي الظهر والعصر في السفر",
+        "question_en": "It is permissible to combine Dhuhr and Asr prayers while traveling",
+        "correctBool": true,
+        "explanation_ar": "نعم، يجوز للمسافر الجمع بين الصلوات جمع تقديم أو تأخير.",
+        "explanation_en": "Yes, a traveler may combine prayers, either advancing or delaying them."
+    },
+    {
+        "id": "q50",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من قال: 'خيركم من تعلم القرآن وعلمه'؟",
+        "question_en": "Who said: 'The best among you is the one who learns the Quran and teaches it'?",
+        "options_ar": [
+            "النبي محمد ﷺ",
+            "أبو بكر",
+            "عمر",
+            "عثمان"
+        ],
+        "options_en": [
+            "Prophet Muhammad ﷺ",
+            "Abu Bakr",
+            "Umar",
+            "Uthman"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "هذا حديث نبوي شريف رواه البخاري.",
+        "explanation_en": "This is a prophetic Hadith narrated by Bukhari."
+    },
+    {
+        "id": "q51",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الابتسامة في وجه أخيك صدقة",
+        "question_en": "Smiling in your brother's face is charity",
+        "correctBool": true,
+        "explanation_ar": "نعم، قال النبي ﷺ: 'تبسمك في وجه أخيك صدقة'.",
+        "explanation_en": "Yes, the Prophet ﷺ said: 'Your smile for your brother is charity'."
+    },
+    {
+        "id": "q52",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من هي أول شهيدة في الإسلام؟",
+        "question_en": "Who was the first female martyr in Islam?",
+        "options_ar": [
+            "خديجة بنت خويلد",
+            "سمية بنت خياط",
+            "فاطمة بنت محمد",
+            "عائشة بنت أبي بكر"
+        ],
+        "options_en": [
+            "Khadijah bint Khuwaylid",
+            "Sumayyah bint Khayyat",
+            "Fatimah bint Muhammad",
+            "Aisha bint Abu Bakr"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "سمية بنت خياط رضي الله عنها هي أول شهيدة في الإسلام.",
+        "explanation_en": "Sumayyah bint Khayyat (may Allah be pleased with her) was the first martyr in Islam."
+    },
+    {
+        "id": "q53",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "hard",
+        "question_ar": "صلح الحديبية كان في السنة السادسة من الهجرة",
+        "question_en": "The Treaty of Hudaybiyyah was in the sixth year of Hijrah",
+        "correctBool": true,
+        "explanation_ar": "نعم، صلح الحديبية كان في ذي القعدة من السنة السادسة للهجرة.",
+        "explanation_en": "Yes, the Treaty of Hudaybiyyah was in Dhul-Qa'dah of the sixth year of Hijrah."
+    },
+    {
+        "id": "q54",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هو عدد أركان الإيمان؟",
+        "question_en": "How many pillars of faith are there?",
+        "options_ar": [
+            "4",
+            "5",
+            "6",
+            "7"
+        ],
+        "options_en": [
+            "4",
+            "5",
+            "6",
+            "7"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "أركان الإيمان ستة: الإيمان بالله، والملائكة، والكتب، والرسل، واليوم الآخر، والقدر.",
+        "explanation_en": "The six pillars of faith are: belief in Allah, Angels, Books, Messengers, the Last Day, and Divine Decree."
+    },
+    {
+        "id": "q55",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الصلاة هي الركن الثاني من أركان الإسلام",
+        "question_en": "Prayer is the second pillar of Islam",
+        "correctBool": true,
+        "explanation_ar": "نعم، الصلاة هي الركن الثاني بعد الشهادتين.",
+        "explanation_en": "Yes, prayer is the second pillar after the testimony of faith."
+    },
+    {
+        "id": "q56",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هي السورة التي بدأت بحروف مقطعة 'حم'؟",
+        "question_en": "Which Surah begins with the letters 'Ha-Meem'?",
+        "options_ar": [
+            "الحواميم السبع",
+            "فصلت فقط",
+            "غافر فقط",
+            "الشورى فقط"
+        ],
+        "options_en": [
+            "The seven Ha-Meem Surahs",
+            "Fussilat only",
+            "Ghafir only",
+            "Ash-Shura only"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "سبع سور تبدأ بـ 'حم': غافر، فصلت، الشورى، الزخرف، الدخان، الجاثية، الأحقاف.",
+        "explanation_en": "Seven Surahs begin with 'Ha-Meem': Ghafir, Fussilat, Ash-Shura, Az-Zukhruf, Ad-Dukhan, Al-Jathiyah, Al-Ahqaf."
+    },
+    {
+        "id": "q57",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "سورة الملك تسمى المانعة أو المنجية",
+        "question_en": "Surah Al-Mulk is called the Protective or Saving Surah",
+        "correctBool": true,
+        "explanation_ar": "نعم، ورد أنها تنجي من عذاب القبر.",
+        "explanation_en": "Yes, it is reported that it protects from the punishment of the grave."
+    },
+    {
+        "id": "q58",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "متى تجب صلاة الجمعة؟",
+        "question_en": "When is Friday prayer obligatory?",
+        "options_ar": [
+            "وقت الظهر",
+            "بعد الظهر",
+            "قبل الظهر",
+            "وقت العصر"
+        ],
+        "options_en": [
+            "Time of Dhuhr",
+            "After Dhuhr",
+            "Before Dhuhr",
+            "Time of Asr"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "صلاة الجمعة تحل محل صلاة الظهر في وقتها.",
+        "explanation_en": "Friday prayer replaces Dhuhr prayer at its time."
+    },
+    {
+        "id": "q59",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "صلاة الفجر ركعتان فقط",
+        "question_en": "Fajr prayer consists of only two Rakats",
+        "correctBool": true,
+        "explanation_ar": "نعم، صلاة الفجر المفروضة ركعتان.",
+        "explanation_en": "Yes, the obligatory Fajr prayer consists of two Rakats."
+    },
+    {
+        "id": "q60",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم عدد أحاديث صحيح البخاري تقريباً؟",
+        "question_en": "Approximately how many Hadith are in Sahih Al-Bukhari?",
+        "options_ar": [
+            "5000",
+            "7000",
+            "9000",
+            "11000"
+        ],
+        "options_en": [
+            "5000",
+            "7000",
+            "9000",
+            "11000"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "صحيح البخاري يحتوي على حوالي 7563 حديثاً مع المكرر.",
+        "explanation_en": "Sahih Al-Bukhari contains approximately 7563 Hadith including repetitions."
+    },
+    {
+        "id": "q61",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "من حسن إسلام المرء تركه ما لا يعنيه",
+        "question_en": "Part of the perfection of one's Islam is leaving that which does not concern him",
+        "correctBool": true,
+        "explanation_ar": "نعم، هذا حديث نبوي شريف.",
+        "explanation_en": "Yes, this is a prophetic Hadith."
+    },
+    {
+        "id": "q62",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "من هو الخليفة الذي جمع القرآن في مصحف واحد؟",
+        "question_en": "Which Caliph compiled the Quran into one book?",
+        "options_ar": [
+            "أبو بكر",
+            "عمر",
+            "عثمان",
+            "علي"
+        ],
+        "options_en": [
+            "Abu Bakr",
+            "Umar",
+            "Uthman",
+            "Ali"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "عثمان بن عفان رضي الله عنه جمع القرآن ونسخه في مصحف واحد.",
+        "explanation_en": "Uthman ibn Affan (may Allah be pleased with him) compiled the Quran into one standardized book."
+    },
+    {
+        "id": "q63",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "حجة الوداع كانت في السنة العاشرة من الهجرة",
+        "question_en": "The Farewell Pilgrimage was in the tenth year of Hijrah",
+        "correctBool": true,
+        "explanation_ar": "نعم، حج النبي ﷺ حجة الوداع في السنة العاشرة من الهجرة.",
+        "explanation_en": "Yes, the Prophet ﷺ performed the Farewell Pilgrimage in the tenth year of Hijrah."
+    },
+    {
+        "id": "q64",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو الشهر الذي يحرم فيه القتال؟",
+        "question_en": "Which month prohibits fighting?",
+        "options_ar": [
+            "رمضان فقط",
+            "الأشهر الحرم الأربعة",
+            "ذو الحجة فقط",
+            "محرم فقط"
+        ],
+        "options_en": [
+            "Ramadan only",
+            "The four sacred months",
+            "Dhul-Hijjah only",
+            "Muharram only"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "الأشهر الحرم الأربعة التي يحرم فيها القتال هي: ذو القعدة، ذو الحجة، محرم، ورجب.",
+        "explanation_en": "The four sacred months in which fighting is prohibited are: Dhul-Qa'dah, Dhul-Hijjah, Muharram, and Rajab."
+    },
+    {
+        "id": "q65",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "التسبيح هو قول 'سبحان الله'",
+        "question_en": "Tasbih means saying 'Subhan Allah'",
+        "correctBool": true,
+        "explanation_ar": "نعم، التسبيح هو قول 'سبحان الله' وتنزيه الله عما لا يليق به.",
+        "explanation_en": "Yes, Tasbih is saying 'Subhan Allah' and glorifying Allah from all imperfections."
+    }    ,
+    {
+        "id": "q66",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "في أي سورة ذكرت آية الكرسي؟",
+        "question_en": "In which Surah is Ayat Al-Kursi mentioned?",
+        "options_ar": [
+            "الفاتحة",
+            "البقرة",
+            "آل عمران",
+            "النساء"
+        ],
+        "options_en": [
+            "Al-Fatiha",
+            "Al-Baqarah",
+            "Al-Imran",
+            "An-Nisa"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "آية الكرسي هي الآية 255 من سورة البقرة.",
+        "explanation_en": "Ayat Al-Kursi is verse 255 of Surah Al-Baqarah."
+    },
+    {
+        "id": "q67",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "سورة الإسراء تسمى أيضاً سورة بني إسرائيل",
+        "question_en": "Surah Al-Isra is also called Surah Bani Israel",
+        "correctBool": true,
+        "explanation_ar": "نعم، سورة الإسراء لها اسمان: الإسراء وبني إسرائيل.",
+        "explanation_en": "Yes, Surah Al-Isra has two names: Al-Isra and Bani Israel."
+    },
+    {
+        "id": "q68",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ماذا يسمى ا لصيام الذي يصومه المسلم تطوعاً؟",
+        "question_en": "What is voluntary fasting called?",
+        "options_ar": [
+            "صيام الفرض",
+            "صيام النفل",
+            "صيام الكفارة",
+            "صيام النذر"
+        ],
+        "options_en": [
+            "Obligatory fasting",
+            "Voluntary fasting",
+            "Expiatory fasting",
+            "Vow fasting"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "صيام النفل أو التطوع هو الصيام المستحب غير الواجب.",
+        "explanation_en": "Voluntary fasting (Nafl) is recommended but not obligatory fasting."
+    },
+    {
+        "id": "q69",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "يستحب صيام يومي الاثنين والخميس",
+        "question_en": "It is recommended to fast on Mondays and Thursdays",
+        "correctBool": true,
+        "explanation_ar": "نعم، كان النبي ﷺ يصوم الاثنين والخميس ويقول: تُعرض الأعمال يوم الاثنين والخميس.",
+        "explanation_en": "Yes, the Prophet ﷺ used to fast on Mondays and Thursdays and said: 'Deeds are presented on Monday and Thursday.'"
+    },
+    {
+        "id": "q70",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم عدد الكلمات الجوامع في حديث: 'من كان يؤمن بالله واليوم الآخر...'؟",
+        "question_en": "Complete the hadith: 'Whoever believes in Allah and the Last Day...'",
+        "options_ar": [
+            "فليقل خيراً أو ليصمت",
+            "فلا يؤذِ جاره",
+            "فليكرم ضيفه",
+            "كل ما سبق"
+        ],
+        "options_en": [
+            "Should speak good or remain silent",
+            "Should not harm his neighbor",
+            "Should honor his guest",
+            "All of the above"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "الحديث يشمل كل هذه الأمور الثلاثة.",
+        "explanation_en": "The hadith includes all three of these matters."
+    },
+    {
+        "id": "q71",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "المؤمن القوي خير وأحب إلى الله من المؤمن الضعيف",
+        "question_en": "The strong believer is better and more beloved to Allah than the weak believer",
+        "correctBool": true,
+        "explanation_ar": "نعم، قال النبي ﷺ: 'المؤمن القوي خير وأحب إلى الله من المؤمن الضعيف، وفي كل خير'.",
+        "explanation_en": "Yes, the Prophet ﷺ said: 'The strong believer is better and more beloved to Allah than the weak believer, though there is good in both.'"
+    },
+    {
+        "id": "q72",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "من هو الصحابي الذي اهتز لموته عرش الرحمن؟",
+        "question_en": "Which companion's death caused the Throne of the Most Merciful to shake?",
+        "options_ar": [
+            "أبو بكر الصديق",
+            "عمر بن الخطاب",
+            "سعد بن معاذ",
+            "حمزة بن عبد المطلب"
+        ],
+        "options_en": [
+            "Abu Bakr As-Siddiq",
+            "Umar ibn Al-Khattab",
+            "Saad ibn Muadh",
+            "Hamzah ibn Abdul-Muttalib"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "سعد بن معاذ رضي الله عنه، قال النبي ﷺ: 'اهتز عرش الرحمن لموت سعد بن معاذ'.",
+        "explanation_en": "Saad ibn Muadh (may Allah be pleased with him). The Prophet ﷺ said: 'The Throne of the Most Merciful shook at the death of Saad ibn Muadh.'"
+    },
+    {
+        "id": "q73",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "غزوة أحد وقعت بعد غزوة بدر بسنة واحدة",
+        "question_en": "The Battle of Uhud occurred one year after the Battle of Badr",
+        "correctBool": true,
+        "explanation_ar": "نعم، غزوة بدر كانت في السنة الثانية من الهجرة وغزوة أحد في السنة الثالثة.",
+        "explanation_en": "Yes, the Battle of Badr was in the second year of Hijrah and Uhud in the third year."
+    },
+    {
+        "id": "q74",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هو اسم الكتاب المقدس في الإسلام؟",
+        "question_en": "What is the name of the holy book in Islam?",
+        "options_ar": [
+            "التوراة",
+            "الإنجيل",
+            "القرآن الكريم",
+            "الزبور"
+        ],
+        "options_en": [
+            "Torah",
+            "Gospel",
+            "The Holy Quran",
+            "Psalms"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "القرآن الكريم هو كتاب الله المنزل على النبي محمد ﷺ.",
+        "explanation_en": "The Holy Quran is the Book of Allah revealed to Prophet Muhammad ﷺ."
+    },
+    {
+        "id": "q75",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الحج إلى مكة المكرمة واجب على كل مسلم مرة في العمر",
+        "question_en": "Hajj to Makkah is obligatory once in a lifetime for every Muslim",
+        "correctBool": true,
+        "explanation_ar": "نعم، الحج واجب مرة واحدة في العمر على المستطيع.",
+        "explanation_en": "Yes, Hajj is obligatory once in a lifetime for those who are able."
+    },
+    {
+        "id": "q76",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم عدد المرات التي ذكرت فيها الجنة في القرآن الكريم تقريباً؟",
+        "question_en": "Approximately how many times is Paradise mentioned in the Quran?",
+        "options_ar": [
+            "50",
+            "77",
+            "100",
+            "147"
+        ],
+        "options_en": [
+            "50",
+            "77",
+            "100",
+            "147"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "ذكرت الجنة في القرآن الكريم حوالي 147 مرة.",
+        "explanation_en": "Paradise is mentioned in the Quran approximately 147 times."
+    },
+    {
+        "id": "q77",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "سورة القمر تحتوي على آيات عن انشقاق القمر",
+        "question_en": "Surah Al-Qamar contains verses about the splitting of the moon",
+        "correctBool": true,
+        "explanation_ar": "نعم، سورة القمر تبدأ بذكر معجزة انشقاق القمر.",
+        "explanation_en": "Yes, Surah Al-Qamar begins with mentioning the miracle of the splitting of the moon."
+    },
+    {
+        "id": "q78",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "ما هو النصاب في زكاة الفطر؟",
+        "question_en": "What is the amount for Zakat Al-Fitr?",
+        "options_ar": [
+            "صاع من التمر أو الشعير",
+            "نصف صاع",
+            "صاعان",
+            "ثلاث أصواع"
+        ],
+        "options_en": [
+            "One Sa' of dates or barley",
+            "Half Sa'",
+            "Two Sa'",
+            "Three Sa'"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "زكاة الفطر صاع من طعام، والصاع يساوي حوالي 2.5 كيلو غرام.",
+        "explanation_en": "Zakat Al-Fitr is one Sa' of food, which equals approximately 2.5 kilograms."
+    },
+    {
+        "id": "q79",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "يجوز إخراج زكاة الفطر نقداً عند الحنفية",
+        "question_en": "According to the Hanafi school, Zakat Al-Fitr may be given in cash",
+        "correctBool": true,
+        "explanation_ar": "نعم، المذهب الحنفي يجيز إخراج زكاة الفطر نقداً.",
+        "explanation_en": "Yes, the Hanafi school permits giving Zakat Al-Fitr in cash."
+    },
+    {
+        "id": "q80",
+        "categoryId": "hadith",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من قال: 'الدين النصيحة'؟",
+        "question_en": "Who said: 'Religion is sincere advice'?",
+        "options_ar": [
+            "النبي محمد ﷺ",
+            "أبو بكر",
+            "عمر",
+            "علي"
+        ],
+        "options_en": [
+            "Prophet Muhammad ﷺ",
+            "Abu Bakr",
+            "Umar",
+            "Ali"
+        ],
+        "correctIndex": 0,
+        "explanation_ar": "هذا حديث نبوي شريف.",
+        "explanation_en": "This is a prophetic Hadith."
+    },
+    {
+        "id": "q81",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الطهارة شطر الإيمان",
+        "question_en": "Cleanliness is half of faith",
+        "correctBool": true,
+        "explanation_ar": "نعم، قال النبي ﷺ: 'الطهور شطر الإيمان'.",
+        "explanation_en": "Yes, the Prophet ﷺ said: 'Purity is half of faith.'"
+    },
+    {
+        "id": "q82",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "من هي أول زوجات النبي ﷺ؟",
+        "question_en": "Who was the first wife of the Prophet ﷺ?",
+        "options_ar": [
+            "عائشة",
+            "خديجة",
+            "حفصة",
+            "زينب"
+        ],
+        "options_en": [
+            "Aisha",
+            "Khadijah",
+            "Hafsah",
+            "Zainab"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "خديجة بنت خويلد رضي الله عنها كانت أول زوجات النبي ﷺ.",
+        "explanation_en": "Khadijah bint Khuwaylid (may Allah be pleased with her) was the first wife of the Prophet ﷺ."
+    },
+    {
+        "id": "q83",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "hard",
+        "question_ar": "بيعة العقبة الأولى كانت في السنة الحادية عشرة من البعثة",
+        "question_en": "The First Pledge of Aqabah was in the eleventh year of Prophethood",
+        "correctBool": true,
+        "explanation_ar": "نعم، كانت بيعة العقبة الأولى في السنة الحادية عشرة من البعثة.",
+        "explanation_en": "Yes, the First Pledge of Aqabah was in the eleventh year of Prophethood."
+    },
+    {
+        "id": "q84",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هي أول صلاة فرضت على المسلمين؟",
+        "question_en": "What was the first prayer made obligatory for Muslims?",
+        "options_ar": [
+            "الفجر",
+            "الظهر",
+            "العصر",
+            "كلها فرضت معاً في ليلة الإسراء"
+        ],
+        "options_en": [
+            "Fajr",
+            "Dhuhr",
+            "Asr",
+            "All were made obligatory together on the night of Isra"
+        ],
+        "correctIndex": 3,
+        "explanation_ar": "الصلوات الخمس فرضت جميعاً في ليلة الإسراء والمعراج.",
+        "explanation_en": "All five prayers were made obligatory on the night of Isra and Miraj."
+    },
+    {
+        "id": "q85",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الصدقة تطفئ الخطيئة كما يطفئ الماء النار",
+        "question_en": "Charity extinguishes sin as water extinguishes fire",
+        "correctBool": true,
+        "explanation_ar": "نعم، هذا حديث نبوي شريف.",
+        "explanation_en": "Yes, this is a prophetic Hadith."
+    }    ,
+    {
+        "id": "q86",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هي السورة التي تُقرأ في كل ركعة من الصلاة؟",
+        "question_en": "Which Surah is recited in every Rakat of prayer?",
+        "options_ar": [
+            "البقرة",
+            "الفاتحة",
+            "الإخلاص",
+            "الناس"
+        ],
+        "options_en": [
+            "Al-Baqarah",
+            "Al-Fatiha",
+            "Al-Ikhlas",
+            "An-Nas"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "سورة الفاتحة ركن من أركان الصلاة وتُقرأ في كل ركعة.",
+        "explanation_en": "Surah Al-Fatiha is a pillar of prayer and must be recited in every Rakat."
+    },
+    {
+        "id": "q87",
+        "categoryId": "quran",
+        "type": "tf",
+        "difficulty": "hard",
+        "question_ar": "سورة التوبة هي السورة الوحيدة في القرآن التي لا تبدأ بالبسملة",
+        "question_en": "Surah At-Tawbah is the only Surah in the Quran that doesn't begin with Bismillah",
+        "correctBool": true,
+        "explanation_ar": "نعم، سورة التوبة لا تبدأ بالبسملة وهي السورة الوحيدة في القرآن.",
+        "explanation_en": "Yes, Surah At-Tawbah doesn't start with Bismillah and is the only Surah in the Quran without it."
+    },
+    {
+        "id": "q88",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "كم عدد ركعات صلاة العشاء الفرض؟",
+        "question_en": "How many Rakats are in the obligatory Isha prayer?",
+        "options_ar": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "options_en": [
+            "2",
+            "3",
+            "4",
+            "5"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "صلاة العشاء الفرض أربع ركعات.",
+        "explanation_en": "The obligatory Isha prayer consists of 4 Rakats."
+    },
+    {
+        "id": "q89",
+        "categoryId": "fiqh",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "يجب على المسلم أن يصلي صلاة الوتر كل ليلة",
+        "question_en": "A Muslim must pray Witr every night",
+        "correctBool": false,
+        "explanation_ar": "لا، صلاة الوتر سنة مؤكدة وليست واجبة.",
+        "explanation_en": "No, Witr prayer is a confirmed Sunnah but not obligatory."
+    },
+    {
+        "id": "q91",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "من أسماء النبي محمد ﷺ: أحمد",
+        "question_en": "One of the names of Prophet Muhammad ﷺ is Ahmad",
+        "correctBool": true,
+        "explanation_ar": "نعم، أحمد من أسماء النبي محمد ﷺ وورد في القرآن.",
+        "explanation_en": "Yes, Ahmad is one of the names of Prophet Muhammad ﷺ and is mentioned in the Quran."
+    },
+    {
+        "id": "q92",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "من هو الصحابي الذي لُقب بـ 'ذو النورين'؟",
+        "question_en": "Which companion was titled 'Possessor of Two Lights'?",
+        "options_ar": [
+            "أبو بكر",
+            "عمر",
+            "عثمان",
+            "علي"
+        ],
+        "options_en": [
+            "Abu Bakr",
+            "Umar",
+            "Uthman",
+            "Ali"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "عثمان بن عفان لُقب بذي النورين لأنه تزوج ابنتي النبي ﷺ رقية ثم أم كلثوم.",
+        "explanation_en": "Uthman ibn Affan was called Dhun-Nurayn (Possessor of Two Lights) because he married two daughters of the Prophet ﷺ, Ruqayyah and then Umm Kulthum."
+    },
+    {
+        "id": "q93",
+        "categoryId": "history",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "أسلم عمر بن الخطاب في السنة السادسة من البعثة",
+        "question_en": "Umar ibn Al-Khattab embraced Islam in the sixth year of Prophethood",
+        "correctBool": true,
+        "explanation_ar": "نعم، أسلم عمر بن الخطاب رضي الله عنه في السنة السادسة من البعثة.",
+        "explanation_en": "Yes, Umar ibn Al-Khattab (may Allah be pleased with him) embraced Islam in the sixth year of Prophethood."
+    },
+    {
+        "id": "q94",
+        "categoryId": "general",
+        "type": "mcq",
+        "difficulty": "easy",
+        "question_ar": "ما هو اسم الملك الموكل بالوحي؟",
+        "question_en": "What is the name of the angel entrusted with revelation?",
+        "options_ar": [
+            "ميكائيل",
+            "إسرافيل",
+            "جبريل",
+            "عزرائيل"
+        ],
+        "options_en": [
+            "Mikail",
+            "Israfil",
+            "Jibril",
+            "Azrael"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "جبريل عليه السلام هو الملك الموكل بالوحي.",
+        "explanation_en": "Jibril (Gabriel) peace be upon him is the angel entrusted with revelation."
+    },
+    {
+        "id": "q95",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "ليلة الإسراء والمعراج حدثت قبل الهجرة",
+        "question_en": "The Night Journey and Ascension occurred before the Hijrah",
+        "correctBool": true,
+        "explanation_ar": "نعم، الإسراء والمعراج حدثت في مكة قبل الهجرة إلى المدينة.",
+        "explanation_en": "Yes, the Isra and Miraj occurred in Makkah before the migration to Madinah."
+    },
+    {
+        "id": "q96",
+        "categoryId": "quran",
+        "type": "mcq",
+        "difficulty": "hard",
+        "question_ar": "كم عدد السور المدنية في القرآن الكريم تقريباً؟",
+        "question_en": "Approximately how many Madinan Surahs are in the Quran?",
+        "options_ar": [
+            "20",
+            "28",
+            "43",
+            "86"
+        ],
+        "options_en": [
+            "20",
+            "28",
+            "43",
+            "86"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "السور المدنية حوالي 28 سورة والمكية 86 سورة.",
+        "explanation_en": "There are approximately 28 Madinan Surahs and 86 Makkan Surahs."
+    },
+    {
+        "id": "q97",
+        "categoryId": "fiqh",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "ما هو حكم الأذان للصلوات الخمس؟",
+        "question_en": "What is the ruling on Adhan for the five prayers?",
+        "options_ar": [
+            "واجب",
+            "سنة مؤكدة",
+            "فرض كفاية",
+            "مستحب"
+        ],
+        "options_en": [
+            "Obligatory",
+            "Confirmed Sunnah",
+            "Collective Obligation",
+            "Recommended"
+        ],
+        "correctIndex": 2,
+        "explanation_ar": "الأذان فرض كفاية عند جمهور العلماء.",
+        "explanation_en": "Adhan is a collective obligation according to the majority of scholars."
+    },
+    {
+        "id": "q98",
+        "categoryId": "hadith",
+        "type": "tf",
+        "difficulty": "medium",
+        "question_ar": "من علامات الساعة الكبرى: ظهور الدجال",
+        "question_en": "One of the major signs of the Hour is the appearance of the Dajjal",
+        "correctBool": true,
+        "explanation_ar": "نعم، ظهور المسيح الدجال من علامات الساعة الكبرى.",
+        "explanation_en": "Yes, the appearance of the false messiah (Dajjal) is one of the major signs of the Hour."
+    },
+    {
+        "id": "q99",
+        "categoryId": "history",
+        "type": "mcq",
+        "difficulty": "medium",
+        "question_ar": "كم سنة عاش النبي محمد ﷺ؟",
+        "question_en": "How many years did Prophet Muhammad ﷺ live?",
+        "options_ar": [
+            "60 سنة",
+            "63 سنة",
+            "65 سنة",
+            "70 سنة"
+        ],
+        "options_en": [
+            "60 years",
+            "63 years",
+            "65 years",
+            "70 years"
+        ],
+        "correctIndex": 1,
+        "explanation_ar": "عاش النبي محمد ﷺ 63 سنة (40 قبل البعثة و23 بعد البعثة).",
+        "explanation_en": "Prophet Muhammad ﷺ lived 63 years (40 before Prophethood and 23 after)."
+    },
+    {
+        "id": "q100",
+        "categoryId": "general",
+        "type": "tf",
+        "difficulty": "easy",
+        "question_ar": "الإسلام دين ودولة ودنيا وآخرة",
+        "question_en": "Islam is a religion that encompasses both worldly and afterlife matters",
+        "correctBool": true,
+        "explanation_ar": "نعم، الإسلام شامل لجميع جوانب الحياة الدنيوية والأخروية.",
+        "explanation_en": "Yes, Islam is comprehensive, covering all aspects of worldly life and the Hereafter."
+    }
+]

@@ -81,37 +81,40 @@ class _HadithListPageState extends State<HadithListPage> {
                 final item = state.items[index];
                 final isFav = state.favorites.contains(item.uid);
 
-                return AppCard(
-                  onTap: () => context.push('/hadith/item/${item.uid}'),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(12),
-                    title: Text(
-                      item.textAr,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      textDirection: ui.TextDirection.rtl,
-                      style: const TextStyle(fontSize: 16, height: 1.5),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [
-                          if (item.number != null)
-                            Text(
-                              "#${item.number}",
-                              style: Theme.of(context).textTheme.bodySmall,
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: AppCard(
+                    onTap: () => context.push('/hadith/item/${item.uid}'),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(12),
+                      title: Text(
+                        item.textAr,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        textDirection: ui.TextDirection.rtl,
+                        style: const TextStyle(fontSize: 16, height: 1.5),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            if (item.number != null)
+                              Text(
+                                "#${item.number}",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            const Spacer(),
+                            IconButton(
+                              icon: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                color: isFav ? Colors.red : null,
+                              ),
+                              onPressed: () => context
+                                  .read<HadithListCubit>()
+                                  .toggleFavorite(item.uid),
                             ),
-                          const Spacer(),
-                          IconButton(
-                            icon: Icon(
-                              isFav ? Icons.favorite : Icons.favorite_border,
-                              color: isFav ? Colors.red : null,
-                            ),
-                            onPressed: () => context
-                                .read<HadithListCubit>()
-                                .toggleFavorite(item.uid),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

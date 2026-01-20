@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/azkar_repository.dart';
 import '../../domain/models/azkar_category.dart';
+import '../../../../core/content/content_update_event_bus.dart';
 
 abstract class AzkarCategoriesState extends Equatable {
   const AzkarCategoriesState();
@@ -33,8 +35,19 @@ class AzkarCategoriesError extends AzkarCategoriesState {
 
 class AzkarCategoriesCubit extends Cubit<AzkarCategoriesState> {
   final AzkarRepository _repository;
+  StreamSubscription<ContentUpdateEvent>? _contentUpdateSubscription;
 
-  AzkarCategoriesCubit(this._repository) : super(AzkarCategoriesInitial());
+  AzkarCategoriesCubit(this._repository) : super(AzkarCategoriesInitial()) {
+    // Listen for content updates
+    _contentUpdateSubscription = ContentUpdateEventBus.instance.stream.listen((
+      event,
+    ) {
+      if (event.hasAzkar) {
+        // Reload categories when azkar content is updated
+        loadCategories(forceReload: true);
+      }
+    });
+  }
 
   Future<void> loadCategories({bool forceReload = false}) async {
     emit(AzkarCategoriesLoading());
@@ -47,5 +60,11 @@ class AzkarCategoriesCubit extends Cubit<AzkarCategoriesState> {
     } catch (e) {
       emit(AzkarCategoriesError(e.toString()));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _contentUpdateSubscription?.cancel();
+    return super.close();
   }
 }

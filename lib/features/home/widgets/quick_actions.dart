@@ -90,9 +90,9 @@ class QuickActions extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   action['label'] as String,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

@@ -32,6 +32,45 @@ class _HadithBooksPageState extends State<HadithBooksPage> {
           }
 
           if (state is HadithBooksLoaded) {
+            // Check if books list is empty (content not downloaded)
+            if (state.books.isEmpty) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.cloud_download_outlined,
+                        size: 64,
+                        color: Theme.of(context).primaryColor.withOpacity(0.5),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "hadith.missing_content_title".tr(),
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "hadith.missing_content_desc".tr(),
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          context.push('/more/settings/downloads');
+                        },
+                        icon: const Icon(Icons.download),
+                        label: Text("content.download_content".tr()),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
             return GridView.builder(
               padding: const EdgeInsets.all(16),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

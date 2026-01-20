@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/content/content_download_service.dart';
 import '../../../../core/content/models/content_item.dart';
 import '../../../../core/config/content_config.dart';
+import '../../../../core/content/content_update_event_bus.dart';
 
 part 'content_selection_state.dart';
 
@@ -107,6 +108,10 @@ class ContentSelectionCubit extends Cubit<ContentSelectionState> {
       // Mark onboarding done
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(ContentConfig.prefKeyContentReady, true);
+
+      // Notify app that content has been updated
+      final downloadedIds = itemsToDownload.map((e) => e.id).toList();
+      ContentUpdateEventBus.instance.notifyContentUpdated(downloadedIds);
 
       emit(ContentSelectionDone());
     } catch (e) {

@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/quran_repository.dart';
 import '../../domain/models/surah.dart';
+import '../../../../core/content/content_update_event_bus.dart';
 
 // States
 
@@ -55,8 +57,19 @@ class QuranHomeError extends QuranHomeState {
 
 class QuranHomeCubit extends Cubit<QuranHomeState> {
   final QuranRepository _repository;
+  StreamSubscription<ContentUpdateEvent>? _contentUpdateSubscription;
 
-  QuranHomeCubit(this._repository) : super(QuranHomeInitial());
+  QuranHomeCubit(this._repository) : super(QuranHomeInitial()) {
+    // Listen for content updates
+    _contentUpdateSubscription = ContentUpdateEventBus.instance.stream.listen((
+      event,
+    ) {
+      if (event.hasQuran) {
+        // Reload surahs when quran content is updated
+        load();
+      }
+    });
+  }
 
   Future<void> load() async {
     emit(QuranHomeLoading());
@@ -92,5 +105,11 @@ class QuranHomeCubit extends Cubit<QuranHomeState> {
     if (state is! QuranHomeLoaded) return;
     final currentState = state as QuranHomeLoaded;
     emit(currentState.copyWith(filtered: currentState.surahs, query: ''));
+  }
+
+  @override
+  Future<void> close() {
+    _contentUpdateSubscription?.cancel();
+    return super.close();
   }
 }

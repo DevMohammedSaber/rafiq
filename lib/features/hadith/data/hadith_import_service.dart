@@ -47,18 +47,23 @@ class HadithImportService {
   ];
 
   Future<bool> needsImport() async {
+    // IMPORTANT: This app no longer uses bundled Hadith assets.
+    // All Hadith content is downloaded from CDN via ContentDownloadService.
+    // The old bundled asset import system is completely disabled.
+
     final prefs = await SharedPreferences.getInstance();
-    final version = prefs.getInt(_dbVersionKey) ?? 0;
 
-    // Check if DB is empty
-    final db = await HadithDatabase.instance.database;
-    final count =
-        Sqflite.firstIntValue(
-          await db.rawQuery('SELECT COUNT(*) FROM hadith_books'),
-        ) ??
-        0;
+    // Check if Hadith was downloaded via CDN (new content system)
+    final cdnVersion = prefs.getInt('content_version_hadith') ?? 0;
 
-    return version < currentVersion || count == 0;
+    // If CDN version exists, content is already imported
+    if (cdnVersion > 0) {
+      return false; // Content ready
+    }
+
+    // If CDN version doesn't exist, DON'T try to import from bundled assets
+    // (they don't exist). User needs to download content from settings.
+    return false; // Don't attempt bundled asset import
   }
 
   Future<void> startImport(String scriptType) async {

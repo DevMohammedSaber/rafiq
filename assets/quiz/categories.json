@@ -1,0 +1,37 @@
+[
+  {
+    "id": "quran",
+    "name_ar": "القرآن الكريم",
+    "name_en": "Holy Quran",
+    "icon": "book",
+    "color": "#006D5B"
+  },
+  {
+    "id": "hadith",
+    "name_ar": "الحديث الشريف",
+    "name_en": "Hadith",
+    "icon": "scroll",
+    "color": "#D4AF37"
+  },
+  {
+    "id": "fiqh",
+    "name_ar": "الفقه",
+    "name_en": "Islamic Jurisprudence",
+    "icon": "balance",
+    "color": "#4CAF50"
+  },
+  {
+    "id": "history",
+    "name_ar": "التاريخ الإسلامي",
+    "name_en": "Islamic History",
+    "icon": "history",
+    "color": "#FF9800"
+  },
+  {
+    "id": "general",
+    "name_ar": "عام",
+    "name_en": "General Knowledge",
+    "icon": "star",
+    "color": "#2196F3"
+  }
+]

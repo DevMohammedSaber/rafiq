@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -70,6 +72,7 @@ class _AzkarCategoriesPageState extends State<AzkarCategoriesPage> {
                 icon: Icons.dataset,
               );
             }
+            log(state.categories.toString());
             return GridView.builder(
               padding: const EdgeInsets.all(20),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

@@ -271,18 +271,13 @@ class AzkarDatabaseCdn {
       }
     }
 
-    // Derive category from filename
+    // Derive default category from filename (fallback only, category should come from CSV column or categories.csv)
     final defaultCategory = fileName
         .replaceAll('.csv', '')
         .replaceAll('_', ' ');
 
-    // Ensure category exists
-    await db.insert('azkar_categories', {
-      'id': defaultCategory,
-      'name_ar': defaultCategory,
-      'name_en': defaultCategory,
-      'order_index': 0,
-    }, conflictAlgorithm: ConflictAlgorithm.ignore);
+    // Don't automatically create category here - it should come from categories.csv
+    // Only use defaultCategory as fallback when categoryIdx == -1
 
     final contentRows = headerIsData ? rows : rows.skip(1).toList();
     int orderIndex = 0;
